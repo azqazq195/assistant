@@ -4,6 +4,7 @@ import 'package:sql_to_mapper/pages/clients/clients.dart';
 import 'package:sql_to_mapper/pages/drivers/drivers.dart';
 import 'package:sql_to_mapper/pages/overview/overview.dart';
 import 'package:sql_to_mapper/routing/routes.dart';
+import 'dart:developer' as developer;
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
