@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/pages/authentication/authentication.dart';
-import 'package:sql_to_mapper/pages/clients/clients.dart';
-import 'package:sql_to_mapper/pages/drivers/drivers.dart';
-import 'package:sql_to_mapper/pages/overview/overview.dart';
+import 'package:sql_to_mapper/pages/insert_sql.dart';
+import 'package:sql_to_mapper/pages/get_domain.dart';
+import 'package:sql_to_mapper/pages/get_mapper_xml.dart';
+import 'package:sql_to_mapper/pages/get_mapper.dart';
 import 'package:sql_to_mapper/routing/routes.dart';
-import 'dart:developer' as developer;
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case overViewPageRoute:
-      return _getPageRoute(const OverViewPage());
-    case driversPageRoute:
-      return _getPageRoute(const DriversViewPage());
-    case clientsPageRoute:
-      return _getPageRoute(const ClientsViewPage());
-    case authenticationPageRoute:
-      return _getPageRoute(const AuthenticationViewPage());
+    case insertSqlPageRoute:
+      return _getPageRoute(const InsertSqlPage(), settings);
+    case getDomainPageRoute:
+      return _getPageRoute(const GetDomainPage(), settings);
+    case getMapperPageRoute:
+      return _getPageRoute(const GetMapperPage(), settings);
+    case getMapperXMLPageRoute:
+      return _getPageRoute(const GetMapperXmlPage(), settings);
     default:
-      return _getPageRoute(const OverViewPage());
+      return _getPageRoute(const InsertSqlPage(), settings);
   }
 }
 
-PageRoute _getPageRoute(Widget child) {
-  return MaterialPageRoute(builder: (context) => child);
+PageRoute _getPageRoute(Widget child, RouteSettings? settings) {
+  return MaterialPageRoute(builder: (context) => child, settings: settings);
 }

@@ -5,6 +5,6 @@ import 'package:sql_to_mapper/routing/routes.dart';
 
 Navigator localNavigator() => Navigator(
       key: navigationController.navigationKey,
-      initialRoute: overViewPageRoute,
+      initialRoute: insertSqlPageRoute,
       onGenerateRoute: generateRoute,
     );

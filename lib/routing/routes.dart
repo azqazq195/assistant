@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-const overViewPageRoute = "Overview";
-const driversPageRoute = "Drivers";
-const clientsPageRoute = "Clients";
-const authenticationPageRoute = "Authentication";
+const insertSqlPageRoute = "Code";
+const getDomainPageRoute = "Domain";
+const getMapperPageRoute = "Mapper";
+const getMapperXMLPageRoute = "Mapper.xml";
 
 List sideMenuItems = [
-  overViewPageRoute,
-  driversPageRoute,
-  clientsPageRoute,
-  authenticationPageRoute
+  insertSqlPageRoute,
+  getDomainPageRoute,
+  getMapperPageRoute,
+  getMapperXMLPageRoute
 ];

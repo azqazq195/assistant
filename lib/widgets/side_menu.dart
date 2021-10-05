@@ -58,14 +58,8 @@ class SideMenu extends StatelessWidget {
             children: sideMenuItems
                 .map(
                   (itemName) => SideMenuItem(
-                    itemName: itemName == authenticationPageRoute
-                        ? "Log Out"
-                        : itemName,
+                    itemName: itemName,
                     onTap: () {
-                      if (itemName == authenticationPageRoute) {
-                        // TODO:: go to authentication page
-                      }
-
                       if (!menuController.isActive(itemName)) {
                         menuController.changeActiveItemTo(itemName);
                         if (ResponsiveWidget.isSmallScreen(context)) Get.back();

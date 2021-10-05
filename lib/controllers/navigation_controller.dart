@@ -9,5 +9,9 @@ class NavigationController extends GetxController {
     return navigationKey.currentState!.pushNamed(routeName);
   }
 
+  Future<dynamic> navigateToWithData(String routeName, String data) {
+    return navigationKey.currentState!.pushNamed(routeName, arguments: data);
+  }
+
   goBack() => navigationKey.currentState!.pop();
 }
