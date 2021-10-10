@@ -90,7 +90,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                     });
                   });
                   // 변환 완료
-                  flutterToast("변환 완료.");
+                  // flutterToast("변환 완료.");
+                  FlutterToast(context, "변환 완료.");
                 },
                 child: const Text("붙여넣기"),
               ),
@@ -128,7 +129,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
               child: OutlinedButton(
                 onPressed: () async {
                   await Clipboard.setData(ClipboardData(text: text));
-                  flutterToast("복사 완료.");
+                  // flutterToast("복사 완료.");
+                  FlutterToast(context, "복사 완료.");
                 },
                 child: const Text("복사하기"),
               ),
@@ -155,6 +157,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           labelColor: Colors.blue,
         ),
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
             sqlPage(),
             textPage(domain),
