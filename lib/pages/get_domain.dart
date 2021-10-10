@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sql_to_mapper/constants/controllers.dart';
-import 'package:sql_to_mapper/helpers/convertor.dart';
+import 'package:sql_to_mapper/helpers/convertor.dart' as helper;
 import 'package:sql_to_mapper/routing/routes.dart';
 import 'package:sql_to_mapper/widgets/custom_text.dart';
 
@@ -15,6 +15,7 @@ class _GetDomainPageState extends State<GetDomainPage> {
   @override
   Widget build(BuildContext context) {
     final data = ModalRoute.of(context)!.settings.arguments;
+    helper.Convertor convertor = helper.Convertor(helper.DBTable(data as String));
 
     if (data.runtimeType == Null) {
       return const Center(
@@ -24,7 +25,7 @@ class _GetDomainPageState extends State<GetDomainPage> {
       var _text = SizedBox(
         width: double.infinity,
         child: Text(
-          Convertor.convertMapper(data as String),
+          convertor.mybatis(),
           style: const TextStyle(
             fontSize: 20,
           ),

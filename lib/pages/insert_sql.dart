@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:sql_to_mapper/constants/controllers.dart';
-import 'package:sql_to_mapper/routing/routes.dart';
+import 'package:flutter/services.dart';
+import 'package:sql_to_mapper/helpers/convertor.dart' as helper;
+import 'package:clipboard/clipboard.dart';
+import 'package:sql_to_mapper/helpers/toast_message.dart';
 
 class InsertSqlPage extends StatefulWidget {
   const InsertSqlPage({Key? key}) : super(key: key);
@@ -12,70 +13,128 @@ class InsertSqlPage extends StatefulWidget {
 }
 
 class _InsertSqlPageState extends State<InsertSqlPage> {
-  final _sqlTextEditController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    var _sqlTextField = TextField(
-      controller: _sqlTextEditController,
-      minLines: 100,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      decoration: const InputDecoration(
-        labelText: "Insert Your Sql Code",
-        hintText: "Insert Sql Code to Convert.",
-        labelStyle: TextStyle(color: Colors.blueAccent),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          borderSide: BorderSide(width: 1, color: Colors.blueAccent),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          borderSide: BorderSide(width: 1, color: Colors.blueAccent),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-      ),
-    );
+    return const Scaffold(body: BottomNavigator());
+  }
+}
 
-    var _convertButton = OutlinedButton(
-      onPressed: () => {
-        menuController.changeActiveItemTo(sideMenuItems[1]),
-        navigationController.navigateToWithData(sideMenuItems[1], _sqlTextEditController.text),
-      },
-      child: const SizedBox(
-        width: double.infinity,
-        child: Text(
-          "Convert",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      ),
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          side: BorderSide(width: 1.0, color: Colors.blueAccent),
-        )),
-      ),
-    );
+class BottomNavigator extends StatefulWidget {
+  const BottomNavigator({Key? key}) : super(key: key);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Center(
+  @override
+  State<BottomNavigator> createState() => _BottomNavigatorState();
+}
+
+class _BottomNavigatorState extends State<BottomNavigator> {
+  static final myController = TextEditingController();
+
+  static String sql = "";
+  static String domain = "";
+  static String mapper = "";
+  static String mybatis = "";
+
+  static const _widgetName = [
+    Tab(
+      text: "sql",
+    ),
+    Tab(
+      text: "domain",
+    ),
+    Tab(
+      text: "mapper",
+    ),
+    Tab(
+      text: "mybatis",
+    ),
+  ];
+
+  late helper.DBTable table;
+  late helper.Convertor convertor;
+
+  Widget sqlPage() {
+    return Scaffold(
+      body: SizedBox.expand(
         child: Column(
           children: [
             Expanded(
-              child: _sqlTextField,
-              flex: 7,
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  sql,
+                  textAlign: TextAlign.left,
+                ),
+              ),
             ),
             const SizedBox(
-              height: 20,
+              height: 40.0,
             ),
+            Container(
+              height: 48,
+              width: double.maxFinite,
+              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Clipboard.getData(Clipboard.kTextPlain).then((value) {
+                    if (value == null) return;
+                    if (value.text == null) return;
+                    setState(() {
+                      sql = value.text!;
+
+                      table = helper.DBTable(sql);
+                      convertor = helper.Convertor(table);
+
+                      mybatis = convertor.mybatis();
+                      mapper = convertor.mapper();
+                      domain = convertor.domain();
+                    });
+                  });
+                  // 변환 완료
+                  flutterToast("변환 완료.");
+                },
+                child: const Text("붙여넣기"),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget textPage(String text) {
+    return Scaffold(
+      body: SizedBox.expand(
+        child: Column(
+          children: [
             Expanded(
-              child: _convertButton,
-              flex: 1,
+              child: SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(text),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            Container(
+              height: 48,
+              width: double.maxFinite,
+              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: text));
+                  flutterToast("복사 완료.");
+                },
+                child: const Text("복사하기"),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
             ),
           ],
         ),
@@ -84,8 +143,32 @@ class _InsertSqlPageState extends State<InsertSqlPage> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      initialIndex: 0,
+      length: _widgetName.length,
+      child: Scaffold(
+        bottomNavigationBar: const TabBar(
+          tabs: _widgetName,
+          indicatorColor: Colors.transparent,
+          unselectedLabelColor: Colors.grey,
+          labelColor: Colors.blue,
+        ),
+        body: TabBarView(
+          children: [
+            sqlPage(),
+            textPage(domain),
+            textPage(mapper),
+            textPage(mybatis),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   void dispose() {
-    _sqlTextEditController.dispose();
+    myController.dispose();
     super.dispose();
   }
 }
