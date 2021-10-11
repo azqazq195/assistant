@@ -36,7 +36,7 @@ class SideMenu extends StatelessWidget {
                     ),
                     const Flexible(
                       child: CustomText(
-                        text: "Mj",
+                        text: "Assistant",
                         size: 20,
                         weight: FontWeight.bold,
                         color: active,

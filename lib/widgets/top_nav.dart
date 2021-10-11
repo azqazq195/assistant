@@ -28,7 +28,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
         children: [
           const Visibility(
             child: CustomText(
-              text: "MJ",
+              text: "Assistant",
               color: lightGrey,
               size: 20,
               weight: FontWeight.bold,

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-const insertSqlPageRoute = "Code";
-const getDomainPageRoute = "Domain";
-const getMapperPageRoute = "Mapper";
-const getMapperXMLPageRoute = "Mapper.xml";
+const convertorPageRoute = "Code";
+const dummyPageRoute = "DUMMY";
 
 List sideMenuItems = [
-  insertSqlPageRoute,
-  getDomainPageRoute,
-  getMapperPageRoute,
-  getMapperXMLPageRoute
+  convertorPageRoute,
+  dummyPageRoute
 ];

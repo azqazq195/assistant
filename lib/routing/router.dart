@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/pages/insert_sql.dart';
-import 'package:sql_to_mapper/pages/get_domain.dart';
-import 'package:sql_to_mapper/pages/get_mapper_xml.dart';
-import 'package:sql_to_mapper/pages/get_mapper.dart';
+import 'package:sql_to_mapper/pages/convertor_page.dart';
+import 'package:sql_to_mapper/pages/dummy_page.dart';
 import 'package:sql_to_mapper/routing/routes.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case insertSqlPageRoute:
-      return _getPageRoute(const InsertSqlPage(), settings);
-    case getDomainPageRoute:
-      return _getPageRoute(const GetDomainPage(), settings);
-    case getMapperPageRoute:
-      return _getPageRoute(const GetMapperPage(), settings);
-    case getMapperXMLPageRoute:
-      return _getPageRoute(const GetMapperXmlPage(), settings);
+    case convertorPageRoute:
+      return _getPageRoute(const ConvertorPage(), settings);
+    case dummyPageRoute:
+      return _getPageRoute(const DummyPage(), settings);
     default:
-      return _getPageRoute(const InsertSqlPage(), settings);
+      return _getPageRoute(const ConvertorPage(), settings);
   }
 }
 

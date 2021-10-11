@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class MenuController extends GetxController {
   static MenuController instance = Get.find();
 
-  var activeItem = insertSqlPageRoute.obs;
+  var activeItem = convertorPageRoute.obs;
   var hoverItem = "".obs;
 
   changeActiveItemTo(String itemName) {
@@ -24,13 +24,9 @@ class MenuController extends GetxController {
 
   Widget returnIconFor(String itemName) {
     switch (itemName) {
-      case insertSqlPageRoute:
+      case convertorPageRoute:
         return _customIcon(Icons.add_task, itemName);
-      case getDomainPageRoute:
-        return _customIcon(Icons.task, itemName);
-      case getMapperPageRoute:
-        return _customIcon(Icons.task, itemName);
-      case getMapperXMLPageRoute:
+      case dummyPageRoute:
         return _customIcon(Icons.task, itemName);
 
       default:
