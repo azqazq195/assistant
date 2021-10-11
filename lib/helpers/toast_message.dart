@@ -32,7 +32,7 @@ class FlutterToast {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check),
+          const Icon(Icons.check),
           Text(text),
         ],
       ),
@@ -41,7 +41,7 @@ class FlutterToast {
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM_RIGHT,
-      toastDuration: Duration(seconds: 2),
+      toastDuration: const Duration(milliseconds: 600),
     );
   }
 }

@@ -26,14 +26,14 @@ class BottomNavigator extends StatefulWidget {
   State<BottomNavigator> createState() => _BottomNavigatorState();
 }
 
-class _BottomNavigatorState extends State<BottomNavigator> {
+class _BottomNavigatorState extends State<BottomNavigator>
+    with SingleTickerProviderStateMixin {
   static const bugMail = "azqazq195@gmail.com";
-  static final myController = TextEditingController();
 
-  static String sql = "";
-  static String domain = "";
-  static String mapper = "";
-  static String mybatis = "";
+  static String sql = "sql";
+  static String domain = "domain";
+  static String mapper = "mapper";
+  static String mybatis = "mybatis";
   static List textList = [sql, domain, mapper, mybatis];
 
   static const _widgetName = [
@@ -62,9 +62,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             Expanded(
               child: SizedBox(
                 width: double.infinity,
-                child: Text(
-                  sql,
-                  textAlign: TextAlign.left,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(
+                    sql,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ),
             ),
@@ -84,7 +87,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 width: double.infinity,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  child: Text(text),
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ),
             ),
@@ -105,7 +111,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         }
 
         StringBuffer sb = StringBuffer();
-        sb.write("<문의 내용>");
+        sb.write("<버그 내용>");
         sb.write("\n\n\n\n");
         sb.write("------------------");
         sb.write("\n\n\nsql\n\n");
@@ -164,10 +170,17 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                     mybatis = convertor.mybatis();
                     mapper = convertor.mapper();
                     domain = convertor.domain();
+
+                    // 변환 완료
+                    FlutterToast(context, "변환 완료.");
+                    if (_selectedIndex + 1 < _tabController.length) {
+                      _onItemTapped(_selectedIndex + 1);
+                    } else {
+                      _onItemTapped(0);
+                    }
+                    _tabController.animateTo(_selectedIndex);
                   });
                 });
-                // 변환 완료
-                flutterToast("변환 완료.");
               },
               child: const Text("붙여넣기"),
             ),
@@ -195,7 +208,13 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             child: OutlinedButton(
               onPressed: () async {
                 await Clipboard.setData(ClipboardData(text: text));
-                flutterToast("복사 완료.");
+                FlutterToast(context, "복사 완료.");
+                if (_selectedIndex + 1 < _tabController.length) {
+                  _onItemTapped(_selectedIndex + 1);
+                } else {
+                  _onItemTapped(0);
+                }
+                _tabController.animateTo(_selectedIndex);
               },
               child: const Text("복사하기"),
             ),
@@ -205,15 +224,30 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
-  Widget _bottomButton(String text) {
-    if (index == 0) {
+  Widget _bottomButton() {
+    if (_selectedIndex == 0) {
       return _pasteButton();
     } else {
-      return _copyButton(textList[index]);
+      return _copyButton(textList[_selectedIndex]);
     }
   }
 
-  var index = 0;
+  var _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController =
+        TabController(length: _widgetName.length, vsync: this, initialIndex: 0);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,16 +261,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             const SizedBox(
               height: 40.0,
             ),
-            _bottomButton("asd"),
+            _bottomButton(),
             const SizedBox(
               height: 40.0,
             ),
             TabBar(
-              onTap: (value) => {
-                setState(() {
-                  index = value;
-                })
-              },
+              onTap: _onItemTapped,
               tabs: _widgetName,
               indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(15), color: Colors.blue),
@@ -262,7 +292,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   void dispose() {
-    myController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 }
