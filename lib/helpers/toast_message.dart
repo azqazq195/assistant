@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+
 void flutterToast(String msg) {
   Fluttertoast.showToast(
       msg: msg,
@@ -12,6 +13,7 @@ void flutterToast(String msg) {
       webBgColor: "#00b09b",
       webPosition: "right");
 }
+
 
 class FlutterToast {
   static late FToast fToast;
@@ -41,7 +43,7 @@ class FlutterToast {
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM_RIGHT,
-      toastDuration: const Duration(milliseconds: 600),
+      toastDuration: const Duration(seconds: 2),
     );
   }
 }
