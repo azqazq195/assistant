@@ -106,7 +106,7 @@ class Convertor {
         return sb.toString();
       }
 
-      switch (column.type) {
+      switch (column.javaType) {
         case "int":
           return getIntMethod();
         case "enum":
@@ -145,7 +145,7 @@ class Convertor {
     sb.write("""public class ${toCapitalize(table.domain)} {\n""");
     for (Column column in table.columns) {
       sb.write(
-          """\tprivate ${convertType(column.type)} ${column.javaName};\n""");
+          """\tprivate ${convertType(column.javaType)} ${column.javaName};\n""");
     }
     sb.write("\n");
     for (Column column in table.columns) {
@@ -177,7 +177,7 @@ class Convertor {
       for (Column column in table.columns) {
         if (column.dbName == "id") continue;
         sb.write(
-            """\t\t<if test="value.${column.javaName} != ${getNullType(column.type)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
+            """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
       }
       sb.write("""\t</set>\n""");
       sb.write("""\twhere id = #{value.id}\n""");
@@ -225,14 +225,14 @@ class Convertor {
       sb.write("""\t\t<trim suffixOverrides=",">\n""");
       for (Column column in table.columns) {
         sb.write(
-            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.type)}">${column.dbName},</if>\n""");
+            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName},</if>\n""");
       }
       sb.write("""\t\t</trim>\n""");
       sb.write("""\t) values (\n""");
       sb.write("""\t\t<trim suffixOverrides=",">\n""");
       for (Column column in table.columns) {
         sb.write(
-            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.type)}">#{value.${column.javaName}},</if>\n""");
+            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">#{value.${column.javaName}},</if>\n""");
       }
       sb.write("""\t\t</trim>\n""");
       sb.write("""\t)\n""");
@@ -292,12 +292,12 @@ class DBTable {
   DBTable(String code) {
     var strings = code.split("\n");
 
-    for(String string in strings) {
+    for (String string in strings) {
       string = string.trim();
       // 테이블 명 구하기.
       if (string.startsWith("CREATE")) {
-        tableName = string
-            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        tableName =
+            string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
         if (tableName.contains("`")) {
           tableName = tableName.substring(tableName.lastIndexOf("`") + 2);
         }
@@ -306,23 +306,31 @@ class DBTable {
 
       // 컬럼 구하기.
       if (string.startsWith("`")) {
-        if (string.contains("AUTO_INCREMENT")) hasAI = true;
-        var temp = string.split(" ");
-        if (temp[0].indexOf("`") == 0) {
-          String name = temp[0]
-              .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
-          String type = temp[1];
-          if (!type.contains("TINYINT")) {
-            type = type.replaceAll(RegExp(r"[^A-Z]"), "");
-          }
-          columns.add(Column(name, getType(type)));
+        bool isAI = false;
+        bool isNullable = false;
+        if (string.contains("AUTO_INCREMENT")) {
+          hasAI = true;
+          isAI = true;
         }
+        if (string.contains("NOT NULL")) {
+          isNullable = false;
+        } else if (string.contains("NULL")) {
+          isNullable = true;
+        }
+        var temp = string.split(" ");
+        String name = temp[0]
+            .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
+        String type = temp[1];
+        if (!type.contains("TINYINT")) {
+          type = type.replaceAll(RegExp(r"[^A-Z]"), "");
+        }
+        columns.add(Column(name, type, getType(type), isAI, isNullable));
       }
 
       // 기본키, 외래키 검수
       if (string.indexOf("PRIMARY KEY") == 0) {
-        String pk = string
-            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        String pk =
+            string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
         for (int k = 0; k < columns.length; k++) {
           if (columns[k].dbName == pk) {
             columns[k].isPK = true;
@@ -331,15 +339,14 @@ class DBTable {
       }
 
       if (string.indexOf("FOREIGN KEY") == 0) {
-        String fk = string
-            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        String fk =
+            string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
         for (int k = 0; k < columns.length; k++) {
           if (columns[k].dbName == fk) {
             columns[k].isFK = true;
           }
         }
       }
-
     }
 
     // 디비 컬럼명 자바 변수명으로 바꾸기
@@ -398,14 +405,63 @@ class DBTable {
         return "UNKNOWN";
     }
   }
+
+  @override
+  String toString() {
+    String getSpace(String? str) {
+      if(str == null) return "\t\t\t\t\t";
+      if (str.length >= 16) {
+        return str + "\t";
+      }
+      if (str.length >= 12) {
+        return str + "\t\t";
+      }
+      if (str.length >= 8) {
+        return str + "\t\t\t";
+      }
+      if (str.length >= 4) {
+        return str + "\t\t\t\t";
+      }
+      return str + "\t\t\t\t\t";
+    }
+
+    StringBuffer sb = StringBuffer();
+    sb.write("\n\n---[TABLE]---\n");
+    sb.write("tableName: $tableName\n");
+    sb.write("domain: $domain\n");
+    sb.write("hasAI: $hasAI\n");
+    sb.write(getSpace("[dbName]"));
+    sb.write(getSpace("[javaName]"));
+    sb.write(getSpace("[type]"));
+    sb.write(getSpace("[isAI]"));
+    sb.write(getSpace("[isNullable]"));
+    sb.write(getSpace("[isPK]"));
+    sb.write(getSpace("[isFK]"));
+    sb.write("\n");
+    for (Column column in columns) {
+      sb.write(getSpace(column.dbName));
+      sb.write(getSpace(column.javaName));
+      sb.write(getSpace(column.javaType));
+      sb.write(getSpace(column.isAI.toString()));
+      sb.write(getSpace(column.isNullable.toString()));
+      sb.write(getSpace(column.isPK.toString()));
+      sb.write(getSpace(column.isFK.toString()));
+      sb.write("\n");
+    }
+    return sb.toString();
+  }
 }
 
 class Column {
   String dbName;
   String? javaName;
-  String type;
+  String dbType;
+  String javaType;
+
+  bool isAI;
+  bool isNullable;
   bool isPK = false;
   bool isFK = false;
 
-  Column(this.dbName, this.type);
+  Column(this.dbName, this.dbType, this.javaType, this.isAI, this.isNullable);
 }

@@ -32,6 +32,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   static String domain = "domain";
   static String mapper = "mapper";
   static String mybatis = "mybatis";
+  static String log = "log";
 
   Widget _sendBugReportMail() {
     return OutlinedButton(
@@ -39,7 +40,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         String? encodeQueryParameters(Map<String, String> params) {
           return params.entries
               .map((e) =>
-          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                  '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
               .join('&');
         }
 
@@ -47,6 +48,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         sb.write("<버그 내용>");
         sb.write("\n\n\n\n");
         sb.write("------------------");
+        sb.write("\n\n\nlog\n\n");
+        sb.write(log);
         sb.write("\n\n\nsql\n\n");
         sb.write(sql);
         sb.write("\n\n\ndomain\n\n");
@@ -76,16 +79,19 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   static const _widgetName = [
     Tab(
-      text: "sql",
+      text: "Sql",
     ),
     Tab(
-      text: "domain",
+      text: "Domain",
     ),
     Tab(
-      text: "mapper",
+      text: "Mapper",
     ),
     Tab(
-      text: "mybatis",
+      text: "Mybatis",
+    ),
+    Tab(
+      text: "Temporary Log",
     ),
   ];
 
@@ -131,6 +137,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                       mybatis = convertor.mybatis();
                       mapper = convertor.mapper();
                       domain = convertor.domain();
+                      _addRow();
                     });
                   });
                   FlutterToast(context, "변환 완료.");
@@ -189,6 +196,67 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
+  final List<DataRow> _rowList = [];
+
+  DataRow _getDataRow(helper.Column column) {
+    return DataRow(
+      cells: <DataCell>[
+        DataCell(Text(column.dbName)),
+        DataCell(Text(column.javaName ?? "")),
+        DataCell(Text(column.dbType)),
+        DataCell(Text(column.javaType)),
+        DataCell(Text(column.isAI.toString())),
+        DataCell(Text(column.isNullable.toString())),
+        DataCell(Text(column.isPK.toString())),
+        DataCell(Text(column.isFK.toString())),
+      ],
+    );
+  }
+
+  _addRow() {
+    for (helper.Column column in table.columns) {
+      _rowList.add(_getDataRow(column));
+    }
+  }
+
+  DataTable dataTable() {
+    return DataTable(
+      columns: const [
+        DataColumn(
+          label: Text("dbName"),
+        ),
+        DataColumn(
+          label: Text("javaName"),
+        ),
+        DataColumn(
+          label: Text("dbType"),
+        ),
+        DataColumn(
+          label: Text("javaType"),
+        ),
+        DataColumn(
+          label: Text("isAI"),
+        ),
+        DataColumn(
+          label: Text("isNullable"),
+        ),
+        DataColumn(
+          label: Text("isPK"),
+        ),
+        DataColumn(
+          label: Text("isFK"),
+        ),
+      ],
+      rows: _rowList,
+    );
+  }
+
+  Widget logPage() {
+    return Scaffold(
+      body: dataTable()
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -207,10 +275,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             textPage(domain),
             textPage(mapper),
             textPage(mybatis),
+            logPage(),
           ],
         ),
       ),
     );
   }
-
 }
