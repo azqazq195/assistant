@@ -4,21 +4,6 @@ class Convertor {
   Convertor(this.table);
 
   String domain() {
-    String convertType(String type) {
-      switch(type) {
-        case "int":
-        case "boolean":
-        case "enum":
-          return "int";
-        case "String":
-          return "String";
-        case "Date":
-          return "Date";
-        default:
-          return "UNKNOWN";
-      }
-    }
-
     String convertMethod(Column column) {
       String getIntMethod() {
         StringBuffer sb = StringBuffer();
@@ -26,7 +11,8 @@ class Convertor {
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
@@ -35,18 +21,22 @@ class Convertor {
       String getEnumMethod() {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
-        sb.write("""\t\treturn ${column.javaName} == null ? -1 : ${column.javaName}.ordinal();\n""");
+        sb.write(
+            """\t\treturn ${column.javaName} == null ? -1 : ${column.javaName}.ordinal();\n""");
         sb.write("""\t}\n\n""");
 
         sb.write("""\tpublic Enum ${column.javaName}() {\n""");
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
-        sb.write("""\t\tthis.${column.javaName} = Enum.values()[${column.javaName}];\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
+        sb.write(
+            """\t\tthis.${column.javaName} = Enum.values()[${column.javaName}];\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(Enum ${column.javaName}) {\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(Enum ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
@@ -62,12 +52,15 @@ class Convertor {
         sb.write("""\t\treturn ${column.javaName} == 1;\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(boolean ${column.javaName}) {\n""");
-        sb.write("""\t\tthis.${column.javaName} = ${column.javaName} ? 1 : 0;\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(boolean ${column.javaName}) {\n""");
+        sb.write(
+            """\t\tthis.${column.javaName} = ${column.javaName} ? 1 : 0;\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
       }
@@ -78,7 +71,8 @@ class Convertor {
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(Date ${column.javaName}) {\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(Date ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
@@ -86,17 +80,33 @@ class Convertor {
 
       String getStringMethod() {
         StringBuffer sb = StringBuffer();
-        sb.write("""\tpublic String get${toCapitalize(column.javaName)}() {\n""");
+        sb.write(
+            """\tpublic String get${toCapitalize(column.javaName)}() {\n""");
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic void set${toCapitalize(column.javaName)}(String ${column.javaName}) {\n""");
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(String ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
       }
 
-      switch(column.type) {
+      String getBigDecimalMethod() {
+        StringBuffer sb = StringBuffer();
+        sb.write(
+            """\tpublic BigDecimal get${toCapitalize(column.javaName)}() {\n""");
+        sb.write("""\t\t//TODO 작성 전\n""");
+        sb.write("""\t}\n\n""");
+
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(String ${column.javaName}) {\n""");
+        sb.write("""\t\t//TODO 작성 전\n""");
+        sb.write("""\t}\n\n""");
+        return sb.toString();
+      }
+
+      switch (column.type) {
         case "int":
           return getIntMethod();
         case "enum":
@@ -107,18 +117,38 @@ class Convertor {
           return getStringMethod();
         case "Date":
           return getDateMethod();
+        case "BigDecimal":
+          return getBigDecimalMethod();
+        default:
+          return "UNKNOWN";
+      }
+    }
+
+    String convertType(String type) {
+      switch (type) {
+        case "int":
+        case "boolean":
+        case "enum":
+          return "int";
+        case "String":
+          return "String";
+        case "Date":
+          return "Date";
+        case "BigDecimal":
+          return "BigDecimal";
         default:
           return "UNKNOWN";
       }
     }
 
     StringBuffer sb = StringBuffer();
-    sb.write("""public class ${toCapitalize(table.tableName)} {\n""");
-    for(Column column in table.columns) {
-      sb.write("""\tprivate ${convertType(column.type)} ${column.javaName};\n""");
+    sb.write("""public class ${toCapitalize(table.domain)} {\n""");
+    for (Column column in table.columns) {
+      sb.write(
+          """\tprivate ${convertType(column.type)} ${column.javaName};\n""");
     }
     sb.write("\n");
-    for(Column column in table.columns) {
+    for (Column column in table.columns) {
       sb.write(convertMethod(column));
     }
     sb.write("""}""");
@@ -127,17 +157,21 @@ class Convertor {
 
   String mapper() {
     StringBuffer sb = StringBuffer();
-    sb.write("""public void insert${toCapitalize(table.tableName)}(@Param("siteName") String siteName, @Param("value") ${toCapitalize(table.tableName)} ${table.tableName});\n""");
-    sb.write("""public void get${toCapitalize(table.tableName)}(@Param("siteName") String siteName, @Param("id") int id);\n""");
-    sb.write("""public void update${toCapitalize(table.tableName)}(@Param("siteName") String siteName, @Param("value") ${toCapitalize(table.tableName)} ${table.tableName});\n""");
-    sb.write("""public void delete${toCapitalize(table.tableName)}(@Param("siteName") String siteName, @Param("id") int id);""");
+    sb.write(
+        """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
+    sb.write(
+        """public void get${table.domain}(@Param("siteName") String siteName, @Param("id") int id);\n""");
+    sb.write(
+        """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
+    sb.write(
+        """public void delete${table.domain}(@Param("siteName") String siteName, @Param("id") int id);""");
     return sb.toString();
   }
 
   String mybatis() {
     String mybatisUpdate() {
       StringBuffer sb = StringBuffer();
-      sb.write("""<update id="update${toCapitalize(table.tableName)}">\n""");
+      sb.write("""<update id="update${table.domain}">\n""");
       sb.write("""\tupdate \${siteName}.c${table.tableName}\n""");
       sb.write("""\t<set>\n""");
       for (Column column in table.columns) {
@@ -153,7 +187,7 @@ class Convertor {
 
     String mybatisDelete() {
       StringBuffer sb = StringBuffer();
-      sb.write("""<delete id="delete${toCapitalize(table.tableName)}">\n""");
+      sb.write("""<delete id="delete${table.domain}">\n""");
       sb.write("""\tdelete from \${siteName}.c${table.tableName}\n""");
       sb.write("""\twhere\n""");
       sb.write("""\t\tid=\${id}\n""");
@@ -164,7 +198,7 @@ class Convertor {
     String mybatisSelect() {
       StringBuffer sb = StringBuffer();
       sb.write(
-          """<select id="get${toCapitalize(table.tableName)}" resultType="${toCapitalize(table.tableName)}">\n""");
+          """<select id="get${table.domain}" resultType="${toCapitalize(table.tableName)}">\n""");
       sb.write("""\tselect\n""");
       for (Column column in table.columns) {
         sb.write("""\t\t${column.dbName} as "${column.javaName}"\n""");
@@ -180,8 +214,13 @@ class Convertor {
 
     String mybatisInsert() {
       StringBuffer sb = StringBuffer();
-      sb.write(
-          """<insert id=insert${toCapitalize(table.tableName)} useGeneratedKeys="true" keyProperty="value.id">\n""");
+      if (table.hasAI) {
+        sb.write(
+            """<insert id="insert${table.domain}" useGeneratedKeys="true" keyProperty="value.id">\n""");
+      } else {
+        sb.write("""<insert id="insert${table.domain}">\n""");
+      }
+
       sb.write("""\tinsert into \${siteName}.c${table.tableName} (\n""");
       sb.write("""\t\t<trim suffixOverrides=",">\n""");
       for (Column column in table.columns) {
@@ -219,6 +258,7 @@ class Convertor {
         return "-1";
       case "String":
       case "Date":
+      case "BigDecimal":
         return "null";
       default:
         return "UNKNOWN";
@@ -228,57 +268,78 @@ class Convertor {
   String toCapitalize(str) {
     return str[0].toUpperCase() + str.substring(1);
   }
+
+  String toCamel(str) {
+    var result = "";
+    var temp = str.split("_");
+    for (int k = 0; k < temp.length; k++) {
+      if (k == 0) {
+        result = temp[k];
+      } else {
+        result = result + temp[k][0].toUpperCase() + temp[k].substring(1);
+      }
+    }
+    return result;
+  }
 }
 
 class DBTable {
   late String tableName;
+  late String domain;
+  bool hasAI = false;
   List<Column> columns = [];
 
   DBTable(String code) {
-    var string = code.split("\n");
-    // 테이블 명 구하기.
-    tableName = string[0]
-        .substring(string[0].indexOf("`") + 1, string[0].lastIndexOf("`"));
-    if (tableName.contains("`")) {
-      tableName = tableName.substring(tableName.lastIndexOf("`") + 2);
-    }
+    var strings = code.split("\n");
 
-    // 컬럼 구하기.
-    for (int i = 1; i < string.length; i++) {
-      var temp = string[i].trim().split(" ");
-
-      if (temp[0].indexOf("`") == 0) {
-        String name = temp[0]
-            .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
-        String type = temp[1];
-        if (!type.contains("TINYINT")) {
-          type = type.replaceAll(RegExp(r"[^A-Z]"), "");
+    for(String string in strings) {
+      string = string.trim();
+      // 테이블 명 구하기.
+      if (string.startsWith("CREATE")) {
+        tableName = string
+            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        if (tableName.contains("`")) {
+          tableName = tableName.substring(tableName.lastIndexOf("`") + 2);
         }
-        columns.add(Column(name, getType(type)));
-      } else {
-        // 기본키, 외래키 검수
-        if (string[i].trim().indexOf("PRIMARY KEY") == 0) {
-          String pk = string[i].substring(
-              string[i].indexOf("`") + 1, string[i].lastIndexOf("`"));
+        domain = toCapitalize(toCamel(tableName));
+      }
 
-          for (int k = 0; k < columns.length; k++) {
-            if (columns[k].dbName == pk) {
-              columns[k].isPK = true;
-            }
+      // 컬럼 구하기.
+      if (string.startsWith("`")) {
+        if (string.contains("AUTO_INCREMENT")) hasAI = true;
+        var temp = string.split(" ");
+        if (temp[0].indexOf("`") == 0) {
+          String name = temp[0]
+              .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
+          String type = temp[1];
+          if (!type.contains("TINYINT")) {
+            type = type.replaceAll(RegExp(r"[^A-Z]"), "");
           }
+          columns.add(Column(name, getType(type)));
         }
+      }
 
-        if (string[i].trim().indexOf("FOREIGN KEY") == 0) {
-          String fk = string[i].substring(
-              string[i].indexOf("`") + 1, string[i].lastIndexOf("`"));
-
-          for (int k = 0; k < columns.length; k++) {
-            if (columns[k].dbName == fk) {
-              columns[k].isFK = true;
-            }
+      // 기본키, 외래키 검수
+      if (string.indexOf("PRIMARY KEY") == 0) {
+        String pk = string
+            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        for (int k = 0; k < columns.length; k++) {
+          if (columns[k].dbName == pk) {
+            columns[k].isPK = true;
           }
         }
       }
+
+      if (string.indexOf("FOREIGN KEY") == 0) {
+        String fk = string
+            .substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        for (int k = 0; k < columns.length; k++) {
+          if (columns[k].dbName == fk) {
+            columns[k].isFK = true;
+          }
+        }
+      }
+
     }
 
     // 디비 컬럼명 자바 변수명으로 바꾸기
@@ -304,6 +365,19 @@ class DBTable {
     return str[0].toUpperCase() + str.substring(1);
   }
 
+  String toCamel(str) {
+    var result = "";
+    var temp = str.split("_");
+    for (int k = 0; k < temp.length; k++) {
+      if (k == 0) {
+        result = temp[k];
+      } else {
+        result = result + temp[k][0].toUpperCase() + temp[k].substring(1);
+      }
+    }
+    return result;
+  }
+
   String getType(type) {
     switch (type) {
       case "INT":
@@ -311,10 +385,13 @@ class DBTable {
       case "TINYINT":
         return "enum";
       case "TINYINT(1)":
+      case "bool":
         return "boolean";
       case "VARCHAR":
       case "TEXT":
         return "String";
+      case "DECIMAL":
+        return "BigDecimal";
       case "TIMESTAMP":
         return "Date";
       default:

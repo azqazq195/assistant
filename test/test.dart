@@ -42,7 +42,9 @@ ENGINE = InnoDB""";
 }
 
 /*
-CREATE TABLE IF NOT EXISTS `center`.`caction` (
+
+
+CREATE TABLE IF NOT EXISTS `center`.`caction_test` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `session_id` INT NOT NULL,
   `ctype` VARCHAR(45) NULL,
@@ -65,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `center`.`caction` (
   `cprivacy_agreed` TINYINT(1) NULL,
   `cpr_agreed` TINYINT(1) NULL,
   `cdate` TIMESTAMP NULL,
+  `crevenue` DECIMAL NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_caction_csession1_idx` (`session_id` ASC),
   CONSTRAINT `fk_caction_csession1`
