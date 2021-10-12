@@ -44,7 +44,7 @@ packages:
     source: hosted
     version: "0.11.0"
   clipboard:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: clipboard
       url: "https://pub.dartlang.org"
@@ -112,7 +112,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_lints:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_lints
       url: "https://pub.dartlang.org"
@@ -129,7 +129,7 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttertoast:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: fluttertoast
       url: "https://pub.dartlang.org"
