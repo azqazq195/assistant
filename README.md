@@ -29,6 +29,3 @@ https://github.com/azqazq195/sql_to_mapper/releases
 ## 업데이트 예정
 - Service, TestService 생성기
 
-## 버전 기록
-### v0.3
-
