@@ -15,3 +15,5 @@
 
 ### 다운로드
 https://github.com/azqazq195/sql_to_mapper/releases
+
+최신버전 > Asset > Release.zip > sql_to_mapper.exe
