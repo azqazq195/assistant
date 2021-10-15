@@ -28,7 +28,20 @@ class MyApp extends StatelessWidget {
             TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
           }),
           primaryColor: Colors.blue),
-      home: SiteLayout(),
+      home: const SiteLayout(),
     );
   }
 }
+
+// Link(
+//   uri: Uri.parse(
+//       'https://pub.dev/documentation/url_launcher/latest/link/link-library.html'),
+//   target: LinkTarget.blank,
+//   builder: (ctx, openLink) {
+//     return TextButton.icon(
+//       onPressed: openLink,
+//       label: Text('Link Widget documentation'),
+//       icon: Icon(Icons.read_more),
+//     );
+//   },
+// ),
