@@ -8,6 +8,10 @@ import 'package:yaml/yaml.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sql_to_mapper/api/client/rest_client.dart';
+import 'package:dio/dio.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SiteLayout extends StatefulWidget {
   const SiteLayout({Key? key}) : super(key: key);
@@ -19,24 +23,31 @@ class SiteLayout extends StatefulWidget {
 class _SiteLayoutState extends State<SiteLayout> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  var thisVersion = "";
-  var lastVersion = "0.0.5";
+  final client = RestClient(Dio());
+  late Release _latestRelease;
 
-  Future<String> getVersion() async {
+  Future<String> getCurrentVersion() async {
     final configFile = File('pubspec.yaml');
     final yamlString = await configFile.readAsString();
     final dynamic yamlMap = loadYaml(yamlString);
     return yamlMap['version'];
   }
 
-  Future<void> _checkVersion() async {
-    final version = await getVersion();
+  Future<String> getLatestVersion() async {
+    final release = await client.getReleaseLatest();
     setState(() {
-      thisVersion = version;
-      if(thisVersion != lastVersion) {
-        _showAlert(context, lastVersion);
-      }
+      _latestRelease = release;
     });
+
+    return release.tagName.replaceAll("v", "");
+  }
+
+  Future<void> _checkVersion() async {
+    final currentVersion = await getCurrentVersion();
+    final latestVersion = await getLatestVersion();
+    if (currentVersion != latestVersion) {
+      _showUpdateAlert(context, _latestRelease);
+    }
   }
 
   Future<void> _checkFirstRun() async {
@@ -51,44 +62,43 @@ class _SiteLayoutState extends State<SiteLayout> {
     }
   }
 
+  Future<void> _openDownloadWebUrl(String version) async {
+    final url = _latestRelease.assets[0]["browser_download_url"];
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
-  initState()  {
+  initState() {
     _checkVersion();
     _checkFirstRun();
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey),
-      drawer: const Drawer(child: SideMenu()),
-      body: const ResponsiveWidget(
-        largeScreen: LargeScreen(),
-        smallScreen: SmallScreen(),
-      ),
-    );
-  }
-
-  void _showAlert(BuildContext context, String version) {
-    final DateTime now = DateTime.parse("1969-07-20 20:18:04Z");
+  void _showUpdateAlert(BuildContext context, Release release) {
+    final DateTime now = DateTime.parse(release.createdAt);
     final DateFormat formatter = DateFormat('MMMM dd, yyyy');
     final String formatted = formatter.format(now);
-
     showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("업데이트 알림"),
+          title: Text("${release.tagName} 업데이트 알림"),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('v$version'),
                 Text(formatted),
-                const Text('Release Note.'),
-                const Text('리스트'),
+                const Text(""),
+                Text(release.body),
               ],
             ),
           ),
@@ -102,12 +112,25 @@ class _SiteLayoutState extends State<SiteLayout> {
             TextButton(
               child: const Text('최신 버전 다운로드'),
               onPressed: () {
-                Navigator.of(context).pop();
+                _openDownloadWebUrl(_latestRelease.tagName);
               },
             ),
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: topNavigationBar(context, scaffoldKey),
+      drawer: const Drawer(child: SideMenu()),
+      body: const ResponsiveWidget(
+        largeScreen: LargeScreen(),
+        smallScreen: SmallScreen(),
+      ),
     );
   }
 }
