@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sql_to_mapper/api/client/rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SiteLayout extends StatefulWidget {
   const SiteLayout({Key? key}) : super(key: key);
@@ -27,10 +27,8 @@ class _SiteLayoutState extends State<SiteLayout> {
   late Release _latestRelease;
 
   Future<String> getCurrentVersion() async {
-    final configFile = File('pubspec.yaml');
-    final yamlString = await configFile.readAsString();
-    final dynamic yamlMap = loadYaml(yamlString);
-    return yamlMap['version'];
+    final info = await PackageInfo.fromPlatform();
+    return info.version;
   }
 
   Future<String> getLatestVersion() async {
@@ -38,7 +36,6 @@ class _SiteLayoutState extends State<SiteLayout> {
     setState(() {
       _latestRelease = release;
     });
-
     return release.tagName.replaceAll("v", "");
   }
 
