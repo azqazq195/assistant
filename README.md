@@ -16,8 +16,6 @@
 ### 다운로드
 https://github.com/azqazq195/assistant/releases
 
-최신버전 > Assets > Release.zip > assistant.exe
-
 ---
 
 ## 오류 확인
