@@ -4,7 +4,7 @@ import 'package:dio/dio.dart' hide Headers;
 
 part 'rest_client.g.dart';
 
-@RestApi(baseUrl: "https://api.github.com/repos/azqazq195/sql_to_mapper/releases")
+@RestApi(baseUrl: "https://api.github.com/repos/azqazq195/assistant/releases")
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 

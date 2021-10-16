@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/constants/style.dart';
-import 'package:sql_to_mapper/helpers/responsiveness.dart';
-import 'package:sql_to_mapper/widgets/custom_text.dart';
+import 'package:assistant/constants/style.dart';
+import 'package:assistant/helpers/responsiveness.dart';
+import 'package:assistant/widgets/custom_text.dart';
 
 AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
     AppBar(

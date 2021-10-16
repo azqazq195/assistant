@@ -1,4 +1,4 @@
-import 'package:sql_to_mapper/helpers/convertor.dart';
+import 'package:assistant/helpers/convertor.dart';
 
 void main() {
   String sql = """CREATE TABLE IF NOT EXISTS `center`.`caction` (

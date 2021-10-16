@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/helpers/responsiveness.dart';
-import 'package:sql_to_mapper/widgets/horizontal_menu_item.dart';
-import 'package:sql_to_mapper/widgets/vertical_menu_item.dart';
+import 'package:assistant/helpers/responsiveness.dart';
+import 'package:assistant/widgets/horizontal_menu_item.dart';
+import 'package:assistant/widgets/vertical_menu_item.dart';
 
 class SideMenuItem extends StatelessWidget {
   final String itemName;

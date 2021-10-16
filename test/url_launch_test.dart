@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 Future<void> main() async {
 
   Future<void> _launchInBrowser(String version) async {
-    final url = "https://github.com/azqazq195/sql_to_mapper/releases/download/$version/Release.zip";
+    final url = "https://github.com/azqazq195/assistant/releases/download/$version/Release.zip";
     if (await canLaunch(url)) {
       await launch(
         url,

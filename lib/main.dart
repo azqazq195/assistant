@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/controllers/menu_controller.dart';
-import 'package:sql_to_mapper/controllers/navigation_controller.dart';
-import 'package:sql_to_mapper/layout.dart';
+import 'package:assistant/controllers/menu_controller.dart';
+import 'package:assistant/controllers/navigation_controller.dart';
+import 'package:assistant/layout.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 

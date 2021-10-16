@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/constants/controllers.dart';
-import 'package:sql_to_mapper/constants/style.dart';
-import 'package:sql_to_mapper/widgets/custom_text.dart';
+import 'package:assistant/constants/controllers.dart';
+import 'package:assistant/constants/style.dart';
+import 'package:assistant/widgets/custom_text.dart';
 import 'package:get/get.dart';
 
 class VerticalMenuItem extends StatelessWidget {

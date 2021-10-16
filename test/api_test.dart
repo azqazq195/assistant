@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sql_to_mapper/api/client/rest_client.dart';
+import 'package:assistant/api/client/rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,8 +24,8 @@ Future<void> main() async {
   }
 
   Future download2(Dio dio) async {
-    // const url = "https://github.com/azqazq195/sql_to_mapper/releases/download/v0.3/Release.zip";
-    const url = "https://github.com/azqazq195/sql_to_mapper/releases/download/v0.4/default.txt";
+    // const url = "https://github.com/azqazq195/assistant/releases/download/v0.3/Release.zip";
+    const url = "https://github.com/azqazq195/assistant/releases/download/v0.4/default.txt";
     final savePath = await getFilePath();
 
     try {

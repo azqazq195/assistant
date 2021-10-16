@@ -1,4 +1,4 @@
-package com.example.sql_to_mapper
+package com.example.assistant
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,9 +14,9 @@
 - TIMESTAMP(Date)
 
 ### 다운로드
-https://github.com/azqazq195/sql_to_mapper/releases
+https://github.com/azqazq195/assistant/releases
 
-최신버전 > Assets > Release.zip > sql_to_mapper.exe
+최신버전 > Assets > Release.zip > assistant.exe
 
 ---
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(sql_to_mapper LANGUAGES CXX)
+project(assistant LANGUAGES CXX)
 
-set(BINARY_NAME "sql_to_mapper")
+set(BINARY_NAME "assistant")
 
 cmake_policy(SET CMP0063 NEW)
 

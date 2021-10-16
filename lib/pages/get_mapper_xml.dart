@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/constants/controllers.dart';
-import 'package:sql_to_mapper/routing/routes.dart';
-import 'package:sql_to_mapper/widgets/custom_text.dart';
+import 'package:assistant/constants/controllers.dart';
+import 'package:assistant/routing/routes.dart';
+import 'package:assistant/widgets/custom_text.dart';
 
 class GetMapperXmlPage extends StatefulWidget {
   const GetMapperXmlPage({Key? key}) : super(key: key);

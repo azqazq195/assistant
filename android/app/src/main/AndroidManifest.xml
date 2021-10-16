@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sql_to_mapper">
+    package="com.example.assistant">
    <application
-        android:label="sql_to_mapper"
+        android:label="assistant"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

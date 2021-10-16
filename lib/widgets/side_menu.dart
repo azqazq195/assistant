@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sql_to_mapper/constants/controllers.dart';
-import 'package:sql_to_mapper/constants/style.dart';
-import 'package:sql_to_mapper/helpers/responsiveness.dart';
-import 'package:sql_to_mapper/routing/routes.dart';
-import 'package:sql_to_mapper/widgets/custom_text.dart';
-import 'package:sql_to_mapper/widgets/side_menu_item.dart';
+import 'package:assistant/constants/controllers.dart';
+import 'package:assistant/constants/style.dart';
+import 'package:assistant/helpers/responsiveness.dart';
+import 'package:assistant/routing/routes.dart';
+import 'package:assistant/widgets/custom_text.dart';
+import 'package:assistant/widgets/side_menu_item.dart';
 import 'package:get/get.dart';
 
 class SideMenu extends StatelessWidget {

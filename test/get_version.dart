@@ -6,7 +6,7 @@ import 'package:yaml/yaml.dart';
 Future<void> main() async {
   const version = "v0.3";
   const _url =
-      "https://github.com/azqazq195/sql_to_mapper/releases/download/$version/Release.zip";
+      "https://github.com/azqazq195/assistant/releases/download/$version/Release.zip";
 
   Future<String> getVersion() async {
     final configFile = File('pubspec.yaml');

@@ -26,7 +26,7 @@ Map<String, dynamic> _$ReleaseToJson(Release instance) => <String, dynamic>{
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'https://api.github.com/repos/azqazq195/sql_to_mapper/releases';
+    baseUrl ??= 'https://api.github.com/repos/azqazq195/assistant/releases';
   }
 
   final Dio _dio;

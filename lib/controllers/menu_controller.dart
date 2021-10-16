@@ -1,5 +1,5 @@
-import 'package:sql_to_mapper/constants/style.dart';
-import 'package:sql_to_mapper/routing/routes.dart';
+import 'package:assistant/constants/style.dart';
+import 'package:assistant/routing/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

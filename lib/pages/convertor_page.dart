@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sql_to_mapper/helpers/convertor.dart' as helper;
-import 'package:sql_to_mapper/helpers/toast_message.dart';
+import 'package:assistant/helpers/convertor.dart' as helper;
+import 'package:assistant/helpers/toast_message.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ConvertorPage extends StatefulWidget {

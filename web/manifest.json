@@ -1,6 +1,6 @@
 {
-    "name": "sql_to_mapper",
-    "short_name": "sql_to_mapper",
+    "name": "assistant",
+    "short_name": "assistant",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
