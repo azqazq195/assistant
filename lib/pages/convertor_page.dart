@@ -33,6 +33,26 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   static String mapper = "mapper";
   static String mybatis = "mybatis";
   static String log = "log";
+  late helper.DBTable table;
+  late helper.Convertor convertor;
+  final List<DataRow> _rowList = [];
+  static const _widgetName = [
+    Tab(
+      text: "Sql",
+    ),
+    Tab(
+      text: "Domain",
+    ),
+    Tab(
+      text: "Mapper",
+    ),
+    Tab(
+      text: "Mybatis",
+    ),
+    Tab(
+      text: "Temporary Log",
+    ),
+  ];
 
   Widget _sendBugReportMail() {
     return OutlinedButton(
@@ -76,27 +96,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       ),
     );
   }
-
-  static const _widgetName = [
-    Tab(
-      text: "Sql",
-    ),
-    Tab(
-      text: "Domain",
-    ),
-    Tab(
-      text: "Mapper",
-    ),
-    Tab(
-      text: "Mybatis",
-    ),
-    Tab(
-      text: "Temporary Log",
-    ),
-  ];
-
-  late helper.DBTable table;
-  late helper.Convertor convertor;
 
   Widget sqlPage() {
     return Scaffold(
@@ -154,6 +153,59 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
+  DataRow _getDataRow(helper.Column column) {
+    return DataRow(
+      cells: <DataCell>[
+        DataCell(Text(column.dbName)),
+        DataCell(Text(column.javaName ?? "")),
+        DataCell(Text(column.dbType)),
+        DataCell(Text(column.javaType)),
+        DataCell(Text(column.isAI.toString())),
+        DataCell(Text(column.isNullable.toString())),
+        DataCell(Text(column.isPK.toString())),
+        DataCell(Text(column.isFK.toString())),
+      ],
+    );
+  }
+
+  void _addRow() {
+    for (helper.Column column in table.columns) {
+      _rowList.add(_getDataRow(column));
+    }
+  }
+
+  DataTable _dataTable() {
+    return DataTable(
+      columns: const [
+        DataColumn(
+          label: Text("dbName"),
+        ),
+        DataColumn(
+          label: Text("javaName"),
+        ),
+        DataColumn(
+          label: Text("dbType"),
+        ),
+        DataColumn(
+          label: Text("javaType"),
+        ),
+        DataColumn(
+          label: Text("isAI"),
+        ),
+        DataColumn(
+          label: Text("isNullable"),
+        ),
+        DataColumn(
+          label: Text("isPK"),
+        ),
+        DataColumn(
+          label: Text("isFK"),
+        ),
+      ],
+      rows: _rowList,
+    );
+  }
+
   Widget textPage(String text) {
     return Scaffold(
       body: SizedBox.expand(
@@ -196,64 +248,9 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
-  final List<DataRow> _rowList = [];
-
-  DataRow _getDataRow(helper.Column column) {
-    return DataRow(
-      cells: <DataCell>[
-        DataCell(Text(column.dbName)),
-        DataCell(Text(column.javaName ?? "")),
-        DataCell(Text(column.dbType)),
-        DataCell(Text(column.javaType)),
-        DataCell(Text(column.isAI.toString())),
-        DataCell(Text(column.isNullable.toString())),
-        DataCell(Text(column.isPK.toString())),
-        DataCell(Text(column.isFK.toString())),
-      ],
-    );
-  }
-
-  _addRow() {
-    for (helper.Column column in table.columns) {
-      _rowList.add(_getDataRow(column));
-    }
-  }
-
-  DataTable dataTable() {
-    return DataTable(
-      columns: const [
-        DataColumn(
-          label: Text("dbName"),
-        ),
-        DataColumn(
-          label: Text("javaName"),
-        ),
-        DataColumn(
-          label: Text("dbType"),
-        ),
-        DataColumn(
-          label: Text("javaType"),
-        ),
-        DataColumn(
-          label: Text("isAI"),
-        ),
-        DataColumn(
-          label: Text("isNullable"),
-        ),
-        DataColumn(
-          label: Text("isPK"),
-        ),
-        DataColumn(
-          label: Text("isFK"),
-        ),
-      ],
-      rows: _rowList,
-    );
-  }
-
   Widget logPage() {
     return Scaffold(
-      body: dataTable()
+      body: _dataTable()
     );
   }
 

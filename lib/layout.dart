@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:assistant/api/client/rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class SiteLayout extends StatefulWidget {
   const SiteLayout({Key? key}) : super(key: key);
@@ -25,8 +25,7 @@ class _SiteLayoutState extends State<SiteLayout> {
   late Release _latestRelease;
 
   Future<String> getCurrentVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    return info.version;
+    return await rootBundle.loadString('assets/config/version.txt');
   }
 
   Future<String> getLatestVersion() async {
@@ -40,6 +39,8 @@ class _SiteLayoutState extends State<SiteLayout> {
   Future<void> _checkVersion() async {
     final currentVersion = await getCurrentVersion();
     final latestVersion = await getLatestVersion();
+    print(currentVersion);
+    print(latestVersion);
     if (currentVersion != latestVersion) {
       _showUpdateAlert(context, _latestRelease);
     }
