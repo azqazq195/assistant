@@ -23,6 +23,7 @@ class _SiteLayoutState extends State<SiteLayout> {
 
   final client = RestClient(Dio());
   late Release _latestRelease;
+  var titleDisplayVersion = "";
 
   Future<String> getCurrentVersion() async {
     return await rootBundle.loadString('assets/config/version.txt');
@@ -39,11 +40,12 @@ class _SiteLayoutState extends State<SiteLayout> {
   Future<void> _checkVersion() async {
     final currentVersion = await getCurrentVersion();
     final latestVersion = await getLatestVersion();
-    print(currentVersion);
-    print(latestVersion);
     if (currentVersion != latestVersion) {
       _showUpdateAlert(context, _latestRelease);
     }
+    setState(() {
+      titleDisplayVersion = "v" + currentVersion;
+    });
   }
 
   Future<void> _checkFirstRun() async {
@@ -121,7 +123,7 @@ class _SiteLayoutState extends State<SiteLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey),
+      appBar: topNavigationBar(context, scaffoldKey, titleDisplayVersion),
       drawer: const Drawer(child: SideMenu()),
       body: const ResponsiveWidget(
         largeScreen: LargeScreen(),
