@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:assistant/helpers/convertor.dart' as helper;
 import 'package:assistant/helpers/toast_message.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:assistant/constants/config.dart';
 
 class ConvertorPage extends StatefulWidget {
   const ConvertorPage({Key? key}) : super(key: key);
@@ -65,11 +66,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         }
 
         StringBuffer sb = StringBuffer();
-        sb.write("<버그 내용>");
+        sb.write("<버그 내용> 버전: $version");
         sb.write("\n\n\n\n");
         sb.write("------------------");
-        sb.write("\n\n\nlog\n\n");
-        sb.write(log);
+        // TODO 로그 메일에 안 담김.
+        // sb.write("\n\n\nlog\n\n");
+        // sb.write(log);
         sb.write("\n\n\nsql\n\n");
         sb.write(sql);
         sb.write("\n\n\ndomain\n\n");
@@ -169,6 +171,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   }
 
   void _addRow() {
+    _rowList.clear();
     for (helper.Column column in table.columns) {
       _rowList.add(_getDataRow(column));
     }

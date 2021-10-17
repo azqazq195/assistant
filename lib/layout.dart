@@ -10,6 +10,7 @@ import 'package:assistant/api/client/rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:assistant/constants/config.dart' as config;
 
 class SiteLayout extends StatefulWidget {
   const SiteLayout({Key? key}) : super(key: key);
@@ -45,6 +46,7 @@ class _SiteLayoutState extends State<SiteLayout> {
     }
     setState(() {
       titleDisplayVersion = "v" + currentVersion;
+      config.version = currentVersion;
     });
   }
 

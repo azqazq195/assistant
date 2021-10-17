@@ -22,7 +22,7 @@ class Convertor {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
         sb.write(
-            """\t\treturn ${column.javaName} == null ? -1 : ${column.javaName}.ordinal();\n""");
+            """\t\treturn ${column.javaName} == null ? -1 : Enum.ordinal();\n""");
         sb.write("""\t}\n\n""");
 
         sb.write("""\tpublic Enum ${column.javaName}() {\n""");
@@ -96,12 +96,24 @@ class Convertor {
         StringBuffer sb = StringBuffer();
         sb.write(
             """\tpublic BigDecimal get${toCapitalize(column.javaName)}() {\n""");
-        sb.write("""\t\t//TODO 작성 전\n""");
+        sb.write("""\t\treturn ${column.javaName}\n""");
         sb.write("""\t}\n\n""");
 
         sb.write(
-            """\tpublic void set${toCapitalize(column.javaName)}(String ${column.javaName}) {\n""");
-        sb.write("""\t\t//TODO 작성 전\n""");
+            """\tpublic void set${toCapitalize(column.javaName)}(BigDecimal ${column.javaName}) {\n""");
+        sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
+        sb.write("""\t}\n\n""");
+
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(long ${column.javaName}) {\n""");
+        sb.write(
+            """\t\tthis.${column.javaName} = BigDecimal.valueOf(${column.javaName});\n""");
+        sb.write("""\t}\n\n""");
+
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(double ${column.javaName}) {\n""");
+        sb.write(
+            """\t\tthis.${column.javaName} = BigDecimal.valueOf(${column.javaName});\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
       }
@@ -124,7 +136,7 @@ class Convertor {
       }
     }
 
-    String convertType(String type) {
+    String getDomainType(String type) {
       switch (type) {
         case "int":
         case "boolean":
@@ -145,9 +157,15 @@ class Convertor {
     sb.write("""public class ${toCapitalize(table.domain)} {\n""");
     for (Column column in table.columns) {
       sb.write(
-          """\tprivate ${convertType(column.javaType)} ${column.javaName};\n""");
+          """\tprivate ${getDomainType(column.javaType)} ${column.javaName}""");
+      if (getNullType(column.javaType) != "null") {
+        sb.write(" = ${getNullType(column.javaType)};\n");
+      } else {
+        sb.write(";\n");
+      }
     }
     sb.write("\n");
+
     for (Column column in table.columns) {
       sb.write(convertMethod(column));
     }
@@ -156,98 +174,232 @@ class Convertor {
   }
 
   String mapper() {
-    StringBuffer sb = StringBuffer();
-    sb.write(
-        """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
-    sb.write(
-        """public void get${table.domain}(@Param("siteName") String siteName, @Param("id") int id);\n""");
-    sb.write(
-        """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
-    sb.write(
-        """public void delete${table.domain}(@Param("siteName") String siteName, @Param("id") int id);""");
-    return sb.toString();
+    String hasId() {
+      StringBuffer sb = StringBuffer();
+      sb.write(
+          """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
+      sb.write(
+          """public void get${table.domain}(@Param("siteName") String siteName, @Param("id") int id);\n""");
+      sb.write(
+          """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
+      sb.write(
+          """public void delete${table.domain}(@Param("siteName") String siteName, @Param("id") int id);""");
+      return sb.toString();
+    }
+
+    String hasNotId() {
+      StringBuffer sb = StringBuffer();
+      sb.write(
+          """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
+      sb.write(
+          """public void get${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
+      sb.write(
+          """public void update${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
+      sb.write(
+          """public void delete${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);""");
+      return sb.toString();
+    }
+
+    if (table.hasAI && table.hasId) {
+      return hasId();
+    } else {
+      return hasNotId();
+    }
+
   }
 
   String mybatis() {
-    String mybatisUpdate() {
-      StringBuffer sb = StringBuffer();
-      sb.write("""<update id="update${table.domain}">\n""");
-      sb.write("""\tupdate \${siteName}.c${table.tableName}\n""");
-      sb.write("""\t<set>\n""");
-      for (Column column in table.columns) {
-        if (column.dbName == "id") continue;
-        sb.write(
-            """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
-      }
-      sb.write("""\t</set>\n""");
-      sb.write("""\twhere id = #{value.id}\n""");
-      sb.write("""</update>""");
-      return sb.toString();
-    }
-
-    String mybatisDelete() {
-      StringBuffer sb = StringBuffer();
-      sb.write("""<delete id="delete${table.domain}">\n""");
-      sb.write("""\tdelete from \${siteName}.c${table.tableName}\n""");
-      sb.write("""\twhere\n""");
-      sb.write("""\t\tid=\${id}\n""");
-      sb.write("""</delete>""");
-      return sb.toString();
-    }
-
-    String mybatisSelect() {
-      StringBuffer sb = StringBuffer();
-      sb.write(
-          """<select id="get${table.domain}" resultType="${toCapitalize(table.tableName)}">\n""");
-      sb.write("""\tselect\n""");
-      for (Column column in table.columns) {
-        sb.write("""\t\t${column.dbName} as "${column.javaName}"\n""");
-      }
-      sb.write("""\tfrom\n""");
-      sb.write("""\t\t\${siteName}.c${table.tableName}\n""");
-      sb.write("""\twhere\n""");
-      sb.write("""\t\tid = \${id}\n""");
-      sb.write("""</select>""");
-
-      return sb.toString();
-    }
-
-    String mybatisInsert() {
-      StringBuffer sb = StringBuffer();
-      if (table.hasAI) {
+    String hasId() {
+      String mybatisInsert() {
+        StringBuffer sb = StringBuffer();
         sb.write(
             """<insert id="insert${table.domain}" useGeneratedKeys="true" keyProperty="value.id">\n""");
-      } else {
-        sb.write("""<insert id="insert${table.domain}">\n""");
+        sb.write("""\tinsert into \${siteName}.c${table.tableName} (\n""");
+        sb.write("""\t\t<trim suffixOverrides=",">\n""");
+        for (Column column in table.columns) {
+          if (column.javaName == "id") continue;
+          if(column.isFK) {
+            sb.write(
+                """\t\t\t${column.dbName},\n""");
+          } else {
+            sb.write(
+                """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName},</if>\n""");
+          }
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t) values (\n""");
+        sb.write("""\t\t<trim suffixOverrides=",">\n""");
+        for (Column column in table.columns) {
+          if (column.javaName == "id") continue;
+          if(column.isFK) {
+            sb.write(
+                """\t\t\t#{value.${column.javaName}},\n""");
+          } else {
+            sb.write(
+                """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">#{value.${column.javaName}},</if>\n""");
+          }
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t)\n""");
+        sb.write("""</insert>""");
+
+        return sb.toString();
       }
 
-      sb.write("""\tinsert into \${siteName}.c${table.tableName} (\n""");
-      sb.write("""\t\t<trim suffixOverrides=",">\n""");
-      for (Column column in table.columns) {
+      String mybatisSelect() {
+        StringBuffer sb = StringBuffer();
         sb.write(
-            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName},</if>\n""");
-      }
-      sb.write("""\t\t</trim>\n""");
-      sb.write("""\t) values (\n""");
-      sb.write("""\t\t<trim suffixOverrides=",">\n""");
-      for (Column column in table.columns) {
-        sb.write(
-            """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">#{value.${column.javaName}},</if>\n""");
-      }
-      sb.write("""\t\t</trim>\n""");
-      sb.write("""\t)\n""");
-      sb.write("""</insert>""");
+            """<select id="get${table.domain}" resultType="${table.domain}">\n""");
+        sb.write("""\tselect\n""");
+        for (Column column in table.columns) {
+          sb.write('\t\t${column.dbName} as "${column.javaName}"');
+          if(column != table.columns.last) {
+            sb.write(",");
+          }
+          sb.write("\n");
+        }
+        sb.write("""\tfrom\n""");
+        sb.write("""\t\t\${siteName}.c${table.tableName}\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\tid = \${id}\n""");
+        sb.write("""</select>""");
 
-      return sb.toString();
+        return sb.toString();
+      }
+
+      String mybatisUpdate() {
+        StringBuffer sb = StringBuffer();
+        sb.write("""<update id="update${table.domain}">\n""");
+        sb.write("""\tupdate \${siteName}.c${table.tableName}\n""");
+        sb.write("""\t<set>\n""");
+        for (Column column in table.columns) {
+          if (column.dbName == "id") continue;
+          sb.write(
+              """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t</set>\n""");
+        sb.write("""\twhere id = #{value.id}\n""");
+        sb.write("""</update>""");
+        return sb.toString();
+      }
+
+      String mybatisDelete() {
+        StringBuffer sb = StringBuffer();
+        sb.write("""<delete id="delete${table.domain}">\n""");
+        sb.write("""\tdelete from \${siteName}.c${table.tableName}\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\tid=\${id}\n""");
+        sb.write("""</delete>""");
+        return sb.toString();
+      }
+
+      return mybatisInsert() +
+          "\n\n" +
+          mybatisSelect() +
+          "\n\n" +
+          mybatisUpdate() +
+          "\n\n" +
+          mybatisDelete();
     }
 
-    return mybatisInsert() +
-        "\n\n" +
-        mybatisSelect() +
-        "\n\n" +
-        mybatisUpdate() +
-        "\n\n" +
-        mybatisDelete();
+    String hasNotId() {
+      String mybatisInsert() {
+        StringBuffer sb = StringBuffer();
+        if (table.hasAI) {
+          sb.write("""<insert id="insert${table.domain}">\n""");
+        }
+        sb.write("""\tinsert into \${siteName}.c${table.tableName} (\n""");
+        sb.write("""\t\t<trim suffixOverrides=",">\n""");
+        for (Column column in table.columns) {
+          sb.write(
+              """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName},</if>\n""");
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t) values (\n""");
+        sb.write("""\t\t<trim suffixOverrides=",">\n""");
+        for (Column column in table.columns) {
+          sb.write(
+              """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">#{value.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t)\n""");
+        sb.write("""</insert>""");
+        return sb.toString();
+      }
+
+      String mybatisSelect() {
+        StringBuffer sb = StringBuffer();
+        sb.write(
+            """<select id="get${table.domain}" resultType="${table.domain}">\n""");
+        sb.write("""\tselect\n""");
+        for (Column column in table.columns) {
+          sb.write("""\t\t${column.dbName} as "${column.javaName}"\n""");
+        }
+        sb.write("""\tfrom\n""");
+        sb.write("""\t\t\${siteName}.c${table.tableName}\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        for (Column column in table.columns) {
+          sb.write(
+              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""</select>""");
+
+        return sb.toString();
+      }
+
+      String mybatisUpdate() {
+        StringBuffer sb = StringBuffer();
+        sb.write("""<update id="update${table.domain}">\n""");
+        sb.write("""\tupdate \${siteName}.c${table.tableName}\n""");
+        sb.write("""\t<set>\n""");
+        for (Column column in table.columns) {
+          if (column.dbName == "id") continue;
+          sb.write(
+              """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t</set>\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        for (Column column in table.columns) {
+          sb.write(
+              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""</update>""");
+        return sb.toString();
+      }
+
+      String mybatisDelete() {
+        StringBuffer sb = StringBuffer();
+        sb.write("""<delete id="delete${table.domain}">\n""");
+        sb.write("""\tdelete from \${siteName}.c${table.tableName}\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        for (Column column in table.columns) {
+          sb.write(
+              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+        }
+        sb.write("""\t\t</trim>\n""");
+        sb.write("""</delete>""");
+        return sb.toString();
+      }
+
+      return mybatisInsert() +
+          "\n\n" +
+          mybatisSelect() +
+          "\n\n" +
+          mybatisUpdate() +
+          "\n\n" +
+          mybatisDelete();
+    }
+
+    if (table.hasAI && table.hasId) {
+      return hasId();
+    } else {
+      return hasNotId();
+    }
   }
 
   String getNullType(String type) {
@@ -259,9 +411,8 @@ class Convertor {
       case "String":
       case "Date":
       case "BigDecimal":
-        return "null";
       default:
-        return "UNKNOWN";
+        return "null";
     }
   }
 
@@ -287,6 +438,7 @@ class DBTable {
   late String tableName;
   late String domain;
   bool hasAI = false;
+  bool hasId = false;
   List<Column> columns = [];
 
   DBTable(String code) {
@@ -366,6 +518,13 @@ class DBTable {
         columns[i].javaName = columns[i].javaName!.substring(1);
       }
     }
+
+    for (Column column in columns) {
+      if (column.dbName == "id") {
+        hasId = true;
+        break;
+      }
+    }
   }
 
   String toCapitalize(str) {
@@ -409,7 +568,7 @@ class DBTable {
   @override
   String toString() {
     String getSpace(String? str) {
-      if(str == null) return "\t\t\t\t\t";
+      if (str == null) return "\t\t\t\t\t";
       if (str.length >= 16) {
         return str + "\t";
       }
