@@ -212,7 +212,7 @@ class Convertor {
       sb.write(
           """public void get${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
       sb.write(
-          """public void update${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
+          """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
       sb.write(
           """public void delete${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);""");
       return sb.toString();
