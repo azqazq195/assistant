@@ -9,6 +9,7 @@
 - INT(int)
 - TINYINT(enum)
 - TINYINT(1)(boolean)
+- DOUBLE(double)
 - VARCHAR(String)
 - TEXT(String)
 - TIMESTAMP(Date)
@@ -17,13 +18,3 @@
 https://github.com/azqazq195/assistant/releases
 
 ---
-
-## 오류 확인
-- mybatis > resultType 카멜 형식 표기
-- mybatis > insert 문에서 value.id 값 넣지 않기
-- mybatis > id 혹은 AI 값이 없을 때의 select, update, delete에서 id로 찾지 않기
-- domain > 변수 별 초기값 설정
-
-## 업데이트 예정
-- Service, TestService 생성기
-
