@@ -53,10 +53,11 @@ class _SiteLayoutState extends State<SiteLayout> {
   Future<void> _checkFirstRun() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstRun = prefs.getBool('isFirstRun') ?? true;
-
     if (isFirstRun) {
-      prefs.setBool('isFirstRun', false);
       print("first run");
+      prefs.setBool('isFirstRun', false);
+      await getLatestVersion();
+      _showFirstAlert(context, _latestRelease);
     } else {
       print("second run");
     }
@@ -81,6 +82,38 @@ class _SiteLayoutState extends State<SiteLayout> {
     _checkVersion();
     _checkFirstRun();
     super.initState();
+  }
+
+  void _showFirstAlert(BuildContext context, Release release) {
+    final DateTime now = DateTime.parse(release.createdAt);
+    final DateFormat formatter = DateFormat('MMMM dd, yyyy');
+    final String formatted = formatter.format(now);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("${release.tagName} 업데이트 알림"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(formatted),
+                const Text(""),
+                Text(release.body),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showUpdateAlert(BuildContext context, Release release) {
@@ -112,6 +145,7 @@ class _SiteLayoutState extends State<SiteLayout> {
             TextButton(
               child: const Text('최신 버전 다운로드'),
               onPressed: () {
+                Navigator.of(context).pop();
                 _openDownloadWebUrl(_latestRelease.tagName);
               },
             ),

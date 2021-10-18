@@ -18,11 +18,25 @@ class Convertor {
         return sb.toString();
       }
 
+      String getDoubleMethod() {
+        StringBuffer sb = StringBuffer();
+        sb.write(
+            """\tpublic double get${toCapitalize(column.javaName)}() {\n""");
+        sb.write("""\t\treturn ${column.javaName};\n""");
+        sb.write("""\t}\n\n""");
+
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(double ${column.javaName}) {\n""");
+        sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
+        sb.write("""\t}\n\n""");
+        return sb.toString();
+      }
+
       String getEnumMethod() {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
         sb.write(
-            """\t\treturn ${column.javaName} == null ? -1 : Enum.ordinal();\n""");
+            """\t\treturn ${column.javaName} == null ? -1 : enum.ordinal();\n""");
         sb.write("""\t}\n\n""");
 
         sb.write("""\tpublic Enum ${column.javaName}() {\n""");
@@ -121,6 +135,8 @@ class Convertor {
       switch (column.javaType) {
         case "int":
           return getIntMethod();
+        case "double":
+          return getDoubleMethod();
         case "enum":
           return getEnumMethod();
         case "boolean":
@@ -142,6 +158,8 @@ class Convertor {
         case "boolean":
         case "enum":
           return "int";
+        case "double":
+          return "double";
         case "String":
           return "String";
         case "Date":
@@ -205,11 +223,10 @@ class Convertor {
     } else {
       return hasNotId();
     }
-
   }
 
   String mybatis() {
-    String hasId() {
+    String hasAI() {
       String mybatisInsert() {
         StringBuffer sb = StringBuffer();
         sb.write(
@@ -218,9 +235,8 @@ class Convertor {
         sb.write("""\t\t<trim suffixOverrides=",">\n""");
         for (Column column in table.columns) {
           if (column.javaName == "id") continue;
-          if(column.isFK) {
-            sb.write(
-                """\t\t\t${column.dbName},\n""");
+          if (column.isFK) {
+            sb.write("""\t\t\t${column.dbName},\n""");
           } else {
             sb.write(
                 """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName},</if>\n""");
@@ -231,9 +247,8 @@ class Convertor {
         sb.write("""\t\t<trim suffixOverrides=",">\n""");
         for (Column column in table.columns) {
           if (column.javaName == "id") continue;
-          if(column.isFK) {
-            sb.write(
-                """\t\t\t#{value.${column.javaName}},\n""");
+          if (column.isFK) {
+            sb.write("""\t\t\t#{value.${column.javaName}},\n""");
           } else {
             sb.write(
                 """\t\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">#{value.${column.javaName}},</if>\n""");
@@ -253,7 +268,7 @@ class Convertor {
         sb.write("""\tselect\n""");
         for (Column column in table.columns) {
           sb.write('\t\t${column.dbName} as "${column.javaName}"');
-          if(column != table.columns.last) {
+          if (column != table.columns.last) {
             sb.write(",");
           }
           sb.write("\n");
@@ -278,7 +293,8 @@ class Convertor {
               """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
         }
         sb.write("""\t</set>\n""");
-        sb.write("""\twhere id = #{value.id}\n""");
+        sb.write("""\twhere\n""");
+        sb.write("""\t\tid = #{value.id}\n""");
         sb.write("""</update>""");
         return sb.toString();
       }
@@ -302,10 +318,13 @@ class Convertor {
           mybatisDelete();
     }
 
-    String hasNotId() {
+    String hasNotAI() {
       String mybatisInsert() {
         StringBuffer sb = StringBuffer();
-        if (table.hasAI) {
+        if(table.hasId) {
+          sb.write(
+              """<insert id="insert${table.domain}" useGeneratedKeys="true" keyProperty="value.id">\n""");
+        } else {
           sb.write("""<insert id="insert${table.domain}">\n""");
         }
         sb.write("""\tinsert into \${siteName}.c${table.tableName} (\n""");
@@ -333,17 +352,20 @@ class Convertor {
             """<select id="get${table.domain}" resultType="${table.domain}">\n""");
         sb.write("""\tselect\n""");
         for (Column column in table.columns) {
-          sb.write("""\t\t${column.dbName} as "${column.javaName}"\n""");
+          sb.write('\t\t${column.dbName} as "${column.javaName}"');
+          if (column != table.columns.last) {
+            sb.write(",");
+          }
+          sb.write("\n");
         }
         sb.write("""\tfrom\n""");
         sb.write("""\t\t\${siteName}.c${table.tableName}\n""");
-        sb.write("""\twhere\n""");
-        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        sb.write("""\t<where>\n""");
         for (Column column in table.columns) {
           sb.write(
-              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+              """\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}}</if>\n""");
         }
-        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t</where>\n""");
         sb.write("""</select>""");
 
         return sb.toString();
@@ -360,13 +382,12 @@ class Convertor {
               """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">${column.dbName} = #{value.${column.javaName}},</if>\n""");
         }
         sb.write("""\t</set>\n""");
-        sb.write("""\twhere\n""");
-        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        sb.write("""\t<where>\n""");
         for (Column column in table.columns) {
           sb.write(
-              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+              """\t\t<if test="value.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{value.${column.javaName}}</if>\n""");
         }
-        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t</where>\n""");
         sb.write("""</update>""");
         return sb.toString();
       }
@@ -375,13 +396,12 @@ class Convertor {
         StringBuffer sb = StringBuffer();
         sb.write("""<delete id="delete${table.domain}">\n""");
         sb.write("""\tdelete from \${siteName}.c${table.tableName}\n""");
-        sb.write("""\twhere\n""");
-        sb.write("""\t\t<trim prefixOverrides="and">\n""");
+        sb.write("""\t<where>\n""");
         for (Column column in table.columns) {
           sb.write(
-              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}},</if>\n""");
+              """\t\t\t<if test="option.${column.javaName} != ${getNullType(column.javaType)}">and ${column.dbName} = #{option.${column.javaName}}</if>\n""");
         }
-        sb.write("""\t\t</trim>\n""");
+        sb.write("""\t</where>\n""");
         sb.write("""</delete>""");
         return sb.toString();
       }
@@ -396,9 +416,9 @@ class Convertor {
     }
 
     if (table.hasAI && table.hasId) {
-      return hasId();
+      return hasAI();
     } else {
-      return hasNotId();
+      return hasNotAI();
     }
   }
 
@@ -407,6 +427,7 @@ class Convertor {
       case "int":
       case "enum":
       case "boolean":
+      case "double":
         return "-1";
       case "String":
       case "Date":
@@ -548,6 +569,8 @@ class DBTable {
     switch (type) {
       case "INT":
         return "int";
+      case "DOUBLE":
+        return "double";
       case "TINYINT":
         return "enum";
       case "TINYINT(1)":
