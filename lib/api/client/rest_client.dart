@@ -8,10 +8,15 @@ part 'rest_client.g.dart';
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
-  @Headers({"Accept": "application/vnd.github.v3+json"})
+  @Headers({"Accept": "application/vnd.github.v3+json",
+    "Authorization": "token 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"})
   @GET('/latest')
   Future<Release> getReleaseLatest();
 
+  @Headers({"Accept": "application/vnd.github.v3+json",
+  "Authorization": "token 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"})
+  @GET('')
+  Future<List<Release>> getReleaseList();
 }
 
 @JsonSerializable()

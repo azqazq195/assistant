@@ -24,7 +24,8 @@ class _SiteLayoutState extends State<SiteLayout> {
 
   final client = RestClient(Dio());
   late Release _latestRelease;
-  var titleDisplayVersion = "";
+  late List<Release> _releaseList;
+  var currentVersion = "";
 
   Future<String> getCurrentVersion() async {
     return await rootBundle.loadString('assets/config/version.txt');
@@ -38,29 +39,32 @@ class _SiteLayoutState extends State<SiteLayout> {
     return release.tagName.replaceAll("v", "");
   }
 
+  Future<void> getReleaseList() async {
+    final release = await client.getReleaseList();
+    setState(() {
+      _releaseList = release;
+    });
+  }
+
   Future<void> _checkVersion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final currentVersion = await getCurrentVersion();
     final latestVersion = await getLatestVersion();
     if (currentVersion != latestVersion) {
       _showUpdateAlert(context, _latestRelease);
+      prefs.setBool('canUpdate', true);
+    } else {
+      bool canUpdate = prefs.getBool('canUpdate') ?? false;
+      if (canUpdate) {
+        await getReleaseList();
+        _showUpdatedAlert(context, _releaseList);
+        prefs.setBool('canUpdate', false);
+      }
     }
     setState(() {
-      titleDisplayVersion = "v" + currentVersion;
+      this.currentVersion = currentVersion;
       config.version = currentVersion;
     });
-  }
-
-  Future<void> _checkFirstRun() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstRun = prefs.getBool('isFirstRun') ?? true;
-    if (isFirstRun) {
-      print("first run");
-      prefs.setBool('isFirstRun', false);
-      await getLatestVersion();
-      _showFirstAlert(context, _latestRelease);
-    } else {
-      print("second run");
-    }
   }
 
   Future<void> _openDownloadWebUrl(String version) async {
@@ -80,28 +84,48 @@ class _SiteLayoutState extends State<SiteLayout> {
   @override
   initState() {
     _checkVersion();
-    _checkFirstRun();
     super.initState();
   }
 
-  void _showFirstAlert(BuildContext context, Release release) {
-    final DateTime now = DateTime.parse(release.createdAt);
-    final DateFormat formatter = DateFormat('MMMM dd, yyyy');
-    final String formatted = formatter.format(now);
+  void _showUpdatedAlert(BuildContext context, List<Release> releaseList) {
+    List<Widget> _releaseList = [];
+
+    for (Release release in releaseList) {
+      final DateTime now = DateTime.parse(release.createdAt);
+      final DateFormat formatter = DateFormat('MM월 dd일, yyyy');
+      final String formatted = formatter.format(now);
+
+      _releaseList.add(ListBody(
+        children: [
+          Text(
+            formatted,
+            style: const TextStyle(
+              color: Colors.orangeAccent,
+            ),
+          ),
+          const Text(""),
+          Text(release.body),
+          if (release != releaseList.last) ...[
+            const Text(""),
+          ]
+        ],
+      ));
+    }
+
     showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("${release.tagName} 업데이트 알림"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(formatted),
-                const Text(""),
-                Text(release.body),
-              ],
+          title: const Text(
+            "업데이트 내역",
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(children: _releaseList),
           ),
           actions: <Widget>[
             TextButton(
@@ -159,7 +183,7 @@ class _SiteLayoutState extends State<SiteLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey, titleDisplayVersion),
+      appBar: topNavigationBar(context, scaffoldKey, "v$currentVersion"),
       drawer: const Drawer(child: SideMenu()),
       body: const ResponsiveWidget(
         largeScreen: LargeScreen(),

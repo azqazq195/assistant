@@ -1,6 +1,5 @@
 name: assistant
 description: work assistant.
-publish_to: 'moseoh'
 version: 1.0.3+7
 
 environment:

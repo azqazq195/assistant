@@ -85,7 +85,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           scheme: 'mailto',
           path: bugMail,
           query: encodeQueryParameters(<String, String>{
-            'subject': 'Example Subject & Symbols are allowed!',
+            'subject': 'Assistant App. Bug Report.',
             'body': sb.toString()
           }),
         );

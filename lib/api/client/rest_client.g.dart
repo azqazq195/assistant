@@ -11,14 +11,14 @@ Release _$ReleaseFromJson(Map<String, dynamic> json) => Release(
       body: json['body'] as String,
       createdAt: json['created_at'] as String,
       assets: json['assets'] as List,
-    );
+);
 
 Map<String, dynamic> _$ReleaseToJson(Release instance) => <String, dynamic>{
       'tagName': instance.tagName,
       'body': instance.body,
       'createdAt': instance.createdAt,
       'assets': instance.assets,
-    };
+};
 
 // **************************************************************************
 // RetrofitGenerator
@@ -38,7 +38,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'Accept': 'application/vnd.github.v3+json'
+      r'Accept': 'application/vnd.github.v3+json',
+      r'Authorization': 'token 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'
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -49,6 +50,28 @@ class _RestClient implements RestClient {
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Release.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<Release>> getReleaseList() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Accept': 'application/vnd.github.v3+json',
+      r'Authorization': 'token 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'
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<List<Release>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => Release.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 
