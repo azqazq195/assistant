@@ -4,7 +4,12 @@ class Convertor {
   Convertor(this.table);
 
   String domain() {
+    bool hasBigDecimal = false;
+    bool hasEnum = false;
+    bool hasDate = false;
+
     String convertMethod(Column column) {
+
       String getIntMethod() {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
@@ -36,21 +41,27 @@ class Convertor {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
         sb.write(
-            """\t\treturn ${column.javaName} == null ? -1 : enum.ordinal();\n""");
+            """\t\treturn ${column.javaName} == null ? -1 : ${column.javaName}.ordinal();\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic Enum ${column.javaName}() {\n""");
+        sb.write("""\tpublic ${toCapitalize(column.javaName)} ${column.javaName}() {\n""");
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
         sb.write(
             """\tpublic void set${toCapitalize(column.javaName)}(int ${column.javaName}) {\n""");
         sb.write(
-            """\t\tthis.${column.javaName} = Enum.values()[${column.javaName}];\n""");
+            """\t\tthis.${column.javaName} = ${toCapitalize(column.javaName)}.values()[${column.javaName}];\n""");
         sb.write("""\t}\n\n""");
 
         sb.write(
-            """\tpublic void set${toCapitalize(column.javaName)}(Enum ${column.javaName}) {\n""");
+            """\tpublic void set${toCapitalize(column.javaName)}(String ${column.javaName}) {\n""");
+        sb.write(
+            """\t\tthis.${column.javaName} = ${toCapitalize(column.javaName)}.valueOf(${column.javaName});\n""");
+        sb.write("""\t}\n\n""");
+
+        sb.write(
+            """\tpublic void set${toCapitalize(column.javaName)}(${toCapitalize(column.javaName)} ${column.javaName}) {\n""");
         sb.write("""\t\tthis.${column.javaName} = ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
         return sb.toString();
@@ -138,14 +149,17 @@ class Convertor {
         case "double":
           return getDoubleMethod();
         case "enum":
+          hasEnum = true;
           return getEnumMethod();
         case "boolean":
           return getBooleanMethod();
         case "String":
           return getStringMethod();
         case "Date":
+          hasDate = true;
           return getDateMethod();
         case "BigDecimal":
+          hasBigDecimal = true;
           return getBigDecimalMethod();
         default:
           return "UNKNOWN";
@@ -172,7 +186,6 @@ class Convertor {
     }
 
     StringBuffer sb = StringBuffer();
-    sb.write("""public class ${toCapitalize(table.domain)} {\n""");
     for (Column column in table.columns) {
       sb.write(
           """\tprivate ${getDomainType(column.javaType)} ${column.javaName}""");
@@ -188,7 +201,29 @@ class Convertor {
       sb.write(convertMethod(column));
     }
     sb.write("""}""");
-    return sb.toString();
+
+    StringBuffer prefix = StringBuffer();
+    prefix.write("package com.csttec.server.domain;\n\n");
+    if(hasBigDecimal) {
+      prefix.write("import java.math.BigDecimal;\n");
+    }
+    if(hasDate) {
+      prefix.write("import java.util.Date;\n");
+    }
+    if(hasBigDecimal || hasDate) {
+      prefix.write("\n");
+    }
+
+    prefix.write("""public class ${toCapitalize(table.domain)} {\n\n""");
+    if(hasEnum) {
+      for (Column column in table.columns) {
+        if(column.javaType == "enum") {
+          prefix.write("\tpublic enum ${toCapitalize(column.javaName)} {\n\n\t}\n\n");
+        }
+      }
+    }
+
+    return prefix.toString() + sb.toString();
   }
 
   String mapper() {
@@ -197,7 +232,7 @@ class Convertor {
       sb.write(
           """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
       sb.write(
-          """public void get${table.domain}(@Param("siteName") String siteName, @Param("id") int id);\n""");
+          """public ${table.domain} get${table.domain}(@Param("siteName") String siteName, @Param("id") int id);\n""");
       sb.write(
           """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
       sb.write(
@@ -210,7 +245,7 @@ class Convertor {
       sb.write(
           """public void insert${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
       sb.write(
-          """public void get${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
+          """public ${table.domain} get${table.domain}(@Param("siteName") String siteName, @Param("option") ${table.domain} option);\n""");
       sb.write(
           """public void update${table.domain}(@Param("siteName") String siteName, @Param("value") ${table.domain} value);\n""");
       sb.write(
