@@ -1,6 +1,6 @@
 name: assistant
 description: work assistant.
-version: 1.0.4+8
+version: 1.0.5+9
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -21,6 +21,7 @@ dependencies:
   shared_preferences: ^2.0.8
   retrofit: ^2.0.1
   json_annotation: ^4.3.0
+  path_provider: ^2.0.5
 
 dev_dependencies:
   flutter_test:

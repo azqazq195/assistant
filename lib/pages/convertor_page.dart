@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:assistant/helpers/convertor.dart' as helper;
 import 'package:assistant/helpers/toast_message.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:assistant/constants/config.dart';
 
@@ -33,6 +36,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   static String domain = "domain";
   static String mapper = "mapper";
   static String mybatis = "mybatis";
+  static List<Map<String, String>> services = [];
   static String log = "log";
   late helper.DBTable table;
   late helper.Convertor convertor;
@@ -49,6 +53,9 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     ),
     Tab(
       text: "Mybatis",
+    ),
+    Tab(
+      text: "Service",
     ),
     Tab(
       text: "Temporary Log",
@@ -95,62 +102,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       child: const Text(
         "버그 제보",
         style: TextStyle(color: Colors.redAccent),
-      ),
-    );
-  }
-
-  Widget sqlPage() {
-    return Scaffold(
-      body: SizedBox.expand(
-        child: Column(
-          children: [
-            Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                child: Text(
-                  sql,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 40.0,
-            ),
-            _sendBugReportMail(),
-            const SizedBox(
-              height: 40.0,
-            ),
-            Container(
-              height: 48,
-              width: double.maxFinite,
-              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
-              child: OutlinedButton(
-                onPressed: () async {
-                  await Clipboard.getData(Clipboard.kTextPlain).then((value) {
-                    if (value == null) return;
-                    if (value.text == null) return;
-                    setState(() {
-                      sql = value.text!;
-
-                      table = helper.DBTable(sql);
-                      convertor = helper.Convertor(table);
-
-                      mybatis = convertor.mybatis();
-                      mapper = convertor.mapper();
-                      domain = convertor.domain();
-                      _addRow();
-                    });
-                  });
-                  FlutterToast(context, "변환 완료.");
-                },
-                child: const Text("붙여넣기"),
-              ),
-            ),
-            const SizedBox(
-              height: 40.0,
-            )
-          ],
-        ),
       ),
     );
   }
@@ -209,6 +160,88 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
+  Future<void> createFile(List<Map<String, String>> services) async {
+    final directory = await getApplicationDocumentsDirectory();
+    var pathList = directory.path.split('\\');
+    pathList[pathList.length - 1] = "Downloads";
+    var path = pathList.join('\\');
+    for(Map<String, String> service in services) {
+      final file = File(path + "\\${service["fileName"]}.java");
+      file.writeAsString(service["service"]!);
+    }
+  }
+
+  Future<void> _openDownloadFolder() async {
+    final directory = await getApplicationDocumentsDirectory();
+    var pathList = directory.path.split('\\');
+    pathList[pathList.length - 1] = "Downloads";
+    var url = "file:" + pathList.join('\\');
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Widget sqlPage() {
+    return Scaffold(
+      body: SizedBox.expand(
+        child: Column(
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  sql,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            _sendBugReportMail(),
+            const SizedBox(
+              height: 40.0,
+            ),
+            Container(
+              height: 48,
+              width: double.maxFinite,
+              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Clipboard.getData(Clipboard.kTextPlain).then((value) {
+                    if (value == null) return;
+                    if (value.text == null) return;
+                    setState(() {
+                      sql = value.text!;
+
+                      table = helper.DBTable(sql);
+                      convertor = helper.Convertor(table);
+
+                      mybatis = convertor.mybatis();
+                      mapper = convertor.mapper();
+                      domain = convertor.domain();
+                      services = convertor.service();
+                      _addRow();
+                    });
+                  });
+                  FlutterToast(context, "변환 완료.");
+                },
+                child: const Text("붙여넣기"),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget textPage(String text) {
     return Scaffold(
       body: SizedBox.expand(
@@ -251,6 +284,48 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
+  Widget filePage(services) {
+    return Scaffold(
+      body: SizedBox.expand(
+        child: Column(
+          children: [
+            const Expanded(
+              child: SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text("생성된 Domain 을 토대로 Service 와 TestService 파일을 임시로 생성해 줍니다.\n(TestService 준비 예정)"),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            _sendBugReportMail(),
+            const SizedBox(
+              height: 40.0,
+            ),
+            Container(
+              height: 48,
+              width: double.maxFinite,
+              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 0.0),
+              child: OutlinedButton(
+                onPressed: () async {
+                  await createFile(services);
+                  _openDownloadFolder();
+                },
+                child: const Text("파일 내려받기."),
+              ),
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget logPage() {
     return Scaffold(
       body: _dataTable()
@@ -275,6 +350,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             textPage(domain),
             textPage(mapper),
             textPage(mybatis),
+            filePage(services),
             logPage(),
           ],
         ),

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class Convertor {
   DBTable table;
 
@@ -9,7 +11,6 @@ class Convertor {
     bool hasDate = false;
 
     String convertMethod(Column column) {
-
       String getIntMethod() {
         StringBuffer sb = StringBuffer();
         sb.write("""\tpublic int get${toCapitalize(column.javaName)}() {\n""");
@@ -44,7 +45,8 @@ class Convertor {
             """\t\treturn ${column.javaName} == null ? -1 : ${column.javaName}.ordinal();\n""");
         sb.write("""\t}\n\n""");
 
-        sb.write("""\tpublic ${toCapitalize(column.javaName)} ${column.javaName}() {\n""");
+        sb.write(
+            """\tpublic ${toCapitalize(column.javaName)} ${column.javaName}() {\n""");
         sb.write("""\t\treturn ${column.javaName};\n""");
         sb.write("""\t}\n\n""");
 
@@ -204,21 +206,22 @@ class Convertor {
 
     StringBuffer prefix = StringBuffer();
     prefix.write("package com.csttec.server.domain;\n\n");
-    if(hasBigDecimal) {
+    if (hasBigDecimal) {
       prefix.write("import java.math.BigDecimal;\n");
     }
-    if(hasDate) {
+    if (hasDate) {
       prefix.write("import java.util.Date;\n");
     }
-    if(hasBigDecimal || hasDate) {
+    if (hasBigDecimal || hasDate) {
       prefix.write("\n");
     }
 
     prefix.write("""public class ${toCapitalize(table.domain)} {\n\n""");
-    if(hasEnum) {
+    if (hasEnum) {
       for (Column column in table.columns) {
-        if(column.javaType == "enum") {
-          prefix.write("\tpublic enum ${toCapitalize(column.javaName)} {\n\n\t}\n\n");
+        if (column.javaType == "enum") {
+          prefix.write(
+              "\tpublic enum ${toCapitalize(column.javaName)} {\n\n\t}\n\n");
         }
       }
     }
@@ -356,7 +359,7 @@ class Convertor {
     String hasNotAI() {
       String mybatisInsert() {
         StringBuffer sb = StringBuffer();
-        if(table.hasId) {
+        if (table.hasId) {
           sb.write(
               """<insert id="insert${table.domain}" useGeneratedKeys="true" keyProperty="value.id">\n""");
         } else {
@@ -455,6 +458,47 @@ class Convertor {
     } else {
       return hasNotAI();
     }
+  }
+
+  List<Map<String, String>> service() {
+    List methods = ['Create', 'Delete', 'Edit', 'List', 'Add', 'Remove'];
+    List<Map<String, String>> services = [];
+    for(String method in methods) {
+      String service ="""package com.csttec.server.service.PACKAGE;
+
+import org.springframework.stereotype.Service;
+
+import com.csttec.server.core.AService;
+import com.csttec.server.core.Bean;
+import com.csttec.server.domain.Session;
+
+/**
+ * 설명.
+ * 
+ * <pre>
+
+ * IN: NONE
+ *  
+ * OUT: NONE
+ * 
+ * </pre>
+ * 
+ * @author AUTHOR
+ *
+ */
+@Service("PACKAGE.$method${table.domain}")
+public class $method${table.domain}Service extends AService{
+
+	@Override
+	protected void doExecute(Bean input, Bean output) {
+		Session session = (Session) input.get("session");
+	}
+
+}
+      """;
+      services.add({"fileName": "$method${table.domain}Service", "service": service});
+    }
+    return services;
   }
 
   String getNullType(String type) {
