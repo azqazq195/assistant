@@ -45,5 +45,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/lib/constants/token.dart
-/lib/api/client/rest_client.g.dart
+flutter/lib/constants/token.dart
+flutter/lib/api/client/rest_client.g.dart

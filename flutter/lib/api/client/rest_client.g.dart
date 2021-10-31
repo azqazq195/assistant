@@ -39,7 +39,7 @@ class _RestClient implements RestClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
       r'Accept': 'application/vnd.github.v3+json',
-      r'Authorization': 'token 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'
+      r'Authorization': 'token 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'
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -59,7 +59,7 @@ class _RestClient implements RestClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
       r'Accept': 'application/vnd.github.v3+json',
-      r'Authorization': 'token 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'
+      r'Authorization': 'token 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'
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
