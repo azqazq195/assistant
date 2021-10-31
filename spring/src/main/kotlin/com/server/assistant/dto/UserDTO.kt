@@ -1,6 +1,7 @@
-package com.server.assistant.DTO
+package com.server.assistant.dto
 
 import com.server.assistant.entity.User
+import java.time.OffsetDateTime
 
 /**
  * UserDTO
@@ -8,6 +9,11 @@ import com.server.assistant.entity.User
  * GitHub : http://github.com/azqazq195
  * Created by azqazq195@gmail.com on 2021-10-31
  */
+data class LoginUserDTO(
+    val email: String,
+    val password: String
+)
+
 data class ReadUserDTO(
     val id: Long? = null,
     val name: String,
@@ -17,13 +23,15 @@ data class ReadUserDTO(
 data class CreateUserDTO(
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
+    val createdDate: OffsetDateTime?
 ) {
     fun toEntity(): User {
         return User(
             name = name,
             email = email,
-            password = password
+            password = password,
+            createdDate = OffsetDateTime.now()
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.server.assistant.controller
 
-import com.server.assistant.DTO.CreateUserDTO
+import com.server.assistant.dto.CreateUserDTO
+import com.server.assistant.dto.LoginUserDTO
 import com.server.assistant.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -23,9 +24,19 @@ class UserController {
         return ResponseEntity.ok().body(userService.getUsers())
     }
 
+    @GetMapping("/user/{id}", produces = ["application/json"])
+    fun getUser(@PathVariable id: Long): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(userService.getUser(id))
+    }
+
     @PostMapping("/user")
     fun createUser(@RequestBody createUserDTO: CreateUserDTO): ResponseEntity<Any> {
         userService.createUser(createUserDTO)
         return ResponseEntity.ok().body(true)
+    }
+
+    @PostMapping("/login", produces = ["application/json"])
+    fun login(@RequestBody loginUserDTO: LoginUserDTO): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(userService.login(loginUserDTO))
     }
 }

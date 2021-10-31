@@ -12,4 +12,6 @@ import org.springframework.data.repository.CrudRepository
 interface UserRepository: CrudRepository<User, Long> {
     fun findUserById(id: Long): User
     fun findAllBy(): List<User>
+    fun findUserByEmail(email: String): User?
+    fun findUserByEmailAndPassword(email: String, password: String): User?
 }

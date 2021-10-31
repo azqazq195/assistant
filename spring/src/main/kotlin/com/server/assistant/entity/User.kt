@@ -1,9 +1,9 @@
 package com.server.assistant.entity
 
-import com.server.assistant.DTO.CreateUserDTO
-import com.server.assistant.DTO.ReadUserDTO
+import com.server.assistant.dto.CreateUserDTO
+import com.server.assistant.dto.ReadUserDTO
+import org.hibernate.Hibernate
 import java.time.OffsetDateTime
-import java.time.OffsetTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -38,7 +38,23 @@ data class User(
         return CreateUserDTO(
             name = name,
             email = email,
-            password = password
+            password = password,
+            createdDate = createdDate
         )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as User
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
     }
 }
