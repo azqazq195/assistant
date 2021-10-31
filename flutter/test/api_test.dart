@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:assistant/api/client/rest_client.dart';
+import 'package:assistant/api/client/git_rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
-  final client = RestClient(Dio());
+  final client = GitRestClient(Dio());
 
   Future<String> getFilePath() async {
     Directory appDocumentsDirectory =

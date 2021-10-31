@@ -1,4 +1,4 @@
-# Install script for directory: D:/DEV/Code/Project/assistant/windows/runner
+# Install script for directory: D:/DEV/Code/Project/assistant/flutter/windows/runner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

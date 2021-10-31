@@ -6,7 +6,7 @@ import 'package:assistant/widgets/small_screen.dart';
 import 'package:assistant/widgets/top_nav.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:assistant/api/client/rest_client.dart';
+import 'package:assistant/api/client/git_rest_client.dart';
 import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -22,7 +22,7 @@ class SiteLayout extends StatefulWidget {
 class _SiteLayoutState extends State<SiteLayout> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  final client = RestClient(Dio());
+  final client = GitRestClient(Dio());
   late Release _latestRelease;
   late List<Release> _releaseList;
   var currentVersion = "";

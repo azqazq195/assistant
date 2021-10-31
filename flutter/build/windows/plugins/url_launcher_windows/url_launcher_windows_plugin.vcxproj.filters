@@ -1,36 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_windows.cpp">
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_windows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.cpp">
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.cpp">
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\include\url_launcher_windows\url_launcher_windows.h">
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\include\url_launcher_windows\url_launcher_windows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.h">
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.h">
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\CMakeLists.txt" />
+    <CustomBuild Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{CC182DD8-27A9-336F-9D2C-110D61563149}</UniqueIdentifier>
+      <UniqueIdentifier>{2EEF289C-DFF3-3080-83DB-D7FBACFAFDD4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{52EFEEAF-7C74-3F8F-8A8F-9E9DF21FC397}</UniqueIdentifier>
+      <UniqueIdentifier>{DF2B1B6E-2993-312C-9F0C-B0E9FCD456DA}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

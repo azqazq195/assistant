@@ -17,7 +17,9 @@ data class LoginUserDTO(
 data class ReadUserDTO(
     val id: Long? = null,
     val name: String,
-    val email: String
+    val email: String,
+    val createdDate: OffsetDateTime,
+    val updatedDate: OffsetDateTime?
 )
 
 data class CreateUserDTO(

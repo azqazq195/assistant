@@ -18,7 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9EC406E7-3645-3BEB-A154-5D974A904430}</ProjectGuid>
+    <ProjectGuid>{4C7AD824-CBA6-3A36-B0F3-F7FA57D46F87}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -50,19 +50,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">url_launcher_windows_plugin.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">url_launcher_windows_plugin</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\Profile\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\Profile\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">url_launcher_windows_plugin.dir\Profile\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">url_launcher_windows_plugin</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">.dll</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">url_launcher_windows_plugin.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">url_launcher_windows_plugin</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
@@ -71,7 +71,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -91,10 +91,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_HAS_EXCEPTIONS=0;FLUTTER_PLUGIN_IMPL;UNICODE;_UNICODE;CMAKE_INTDIR=\"Debug\";url_launcher_windows_plugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -102,13 +102,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\..\flutter\Debug\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\..\flutter\Debug\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -117,7 +117,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -137,10 +137,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_HAS_EXCEPTIONS=0;FLUTTER_PLUGIN_IMPL;UNICODE;_UNICODE;CMAKE_INTDIR=\"Profile\";url_launcher_windows_plugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -148,13 +148,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\..\flutter\Profile\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\..\flutter\Profile\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -163,7 +163,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DisableSpecificWarnings>"4100"</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -183,10 +183,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_HAS_EXCEPTIONS=0;FLUTTER_PLUGIN_IMPL;UNICODE;_UNICODE;CMAKE_INTDIR=\"Release\";url_launcher_windows_plugin_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\cpp_client_wrapper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -194,13 +194,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>..\..\flutter\Release\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\..\flutter\Release\flutter_wrapper_plugin.lib;D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\flutter_windows.dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.lib</ImportLibrary>
-      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
+      <ImportLibrary>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -208,11 +208,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\CMakeLists.txt">
+    <CustomBuild Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\CMakeLists.txt">
       <StdOutEncoding>UTF-8</StdOutEncoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/flutter/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/windows -BD:/DEV/Code/Project/assistant/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/flutter/windows -BD:/DEV/Code/Project/assistant/flutter/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -221,11 +221,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/flutter/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/windows -BD:/DEV/Code/Project/assistant/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/flutter/windows -BD:/DEV/Code/Project/assistant/flutter/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -234,11 +234,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/DEV/Code/Project/assistant/flutter/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows/windows/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/windows -BD:/DEV/Code/Project/assistant/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/DEV/Code/Project/assistant/flutter/windows -BD:/DEV/Code/Project/assistant/flutter/build/windows --check-stamp-file D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -247,33 +247,33 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\Code\Project\assistant\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\include\url_launcher_windows\url_launcher_windows.h" />
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_windows.cpp" />
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.cpp" />
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.h" />
-    <ClCompile Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.cpp" />
-    <ClInclude Include="D:\DEV\Code\Project\assistant\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.h" />
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\include\url_launcher_windows\url_launcher_windows.h" />
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_windows.cpp" />
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.cpp" />
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\system_apis.h" />
+    <ClCompile Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.cpp" />
+    <ClInclude Include="D:\DEV\Code\Project\assistant\flutter\windows\flutter\ephemeral\.plugin_symlinks\url_launcher_windows\windows\url_launcher_plugin.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\DEV\Code\Project\assistant\build\windows\ZERO_CHECK.vcxproj">
-      <Project>{17036B4C-0E0B-3DE4-8FCF-D4F6B84DE772}</Project>
+    <ProjectReference Include="D:\DEV\Code\Project\assistant\flutter\build\windows\ZERO_CHECK.vcxproj">
+      <Project>{DB2B86E5-642B-39D2-BF17-C5100993859A}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\DEV\Code\Project\assistant\build\windows\flutter\flutter_assemble.vcxproj">
-      <Project>{EE346F7F-BA6E-3D0E-9B19-9237D5EAFC4B}</Project>
+    <ProjectReference Include="D:\DEV\Code\Project\assistant\flutter\build\windows\flutter\flutter_assemble.vcxproj">
+      <Project>{BF46C76C-8AFA-315C-A24A-D9215B697FF9}</Project>
       <Name>flutter_assemble</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\DEV\Code\Project\assistant\build\windows\flutter\flutter_wrapper_plugin.vcxproj">
-      <Project>{6197460E-C26E-307B-BF47-5E69E6F1F035}</Project>
+    <ProjectReference Include="D:\DEV\Code\Project\assistant\flutter\build\windows\flutter\flutter_wrapper_plugin.vcxproj">
+      <Project>{4C7BE941-8D12-3305-A2E1-1761A414214C}</Project>
       <Name>flutter_wrapper_plugin</Name>
     </ProjectReference>
   </ItemGroup>
