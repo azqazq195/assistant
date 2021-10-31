@@ -6,6 +6,7 @@ plugins {
 	war
 	kotlin("jvm") version "1.5.31"
 	kotlin("plugin.spring") version "1.5.31"
+	kotlin("plugin.jpa") version "1.5.31"
 }
 
 group = "com.server"
@@ -17,11 +18,14 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.5.5")
+	implementation("org.springframework.boot:spring-boot-starter-web:2.5.5")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
+
+	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:2.5.5")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.5")
 }
 
 tasks.withType<KotlinCompile> {
