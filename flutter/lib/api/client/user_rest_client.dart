@@ -4,36 +4,52 @@ import 'package:dio/dio.dart' hide Headers;
 
 part 'user_rest_client.g.dart';
 
-@RestApi(baseUrl: "localhost:8080/")
+@RestApi(baseUrl: "http://localhost:8080")
 abstract class UserRestClient {
   factory UserRestClient(Dio dio, {String baseUrl}) = _UserRestClient;
 
   @GET('/login')
-  Future<LoginResponse> login();
+  Future<Response> login();
 
   @GET('/user/{id}')
-  Future<User> getUser(@Path('id') id);
+  Future<Response> getUser(@Path('id') id);
 
   @POST('/user')
-  Future<bool> createUser(@Body() Map user);
+  Future<Response> createUser(@Body() User user);
 }
 
 @JsonSerializable()
-class LoginResponse {
-  int? id;
-  String? message;
+class Response {
   String result;
+  String? message;
+  dynamic meta;
+  List<dynamic> data;
 
-  LoginResponse({
-    this.id,
-    this.message,
+  Response({
     required this.result,
+    this.message,
+    this.meta,
+    required this.data,
   });
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$LoginResponseFromJson(json);
+  factory Response.fromJson(Map<String, dynamic> json) =>
+      _$ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
+  Map<String, dynamic> toJson() => _$ResponseToJson(this);
+}
+
+@JsonSerializable()
+class Login {
+  int id;
+
+  Login({
+    required this.id,
+  });
+
+  factory Login.fromJson(Map<String, dynamic> json) =>
+      _$LoginFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LoginToJson(this);
 }
 
 @JsonSerializable()
