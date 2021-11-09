@@ -23,14 +23,16 @@ data class User(
     val name: String,
     val email: String,
     val password: String,
-    val createdDate: OffsetDateTime? = null,
+    val createdDate: OffsetDateTime,
     var updatedDate: OffsetDateTime? = null
 ) {
     fun toReadUserDto(): ReadUserDTO {
         return ReadUserDTO(
             id = id,
             name = name,
-            email = email
+            email = email,
+            createdDate = createdDate,
+            updatedDate = updatedDate
         )
     }
 
@@ -39,7 +41,6 @@ data class User(
             name = name,
             email = email,
             password = password,
-            createdDate = createdDate
         )
     }
 

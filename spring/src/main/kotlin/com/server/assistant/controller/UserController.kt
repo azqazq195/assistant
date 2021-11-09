@@ -3,6 +3,7 @@ package com.server.assistant.controller
 import com.server.assistant.dto.CreateUserDTO
 import com.server.assistant.dto.LoginUserDTO
 import com.server.assistant.service.UserService
+import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -31,8 +32,7 @@ class UserController {
 
     @PostMapping("/user")
     fun createUser(@RequestBody createUserDTO: CreateUserDTO): ResponseEntity<Any> {
-        userService.createUser(createUserDTO)
-        return ResponseEntity.ok().body(true)
+        return ResponseEntity.ok().body(userService.createUser(createUserDTO))
     }
 
     @PostMapping("/login", produces = ["application/json"])

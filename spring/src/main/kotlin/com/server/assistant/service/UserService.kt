@@ -3,8 +3,10 @@ package com.server.assistant.service
 import com.server.assistant.dto.CreateUserDTO
 import com.server.assistant.dto.LoginUserDTO
 import com.server.assistant.dto.ReadUserDTO
+import com.server.assistant.entity.User
 import com.server.assistant.repository.UserRepository
 import com.server.assistant.response.LoginResponse
+import com.server.assistant.response.Response
 import com.server.assistant.response.Result
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -23,27 +25,33 @@ class UserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    fun getUsers(): List<ReadUserDTO> {
+    fun getUsers(): Response {
         val users = userRepository.findAllBy()
-        return users.map { it.toReadUserDto() }
+        val response = Response(result = Result.SUCCESS.name, message = null, meta = {})
+        response.setDataList(users.map { it.toReadUserDto() }.toMutableList())
+        return response
     }
 
-    fun getUser(id: Long): ReadUserDTO {
+    fun getUser(id: Long): Response {
         val user = userRepository.findUserById(id)
-        return user.toReadUserDto()
+        val response = Response(result = Result.SUCCESS.name, message = null, meta = {})
+        response.addData(user)
+        return response
     }
 
     @Transactional
-    fun createUser(createUserDTO: CreateUserDTO): CreateUserDTO {
+    fun createUser(createUserDTO: CreateUserDTO): Response {
         val user = userRepository.save(createUserDTO.toEntity())
-        return user.toCreateUserDto()
+        val response = Response(result = Result.SUCCESS.name, message = null, meta = {})
+        response.addData(user)
+        return response
     }
 
-    fun login(loginUserDTO: LoginUserDTO): LoginResponse {
-        userRepository.findUserByEmail(loginUserDTO.email)
-            ?: return LoginResponse(null, "존재하지 않는 아이디 입니다.", Result.FAILURE.name.lowercase())
-        val user = userRepository.findUserByEmailAndPassword(loginUserDTO.email, loginUserDTO.password)
-            ?: return LoginResponse(null,"비밀번호가 일치하지 않습니다.", Result.FAILURE.name.lowercase())
-        return LoginResponse(user.id, "로그인 성공.", Result.SUCCESS.name.lowercase())
+    fun login(loginUserDTO: LoginUserDTO): Response {
+        var user: User? = userRepository.findUserByEmail(loginUserDTO.email)
+        user ?: return Response(result = Result.FAILURE.name, message = "존재하지 않는 아이디 입니다.", meta = {})
+        user = userRepository.findUserByEmailAndPassword(loginUserDTO.email, loginUserDTO.password)
+        user ?: return Response(result = Result.FAILURE.name, message = "비밀번호가 일치하지 않습니다.", meta = {})
+        return Response(result = Result.SUCCESS.name, message = null, meta = {}, user)
     }
 }
