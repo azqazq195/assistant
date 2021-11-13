@@ -1,6 +1,7 @@
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/data/icudtl.dat
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/flutter_windows.dll
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/url_launcher_windows_plugin.dll
+D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/window_manager_plugin.dll
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/data/flutter_assets/AssetManifest.json
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/data/flutter_assets/assets/config/version.txt
 D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/data/flutter_assets/assets/icons/flutter.png

@@ -176,7 +176,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\url_launcher_windows\ALL_BUILD.vcxproj">
+    <ProjectReference Include="D:\DEV\Code\Project\assistant\flutter\build\windows\plugins\window_manager\ALL_BUILD.vcxproj">
       <Project>{B5907D9B-70F1-3C10-AECF-61A153A3BD0C}</Project>
       <Name>ALL_BUILD</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

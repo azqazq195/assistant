@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class Convertor {
   DBTable table;
 

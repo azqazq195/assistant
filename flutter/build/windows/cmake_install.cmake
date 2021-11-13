@@ -47,6 +47,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/window_manager/cmake_install.cmake")
+endif()
+
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
@@ -152,34 +157,43 @@ endif()
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xRuntimex" OR NOT CMAKE_INSTALL_COMPONENT)
   if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/url_launcher_windows_plugin.dll")
+     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/url_launcher_windows_plugin.dll;D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug/window_manager_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
     if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
-file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug" TYPE FILE FILES "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.dll")
+file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Debug" TYPE FILE FILES
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Debug/url_launcher_windows_plugin.dll"
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/window_manager/Debug/window_manager_plugin.dll"
+      )
   elseif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Pp][Rr][Oo][Ff][Ii][Ll][Ee])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Profile/url_launcher_windows_plugin.dll")
+     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Profile/url_launcher_windows_plugin.dll;D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Profile/window_manager_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
     if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
-file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Profile" TYPE FILE FILES "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.dll")
+file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Profile" TYPE FILE FILES
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Profile/url_launcher_windows_plugin.dll"
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/window_manager/Profile/window_manager_plugin.dll"
+      )
   elseif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
     list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Release/url_launcher_windows_plugin.dll")
+     "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Release/url_launcher_windows_plugin.dll;D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Release/window_manager_plugin.dll")
     if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
     if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
         message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
     endif()
-file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Release" TYPE FILE FILES "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.dll")
+file(INSTALL DESTINATION "D:/DEV/Code/Project/assistant/flutter/build/windows/runner/Release" TYPE FILE FILES
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/url_launcher_windows/Release/url_launcher_windows_plugin.dll"
+      "D:/DEV/Code/Project/assistant/flutter/build/windows/plugins/window_manager/Release/window_manager_plugin.dll"
+      )
   endif()
 endif()
 

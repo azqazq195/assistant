@@ -1,4 +1,5 @@
 import 'package:assistant/api/client/user_rest_client.dart';
+import 'package:assistant/helpers/window_size.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/helpers/responsiveness.dart';
 import 'package:assistant/widgets/large_screen.dart';
@@ -85,8 +86,8 @@ class _SiteLayoutState extends State<SiteLayout> {
 
   @override
   initState() {
-     login();
-    login();
+    // login();
+    setWindowSize(1600, 1000);
     checkVersion();
     super.initState();
   }
@@ -230,7 +231,7 @@ class _SiteLayoutState extends State<SiteLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey, "v$currentVersion"),
+      // appBar: topNavigationBar(context, scaffoldKey, "v$currentVersion"),
       drawer: const Drawer(child: SideMenu()),
       body: const ResponsiveWidget(
         largeScreen: LargeScreen(),
