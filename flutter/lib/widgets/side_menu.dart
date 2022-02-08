@@ -1,10 +1,8 @@
 import 'package:assistant/constants/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/constants/controllers.dart';
-import 'package:assistant/constants/style.dart';
 import 'package:assistant/helpers/responsiveness.dart';
 import 'package:assistant/routing/routes.dart';
-import 'package:assistant/widgets/custom_text.dart';
 import 'package:assistant/widgets/side_menu_item.dart';
 import 'package:get/get.dart';
 
@@ -22,36 +20,35 @@ class SideMenu extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Assistant",
+              child: Container(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Assistant",
+                      style: TextStyle(
+                        color: CustomColor.fontColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: Text(
+                        "v2.0.1",
                         style: TextStyle(
                           color: CustomColor.fontColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 26,
+                          fontSize: 16,
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Text(
-                          "v2.0.1",
-                          style: TextStyle(
-                            color: CustomColor.fontColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(

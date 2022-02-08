@@ -23,6 +23,7 @@ dependencies:
   json_annotation: ^4.3.0
   path_provider: ^2.0.5
   window_manager: ^0.0.5
+  msix: ^2.8.17
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +37,16 @@ flutter:
   assets:
     - assets/icons/
     - assets/config/
+
+msix_config:
+  display_name: Assistant
+  publisher_display_name: Moseoh
+  identity_name: Moseoh.Assistant
+  msix_version: 1.0.0.3
+  store: false
+  logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
+  output_path: D:\DEV\Code\Project\assistant\flutter
+  capabilities: "internetClient"
   # example:
   # fonts:
   #   - family: Schyler
