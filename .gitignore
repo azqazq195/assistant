@@ -1,0 +1,16 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+
+# flutter
+flutter/.dart_tool
+flutter/.idea
+flutter/.vscode
+flutter/build
+
+# spring
+spring
+
