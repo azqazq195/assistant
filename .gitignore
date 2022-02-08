@@ -13,23 +13,6 @@
 *.iml
 *.ipr
 *.iws
-flutter/.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-/build/
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -45,5 +28,16 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+flutter/.idea/
+flutter/.vscode/
+flutter/.dart_tool/
 flutter/lib/constants/token.dart
 flutter/lib/api/client/*.g.dart
+flutter/build/

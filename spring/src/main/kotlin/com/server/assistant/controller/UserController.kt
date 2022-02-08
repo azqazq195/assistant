@@ -3,7 +3,6 @@ package com.server.assistant.controller
 import com.server.assistant.dto.CreateUserDTO
 import com.server.assistant.dto.LoginUserDTO
 import com.server.assistant.service.UserService
-import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

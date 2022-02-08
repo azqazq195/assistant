@@ -2,10 +2,8 @@ package com.server.assistant.service
 
 import com.server.assistant.dto.CreateUserDTO
 import com.server.assistant.dto.LoginUserDTO
-import com.server.assistant.dto.ReadUserDTO
 import com.server.assistant.entity.User
 import com.server.assistant.repository.UserRepository
-import com.server.assistant.response.LoginResponse
 import com.server.assistant.response.Response
 import com.server.assistant.response.Result
 import org.springframework.beans.factory.annotation.Autowired
