@@ -1,6 +1,6 @@
 name: assistant
 description: work assistant.
-version: 1.0.5+9
+version: 1.0.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^2.0.5
   window_manager: ^0.0.5
   msix: ^2.8.17
+  fluent_ui: ^3.8.0
 
 dev_dependencies:
   flutter_test:
@@ -35,18 +36,19 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - pubspec.yaml
     - assets/icons/
-    - assets/config/
 
 msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.0.5
+  msix_version: 1.0.0.7
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter
   capabilities: "internetClient"
+
   # example:
   # fonts:
   #   - family: Schyler

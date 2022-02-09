@@ -5,15 +5,18 @@
 .idea
 *.iml
 
+# token 사용 관련
+flutter/lib/api/client/*.g.dart
+flutter/lib/api/token.dart
+
 # flutter
 flutter/.dart_tool
 flutter/.idea
 flutter/.vscode
 flutter/build
+
 flutter/update.sh
-flutter/released.sh
-flutter/test.sh
-flutter/test.json
+flutter/token.dart
 
 # spring
 spring

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart' hide Headers;
-import 'package:assistant/constants/token.dart';
+import 'package:assistant/api/token.dart';
 
 part 'git_rest_client.g.dart';
 
