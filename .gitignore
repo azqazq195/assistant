@@ -12,6 +12,8 @@ flutter/.vscode
 flutter/build
 flutter/update.sh
 flutter/released.sh
+flutter/test.sh
+flutter/test.json
 
 # spring
 spring
