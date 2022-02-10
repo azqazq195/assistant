@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart' hide Headers;
-import 'package:assistant/api/token.dart';
 
 part 'git_rest_client.g.dart';
 
@@ -9,11 +8,11 @@ part 'git_rest_client.g.dart';
 abstract class GitRestClient {
   factory GitRestClient(Dio dio, {String baseUrl}) = _GitRestClient;
 
-  @Headers({"Accept": "application/vnd.github.v3+json", "Authorization": token})
+  @Headers({"Accept": "application/vnd.github.v3+json"})
   @GET('/latest')
   Future<Release> getReleaseLatest();
 
-  @Headers({"Accept": "application/vnd.github.v3+json", "Authorization": token})
+  @Headers({"Accept": "application/vnd.github.v3+json"})
   @GET('')
   Future<List<Release>> getReleaseList();
 }

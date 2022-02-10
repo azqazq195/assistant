@@ -1,13 +1,9 @@
-### Example user template template
-### Example user template
-
 # IntelliJ project files
 .idea
 *.iml
 
 # token 사용 관련
-flutter/lib/api/client/*.g.dart
-flutter/lib/api/token.dart
+update.sh
 
 # flutter
 flutter/.dart_tool
