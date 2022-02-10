@@ -18,7 +18,7 @@ dependencies:
   clipboard: ^0.1.3
   fluttertoast: ^8.0.8
   yaml: ^3.1.0
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.0.13
   retrofit: ^2.0.1
   json_annotation: ^4.3.0
   path_provider: ^2.0.5
@@ -43,7 +43,7 @@ msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.0.8
+  msix_version: 1.0.0.9
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter

@@ -1,4 +1,5 @@
 import 'package:assistant/constants/custom_color.dart';
+import 'package:assistant/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/controllers/menu_controller.dart';
 import 'package:assistant/controllers/navigation_controller.dart';
@@ -32,9 +33,6 @@ class MyApp extends StatelessWidget {
         }),
         primaryColor: Colors.blue,
       ),
-
-      // home: const LoginPage(),
-      // home: const SiteLayout(),
       home: const Main(),
     );
   }
@@ -56,6 +54,6 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const SiteLayout();
   }
 }
