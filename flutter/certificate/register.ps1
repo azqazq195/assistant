@@ -1,0 +1,1 @@
+Import-Certificate -FilePath "Moseoh.cer" -CertStoreLocation Cert:\LocalMachine\Root

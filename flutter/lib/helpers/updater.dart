@@ -42,9 +42,6 @@ class Updater {
     final currentVersion = await getCurrentVersion();
     final latestVersion = await getLatestVersion();
 
-    print(currentVersion);
-    print(latestVersion);
-
     if (currentVersion != latestVersion) {
       _showUpdateAlert(context);
       return;

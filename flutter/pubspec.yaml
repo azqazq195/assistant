@@ -43,11 +43,14 @@ msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.0.10
+  msix_version: 1.0.5.3
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter
   capabilities: "internetClient"
+  certificate_path: D:\DEV\Code\Project\assistant\flutter\certificate\Moseoh.pfx
+  certificate_password: qwe123
+
 
   # example:
   # fonts:
