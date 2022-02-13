@@ -1,3 +1,1 @@
-powershell .\register.ps1
-
-pause
+certutil -addstore "Root" "Moseoh.cer"
