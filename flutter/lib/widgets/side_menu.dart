@@ -1,4 +1,5 @@
 import 'package:assistant/constants/custom_color.dart';
+import 'package:assistant/helpers/updater.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/constants/controllers.dart';
 import 'package:assistant/helpers/responsiveness.dart';
@@ -8,6 +9,32 @@ import 'package:get/get.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({Key? key}) : super(key: key);
+
+  FutureBuilder<Widget> _currentVersion() {
+    return FutureBuilder<Widget>(
+      future: getCurrentVersion(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data;
+        } else {
+          return const Text("");
+        }
+      },
+    );
+  }
+
+  Future<Text> getCurrentVersion() async {
+    var version = await Updater().getCurrentVersion();
+    version = "v${version.substring(0, version.lastIndexOf("."))}";
+    return Text(
+      version,
+      style: TextStyle(
+        color: CustomColor.fontColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +65,7 @@ class SideMenu extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 2),
-                      child: Text(
-                        "v2.0.1",
-                        style: TextStyle(
-                          color: CustomColor.fontColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
+                      child: _currentVersion(),
                     ),
                   ],
                 ),
