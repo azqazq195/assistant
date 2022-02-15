@@ -10,17 +10,6 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  Widget fieldSQL() {
-    return CardContainer(
-      content: CustomText(
-        text: "SQL",
-        size: 26,
-        weight: FontWeight.bold,
-        color: CustomColor.fontColor,
-      ),
-    );
-  }
-
   Widget fieldMain() {
     return Column(
       children: [
@@ -71,6 +60,17 @@ class _BodyState extends State<Body> {
           child: CardPopupButton(),
         ),
       ],
+    );
+  }
+
+  Widget fieldSQL() {
+    return CardContainer(
+      content: CustomText(
+        text: "SQL",
+        size: 26,
+        weight: FontWeight.bold,
+        color: CustomColor.fontColor,
+      ),
     );
   }
 

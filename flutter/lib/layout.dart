@@ -1,5 +1,4 @@
 import 'package:assistant/api/client/user_rest_client.dart';
-import 'package:assistant/helpers/updater.dart';
 import 'package:assistant/helpers/window_size.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/helpers/responsiveness.dart';

@@ -38,32 +38,34 @@ flutter:
   assets:
     - pubspec.yaml
     - assets/icons/
+    - assets/logo/
+  fonts:
+    - family: AppleSDGothicNeo
+      fonts:
+        - asset: fonts/AppleSDGothicNeoH.ttf
+          weight: 900
+        - asset: fonts/AppleSDGothicNeoEB.ttf
+          weight: 800
+        - asset: fonts/AppleSDGothicNeoB.ttf
+          weight: 700
+        - asset: fonts/AppleSDGothicNeoM.ttf
+          weight: 600
+        - asset: fonts/AppleSDGothicNeoR.ttf
+        - asset: fonts/AppleSDGothicNeoL.ttf
+          weight: 400
+        - asset: fonts/AppleSDGothicNeoUL.ttf
+          weight: 300
+        - asset: fonts/AppleSDGothicNeoT.ttf
+          weight: 200
 
 msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.5.4
+  msix_version: 1.0.5.5
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter
   capabilities: "internetClient"
   certificate_path: D:\DEV\Code\Project\assistant\flutter\certificate\Moseoh.pfx
   certificate_password: qwe123
-
-
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

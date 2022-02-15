@@ -1,6 +1,7 @@
 import 'package:assistant/constants/custom_color.dart';
 import 'package:assistant/constants/style.dart';
 import 'package:assistant/helpers/window_size.dart';
+import 'package:assistant/main.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: CustomColor.fontColor,
                           ),
                           contentPadding:
-                          const EdgeInsets.only(left: 20, right: 20),
+                              const EdgeInsets.only(left: 20, right: 20),
                         ),
                         style: TextStyle(
                           fontSize: 16,
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: CustomColor.fontColor,
                           ),
                           contentPadding:
-                          const EdgeInsets.only(left: 20, right: 20),
+                              const EdgeInsets.only(left: 20, right: 20),
                         ),
                         style: TextStyle(
                           fontSize: 16,
@@ -143,7 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Main(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "로그인",
                         style: TextStyle(

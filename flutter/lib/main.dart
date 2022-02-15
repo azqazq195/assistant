@@ -1,5 +1,4 @@
-import 'package:assistant/constants/custom_color.dart';
-import 'package:assistant/layout.dart';
+import 'package:assistant/pages/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/controllers/menu_controller.dart';
 import 'package:assistant/controllers/navigation_controller.dart';
@@ -18,8 +17,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CustomColor.getTheme();
-
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Assistant",
@@ -54,6 +51,6 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    return const SiteLayout();
+    return const LoginScreen();
   }
 }
