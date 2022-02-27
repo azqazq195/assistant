@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const Color fontBlack = Color(0xFF000000);
 const Color fontDefault = Color(0xFF454545);
 const Color fontGrey = Color(0xFF999999);
+const Color fontPrimary = Color(0xFF61B76A);
 
 const Color background = Color(0xFFF5FFFC);
 const Color logo = Color(0xFF61B76A);
@@ -13,3 +14,6 @@ const Color borderFocused = Color(0xFF61B76A);
 
 const Color btnHovered = Color(0xFFF5FFFC);
 const Color btnPressed = Color(0xFFDAFFDE);
+
+const Color checked = Color(0xFF61B76A);
+const Color canceled = Color(0xFFFF5252);

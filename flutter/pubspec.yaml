@@ -25,6 +25,8 @@ dependencies:
   window_manager: ^0.0.5
   msix: ^2.8.17
   fluent_ui: ^3.8.0
+  process_run: ^0.12.3+2
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +64,7 @@ msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.5.5
+  msix_version: 1.0.5.6
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter

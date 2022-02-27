@@ -1,3 +1,5 @@
+import 'package:assistant/helpers/shared_preferences.dart';
+import 'package:assistant/layout.dart';
 import 'package:assistant/pages/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:assistant/controllers/menu_controller.dart';
@@ -5,10 +7,13 @@ import 'package:assistant/controllers/navigation_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:assistant/helpers/updater.dart';
+import 'package:assistant/helpers/logger.dart';
 
-void main() {
+Future<void> main() async {
   Get.put(MenuController());
   Get.put(NavigationController());
+  await Logger.init();
+  await SharedPreferences.init();
   runApp(const MyApp());
 }
 
@@ -45,12 +50,20 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   @override
   void initState() {
-    Updater().checkVersion(context);
     super.initState();
+    Updater().checkVersion(context);
   }
+
+  final _isAutoLogin = SharedPreferences.prefs.getBool("auto_login") ?? false;
 
   @override
   Widget build(BuildContext context) {
-    return const LoginScreen();
+    if (_isAutoLogin) {
+      Logger.i("auto login is true. skip login.");
+      return const SiteLayout();
+    } else {
+      Logger.i("auto login is false. required login.");
+      return const LoginScreen();
+    }
   }
 }

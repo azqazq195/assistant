@@ -37,23 +37,23 @@ class _BodyState extends State<Body> {
 
   Widget fieldAction() {
     return Row(
-      children: [
+      children: const [
         Expanded(
           child: CardPopupButton(),
         ),
-        const SizedBox(
+        SizedBox(
           width: 30,
         ),
         Expanded(
           child: CardPopupButton(),
         ),
-        const SizedBox(
+        SizedBox(
           width: 30,
         ),
         Expanded(
           child: CardPopupButton(),
         ),
-        const SizedBox(
+        SizedBox(
           width: 30,
         ),
         Expanded(

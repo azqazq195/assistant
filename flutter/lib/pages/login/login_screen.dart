@@ -1,3 +1,5 @@
+import 'package:assistant/helpers/logger.dart';
+import 'package:assistant/helpers/shared_preferences.dart';
 import 'package:assistant/layout.dart';
 import 'package:assistant/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +22,28 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LeftPage extends StatelessWidget {
+class LeftPage extends StatefulWidget {
   const LeftPage({Key? key}) : super(key: key);
+
+  @override
+  State<LeftPage> createState() => _LeftPageState();
+}
+
+class _LeftPageState extends State<LeftPage> {
+  late bool _isAutoLogin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isAutoLogin = SharedPreferences.prefs.getBool("auto_login") ?? false;
+    Logger.d('current autoLogin value: $_isAutoLogin');
+    // if (_isAutoLogin) {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const SiteLayout()),
+    //   );
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +67,12 @@ class LeftPage extends StatelessWidget {
           const SizedBox(
             height: 18,
           ),
-          const CustomText(
-            text: '로그인 정보를 입력해 주세요.',
-            size: 12,
-            color: fontGrey,
-            weight: FontWeight.bold,
-          ),
+          // const CustomText(
+          //   text: '로그인 정보를 입력해 주세요.',
+          //   size: 12,
+          //   color: fontGrey,
+          //   weight: FontWeight.bold,
+          // ),
           const SizedBox(
             height: 12,
           ),
@@ -102,6 +124,33 @@ class LeftPage extends StatelessWidget {
             ),
           ),
           const SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            width: 348,
+            child: Row(
+              children: [
+                Checkbox(
+                  side: const BorderSide(color: borderGrey, width: 1),
+                  activeColor: checked,
+                  value: _isAutoLogin,
+                  onChanged: (value) {
+                    setState(() {
+                      _isAutoLogin = value!;
+                      Logger.d('change autoLogin: $_isAutoLogin');
+                    });
+                  },
+                ),
+                const CustomText(
+                  text: '자동 로그인',
+                  size: 12,
+                  color: fontGrey,
+                  weight: FontWeight.bold,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
             width: 348,
             height: 48,
             child: Divider(
@@ -130,6 +179,8 @@ class LeftPage extends StatelessWidget {
               ),
             ),
             onPressed: () {
+              SharedPreferences.prefs.setBool("auto_login", _isAutoLogin);
+              Logger.i('save autoLogin: $_isAutoLogin');
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SiteLayout()),
@@ -151,7 +202,7 @@ class LeftPage extends StatelessWidget {
                   text: 'Google 계정 로그인',
                   size: 12,
                   color: fontDefault,
-                  weight: FontWeight.w200,
+                  weight: FontWeight.bold,
                 ),
               ],
             ),
