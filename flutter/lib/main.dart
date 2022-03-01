@@ -54,10 +54,22 @@ class _MainState extends State<Main> {
     Updater().checkVersion(context);
   }
 
-  final _isAutoLogin = SharedPreferences.prefs.getBool("auto_login") ?? false;
+  final _isAutoLogin =
+      SharedPreferences.prefs.getBool(Preferences.autoLogin.name) ?? false;
+  final _welcome =
+      SharedPreferences.prefs.getBool(Preferences.welcome.name) ?? true;
 
   @override
   Widget build(BuildContext context) {
+    if (_welcome) {
+      SharedPreferences.prefs.setBool(Preferences.welcome.name, false);
+      SharedPreferences.prefs.setString(Preferences.svnProjectPath.name,
+          "https://intranet-fs.csttec.com:5443/svn/cstone/server/trunk/server_DevTrunk/");
+      SharedPreferences.prefs.setString(
+          Preferences.svnProjectPersistencePath.name,
+          "src/main/java/com/csttec/server/persistence");
+    }
+
     if (_isAutoLogin) {
       Logger.i("auto login is true. skip login.");
       return const SiteLayout();

@@ -35,7 +35,8 @@ class _LeftPageState extends State<LeftPage> {
   @override
   void initState() {
     super.initState();
-    _isAutoLogin = SharedPreferences.prefs.getBool("auto_login") ?? false;
+    _isAutoLogin =
+        SharedPreferences.prefs.getBool(Preferences.autoLogin.name) ?? false;
     Logger.d('current autoLogin value: $_isAutoLogin');
     // if (_isAutoLogin) {
     //   Navigator.push(
@@ -179,7 +180,8 @@ class _LeftPageState extends State<LeftPage> {
               ),
             ),
             onPressed: () {
-              SharedPreferences.prefs.setBool("auto_login", _isAutoLogin);
+              SharedPreferences.prefs
+                  .setBool(Preferences.autoLogin.name, _isAutoLogin);
               Logger.i('save autoLogin: $_isAutoLogin');
               Navigator.push(
                 context,

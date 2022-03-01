@@ -9,3 +9,16 @@ class SharedPreferences {
     Logger.i("SharedPreferences initialize");
   }
 }
+
+enum Preferences {
+  svnPath,
+  svnUsername,
+  svnPassword,
+  svnProjectPath,
+  svnProjectPersistencePath,
+  mysqlPath,
+  mysqlUsername,
+  mysqlPassword,
+  autoLogin,
+  welcome,
+}
