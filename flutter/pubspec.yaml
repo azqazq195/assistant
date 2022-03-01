@@ -65,7 +65,7 @@ msix_config:
   display_name: Assistant
   publisher_display_name: Moseoh
   identity_name: Moseoh.Assistant
-  msix_version: 1.0.5.7
+  msix_version: 1.0.5.71
   store: false
   logo_path: D:\DEV\Code\Project\assistant\flutter\assets\logo\flutter.png
   output_path: D:\DEV\Code\Project\assistant\flutter

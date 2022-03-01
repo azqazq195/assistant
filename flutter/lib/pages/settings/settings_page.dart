@@ -144,15 +144,18 @@ class _SettingsPageState extends State<SettingsPage> {
     shell = shell.pushd(Logger.localDirectory);
     shell = shell.pushd(directory);
 
-    List<ProcessResult> _processResult = _mysqlPassword.isEmpty
-        ? await shell.run('''
-      "$_mysqlPath/mysql.exe" -u $_mysqlUsername < db-populate.sql
-      "$_mysqlPath/mysql.exe" -u $_mysqlUsername < center-db-populate.sql
-      ''')
-        : await shell.run('''
-      "$_mysqlPath/mysql.exe" -u $_mysqlUsername -p$_mysqlPassword < db-populate.sql
-      "$_mysqlPath/mysql.exe" -u $_mysqlUsername -p$_mysqlPassword < center-db-populate.sql
-      ''');
+    var dbScript = _mysqlPassword.isEmpty
+        ? '''
+    "$_mysqlPath/mysql.exe" -u $_mysqlUsername < db-populate.sql
+    "$_mysqlPath/mysql.exe" -u $_mysqlUsername < center-db-populate.sql
+    '''
+        : '''
+    "$_mysqlPath/mysql.exe" -u $_mysqlUsername -p$_mysqlPassword < db-populate.sql
+    "$_mysqlPath/mysql.exe" -u $_mysqlUsername -p$_mysqlPassword < center-db-populate.sql
+    ''';
+
+    Logger.i(dbScript);
+    List<ProcessResult> _processResult = await shell.run(dbScript);
     shell = shell.popd();
     for (var processResult in _processResult) {
       if (processResult.outText.isNotEmpty) {
@@ -275,6 +278,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           SharedPreferences.prefs.setString(
                               Preferences.svnPassword.name,
                               _svnPasswordTextEditController.text);
+                          setState(() {
+                            _svnInfo();
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -691,6 +697,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           SharedPreferences.prefs.setString(
                               Preferences.mysqlPassword.name,
                               _mysqlPasswordTextEditController.text);
+                          setState(() {
+                            _mysqlInfo();
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
