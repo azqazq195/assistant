@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
-project(assistant LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(fluent LANGUAGES CXX)
 
-set(BINARY_NAME "assistant")
+set(BINARY_NAME "fluent")
 
 cmake_policy(SET CMP0063 NEW)
 

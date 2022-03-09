@@ -1,19 +1,67 @@
-import 'package:assistant/helpers/shared_preferences.dart';
-import 'package:assistant/layout.dart';
-import 'package:assistant/pages/login/login_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:assistant/controllers/menu_controller.dart';
-import 'package:assistant/controllers/navigation_controller.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:assistant/helpers/updater.dart';
-import 'package:assistant/helpers/logger.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fluent/screens/code/code_page.dart';
+import 'package:fluent/screens/database/database_page.dart';
+import 'package:fluent/utils/logger.dart';
+import 'package:fluent/utils/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
+import 'package:system_theme/system_theme.dart';
 
-Future<void> main() async {
-  Get.put(MenuController());
-  Get.put(NavigationController());
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_strategy/url_strategy.dart';
+
+import 'screens/colors.dart';
+import 'screens/forms.dart';
+import 'screens/icons.dart';
+import 'screens/inputs.dart';
+import 'screens/mobile.dart';
+import 'screens/others.dart';
+import 'screens/settings/settings_page.dart';
+import 'screens/typography.dart';
+import 'provider/theme.dart';
+
+const String appTitle = 'Assistant';
+
+/// Checks if the current environment is a desktop environment.
+bool get isDesktop {
+  if (kIsWeb) return false;
+  return [
+    TargetPlatform.windows,
+    TargetPlatform.linux,
+    TargetPlatform.macOS,
+  ].contains(defaultTargetPlatform);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb ||
+      [TargetPlatform.windows, TargetPlatform.android]
+          .contains(defaultTargetPlatform)) {
+    SystemTheme.accentInstance;
+  }
+
+  setPathUrlStrategy();
+
   await Logger.init();
   await SharedPreferences.init();
+
+  if (isDesktop) {
+    await WindowManager.instance.ensureInitialized();
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.setTitleBarStyle('hidden');
+      // await windowManager.setSize(const Size(755, 545));
+      // await windowManager.setMinimumSize(const Size(755, 545));
+      await windowManager.setSize(const Size(1510, 1090));
+      await windowManager.setMinimumSize(const Size(1510, 1090));
+      await windowManager.center();
+      await windowManager.show();
+      await windowManager.setSkipTaskbar(false);
+    });
+  }
+
   runApp(const MyApp());
 }
 
@@ -22,60 +70,334 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Assistant",
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: GoogleFonts.mulishTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: Colors.black),
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
-        }),
-        primaryColor: Colors.blue,
-      ),
-      home: const Main(),
+    return ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      builder: (context, _) {
+        final appTheme = context.watch<AppTheme>();
+        return FluentApp(
+          title: appTitle,
+          themeMode: appTheme.mode,
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          routes: {'/': (_) => const MyHomePage()},
+          color: appTheme.color,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: appTheme.color,
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
+          theme: ThemeData(
+            accentColor: appTheme.color,
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-class Main extends StatefulWidget {
-  const Main({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  _MainState createState() => _MainState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MainState extends State<Main> {
-  @override
-  void initState() {
-    super.initState();
-    Updater().checkVersion(context);
-  }
+class _MyHomePageState extends State<MyHomePage> {
+  bool value = false;
 
-  final _isAutoLogin =
-      SharedPreferences.prefs.getBool(Preferences.autoLogin.name) ?? false;
-  final _welcome =
-      SharedPreferences.prefs.getBool(Preferences.welcome.name) ?? true;
+  int index = 0;
+
+  final settingsController = ScrollController();
+
+  @override
+  void dispose() {
+    settingsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (_welcome) {
-      SharedPreferences.prefs.setBool(Preferences.welcome.name, false);
-      SharedPreferences.prefs.setString(Preferences.svnProjectPath.name,
-          "https://intranet-fs.csttec.com:5443/svn/cstone/server/trunk/server_DevTrunk/");
-      SharedPreferences.prefs.setString(
-          Preferences.svnProjectPersistencePath.name,
-          "src/main/java/com/csttec/server/persistence");
-    }
+    final appTheme = context.watch<AppTheme>();
+    return NavigationView(
+      appBar: NavigationAppBar(
+        title: () {
+          if (kIsWeb) return const Text(appTitle);
+          return const DragToMoveArea(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(appTitle),
+            ),
+          );
+        }(),
+        actions: kIsWeb
+            ? null
+            : DragToMoveArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [Spacer(), WindowButtons()],
+                ),
+              ),
+      ),
+      pane: NavigationPane(
+        selected: index,
+        onChanged: (i) => setState(() => index = i),
+        size: const NavigationPaneSize(
+          openMinWidth: 200,
+          openMaxWidth: 260,
+        ),
+        header: Container(
+          height: kOneLineTileHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: const FlutterLogo(
+            style: FlutterLogoStyle.horizontal,
+            size: 100,
+          ),
+        ),
+        displayMode: appTheme.displayMode,
+        indicatorBuilder: () {
+          switch (appTheme.indicator) {
+            case NavigationIndicators.end:
+              return NavigationIndicator.end;
+            case NavigationIndicators.sticky:
+            default:
+              return NavigationIndicator.sticky;
+          }
+        }(),
+        items: [
+          PaneItemHeader(header: const Text("Assistant")),
+          PaneItem(
+            icon: const Icon(FluentIcons.code),
+            title: const Text('Code'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.database),
+            title: const Text('DataBase'),
+          ),
+          PaneItemSeparator(),
+          PaneItemHeader(header: const Text("Development")),
+          PaneItem(
+            icon: const Icon(FluentIcons.checkbox_composite),
+            title: const Text('Inputs'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.text_field),
+            title: const Text('Forms'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.color),
+            title: const Text('Colors'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.icon_sets_flag),
+            title: const Text('Icons'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.plain_text),
+            title: const Text('Typography'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.cell_phone),
+            title: const Text('Mobile'),
+          ),
+          PaneItem(
+            icon: Icon(
+              appTheme.displayMode == PaneDisplayMode.top
+                  ? FluentIcons.more
+                  : FluentIcons.more_vertical,
+            ),
+            title: const Text('Others'),
+            infoBadge: const InfoBadge(
+              source: Text('9'),
+            ),
+          ),
+        ],
+        autoSuggestBox: AutoSuggestBox(
+          controller: TextEditingController(),
+          items: const [
+            'Code',
+            'DataBase',
+            'Inputs',
+            'Forms',
+            'Colors',
+            'Icons',
+            'Typhography',
+            'Mobile',
+            'Other',
+            'Settings',
+            'Source code'
+          ],
+          onSelected: (str) {
+            setState(() {
+              if (str == 'Code') {
+                index = 0;
+                return;
+              }
+              if (str == 'DataBase') {
+                index = 1;
+                return;
+              }
+              if (str == 'Inputs') {
+                index = 2;
+                return;
+              }
+              if (str == 'Forms') {
+                index = 3;
+                return;
+              }
+              if (str == 'Colors') {
+                index = 4;
+                return;
+              }
+              if (str == 'Icons') {
+                index = 5;
+                return;
+              }
+              if (str == 'Typhography') {
+                index = 6;
+                return;
+              }
+              if (str == 'Mobile') {
+                index = 7;
+                return;
+              }
+              if (str == 'Other') {
+                index = 8;
+                return;
+              }
+              if (str == 'Settings') {
+                index = 9;
+                return;
+              }
+              if (str == 'Source code') {
+                return;
+              }
+            });
+          },
+        ),
+        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+        footerItems: [
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.settings),
+            title: const Text('Settings'),
+          ),
+          _LinkPaneItemAction(
+            icon: const Icon(FluentIcons.open_source),
+            title: const Text('Source code'),
+            link: 'https://github.com/azqazq195/assistant',
+          ),
+        ],
+      ),
+      content: NavigationBody(index: index, children: [
+        const CodePage(),
+        const DatabasePage(),
+        const InputsPage(),
+        const Forms(),
+        const ColorsPage(),
+        const IconsPage(),
+        const TypographyPage(),
+        const Mobile(),
+        const Others(),
+        Settings(controller: settingsController),
+      ]),
+    );
+  }
+}
 
-    if (_isAutoLogin) {
-      Logger.i("auto login is true. skip login.");
-      return const SiteLayout();
-    } else {
-      Logger.i("auto login is false. required login.");
-      return const LoginScreen();
-    }
+class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasFluentTheme(context));
+    assert(debugCheckHasFluentLocalizations(context));
+    final ThemeData theme = FluentTheme.of(context);
+    final buttonColors = WindowButtonColors(
+      iconNormal: theme.inactiveColor,
+      iconMouseDown: theme.inactiveColor,
+      iconMouseOver: theme.inactiveColor,
+      mouseOver: ButtonThemeData.buttonColor(
+          theme.brightness, {ButtonStates.hovering}),
+      mouseDown: ButtonThemeData.buttonColor(
+          theme.brightness, {ButtonStates.pressing}),
+    );
+    final closeButtonColors = WindowButtonColors(
+      mouseOver: Colors.red,
+      mouseDown: Colors.red.dark,
+      iconNormal: theme.inactiveColor,
+      iconMouseOver: Colors.red.basedOnLuminance(),
+      iconMouseDown: Colors.red.dark.basedOnLuminance(),
+    );
+    return Row(children: [
+      Tooltip(
+        message: FluentLocalizations.of(context).minimizeWindowTooltip,
+        child: MinimizeWindowButton(colors: buttonColors),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).restoreWindowTooltip,
+        child: WindowButton(
+          colors: buttonColors,
+          iconBuilder: (context) {
+            if (appWindow.isMaximized) {
+              return RestoreIcon(color: context.iconColor);
+            }
+            return MaximizeIcon(color: context.iconColor);
+          },
+          onPressed: appWindow.maximizeOrRestore,
+        ),
+      ),
+      Tooltip(
+        message: FluentLocalizations.of(context).closeWindowTooltip,
+        child: CloseWindowButton(colors: closeButtonColors),
+      ),
+    ]);
+  }
+}
+
+class _LinkPaneItemAction extends PaneItem {
+  _LinkPaneItemAction({
+    required Widget icon,
+    required this.link,
+    title,
+    infoBadge,
+    focusNode,
+    autofocus = false,
+  }) : super(
+          icon: icon,
+          title: title,
+          infoBadge: infoBadge,
+          focusNode: focusNode,
+          autofocus: autofocus,
+        );
+
+  final String link;
+
+  @override
+  Widget build(
+    BuildContext context,
+    bool selected,
+    VoidCallback? onPressed, {
+    PaneDisplayMode? displayMode,
+    bool showTextOnTop = true,
+    bool? autofocus,
+  }) {
+    return Link(
+      uri: Uri.parse(link),
+      builder: (context, followLink) => super.build(
+        context,
+        selected,
+        followLink,
+        displayMode: displayMode,
+        showTextOnTop: showTextOnTop,
+        autofocus: autofocus,
+      ),
+    );
   }
 }

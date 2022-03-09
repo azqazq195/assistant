@@ -1,6 +1,6 @@
 {
-    "name": "assistant",
-    "short_name": "assistant",
+    "name": "fluent",
+    "short_name": "fluent",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
