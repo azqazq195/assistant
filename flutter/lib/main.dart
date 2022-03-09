@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
+          // routes: {'/': (_) => const MyHomePageTest()},
           routes: {'/': (_) => const MyHomePage()},
           color: appTheme.color,
           darkTheme: ThemeData(
@@ -102,14 +103,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class MyHomePageTest extends StatefulWidget {
+  const MyHomePageTest({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageTestState createState() => _MyHomePageTestState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageTestState extends State<MyHomePageTest> {
   bool value = false;
 
   int index = 0;
@@ -287,9 +288,6 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
-            infoBadge: const InfoBadge(
-              source: Text('9'),
-            ),
           ),
           _LinkPaneItemAction(
             icon: const Icon(FluentIcons.open_source),
@@ -401,6 +399,131 @@ class _LinkPaneItemAction extends PaneItem {
         showTextOnTop: showTextOnTop,
         autofocus: autofocus,
       ),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool value = false;
+
+  int index = 0;
+
+  final settingsController = ScrollController();
+
+  @override
+  void dispose() {
+    settingsController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appTheme = context.watch<AppTheme>();
+    return NavigationView(
+      appBar: NavigationAppBar(
+        title: () {
+          if (kIsWeb) return const Text(appTitle);
+          return const DragToMoveArea(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(appTitle),
+            ),
+          );
+        }(),
+        actions: kIsWeb
+            ? null
+            : DragToMoveArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [Spacer(), WindowButtons()],
+                ),
+              ),
+      ),
+      pane: NavigationPane(
+        selected: index,
+        onChanged: (i) => setState(() => index = i),
+        size: const NavigationPaneSize(
+          openMinWidth: 200,
+          openMaxWidth: 260,
+        ),
+        header: Container(
+          height: kOneLineTileHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: const FlutterLogo(
+            style: FlutterLogoStyle.horizontal,
+            size: 100,
+          ),
+        ),
+        displayMode: appTheme.displayMode,
+        indicatorBuilder: () {
+          switch (appTheme.indicator) {
+            case NavigationIndicators.end:
+              return NavigationIndicator.end;
+            case NavigationIndicators.sticky:
+            default:
+              return NavigationIndicator.sticky;
+          }
+        }(),
+        items: [
+          PaneItemHeader(header: const Text("Assistant")),
+          PaneItem(
+            icon: const Icon(FluentIcons.code),
+            title: const Text('Code'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.database),
+            title: const Text('DataBase'),
+          ),
+        ],
+        autoSuggestBox: AutoSuggestBox(
+          controller: TextEditingController(),
+          items: const ['Code', 'DataBase', 'Settings', 'Source code'],
+          onSelected: (str) {
+            setState(() {
+              if (str == 'Code') {
+                index = 0;
+                return;
+              }
+              if (str == 'DataBase') {
+                index = 1;
+                return;
+              }
+              if (str == 'Settings') {
+                index = 2;
+                return;
+              }
+              if (str == 'Source code') {
+                return;
+              }
+            });
+          },
+        ),
+        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+        footerItems: [
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.settings),
+            title: const Text('Settings'),
+          ),
+          _LinkPaneItemAction(
+            icon: const Icon(FluentIcons.open_source),
+            title: const Text('Source code'),
+            link: 'https://github.com/azqazq195/assistant',
+          ),
+        ],
+      ),
+      content: NavigationBody(index: index, children: [
+        const CodePage(),
+        const DatabasePage(),
+        Settings(controller: settingsController),
+      ]),
     );
   }
 }

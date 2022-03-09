@@ -96,8 +96,20 @@ class _DatabasePageState extends State<DatabasePage> {
                       actions: [
                         FilledButton(
                           child: const Text('Update'),
-                          onPressed: () {
-                            sqlUpdate();
+                          onPressed: () async {
+                            showDialog(
+                              context: context,
+                              builder: (_) => const ContentDialog(
+                                title: Text('Update...'),
+                                content: Center(child: ProgressRing()),
+                              ),
+                            );
+                            if (await sqlUpdate()) {
+                              snackbar(context, 'Update success.');
+                            } else {
+                              snackbar(context, 'Update failed.');
+                            }
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                         ),
@@ -207,7 +219,8 @@ class _DatabasePageState extends State<DatabasePage> {
 
     var sqlScript = mysqlPassword.isEmpty
         ? '''
-    "$mysqlPath\\mysql.exe" -u $mysqlUsername center < center-db-populate.sql;
+    "$mysqlPath\\mysql.exe" -u $mysqlUsername < db-populate.sql;
+    "$mysqlPath\\mysql.exe" -u $mysqlUsername < center-db-populate.sql;
     '''
         : '''
     "$mysqlPath\\mysql.exe" -u $mysqlUsername -p$mysqlPassword < db-populate.sql

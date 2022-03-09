@@ -1,16 +1,12 @@
 import 'dart:io';
 
-import 'package:fluent/provider/database.dart';
-import 'package:fluent/utils/logger.dart';
 import 'package:fluent/utils/shared_preferences.dart';
 import 'package:fluent/utils/utils.dart';
 
 enum Schema { csttec, center }
 
 class Convertor {
-  final database = Database();
-
-  Future<List<String>> loadDatabase(Schema schema) async {
+  Future<List<Table>> loadDatabase(Schema schema) async {
     var filePath =
         SharedPreferences.prefs.getString(Preferences.persistencePath.name) ??
             '';
@@ -52,14 +48,7 @@ class Convertor {
       }
     }
 
-    List<String> tableDomainList = [];
-    for (Table table in tableList) {
-      print(table.tableName);
-      print(table.domain);
-      tableDomainList.add(table.domain);
-    }
-    tableDomainList.sort((a, b) => a.compareTo(b));
-    return tableDomainList;
+    return tableList;
   }
 }
 
@@ -78,111 +67,79 @@ class Table {
     tableName = temp.substring(temp.lastIndexOf("`") + 2);
     domain = toCapitalize(toCamel(tableName));
 
-    //   for (String string in code.split("\n")) {
-    //     string = string.trim();
-    //     print(string);
-    //     // 테이블 명 구하기.
-    //     if (string.startsWith("CREATE")) {
-    //       tableName =
-    //           string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
-    //       if (tableName.contains("`")) {
-    //         tableName = tableName.substring(tableName.lastIndexOf("`") + 2);
-    //       }
-    //       domain = toCapitalize(toCamel(tableName));
-    //     }
+    for (int i = 1; i < strings.length; i++) {
+      final string = strings[i].trim();
 
-    //     // 컬럼 구하기.
-    //     if (string.startsWith("`")) {
-    //       bool isAI = false;
-    //       bool isNullable = false;
-    //       if (string.contains("AUTO_INCREMENT")) {
-    //         hasAI = true;
-    //         isAI = true;
-    //       }
-    //       if (string.contains("NOT NULL")) {
-    //         isNullable = false;
-    //       } else if (string.contains("NULL")) {
-    //         isNullable = true;
-    //       }
-    //       var temp = string.split(" ");
-    //       String name = temp[0]
-    //           .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
-    //       String type = temp[1];
-    //       if (!type.contains("TINYINT")) {
-    //         type = type.replaceAll(RegExp(r"[^A-Z]"), "");
-    //       }
-    //       columns.add(Column(name, type, getType(type), isAI, isNullable));
-    //     }
+      if (string.startsWith("`")) {
+        bool isAI = false;
+        bool isNullable = false;
+        if (string.contains("AUTO_INCREMENT")) {
+          hasAI = true;
+          isAI = true;
+        }
+        if (string.contains("NOT NULL")) {
+          isNullable = false;
+        } else if (string.contains("NULL")) {
+          isNullable = true;
+        }
 
-    //     // 기본키, 외래키 검수
-    //     if (string.indexOf("PRIMARY KEY") == 0) {
-    //       String pk =
-    //           string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
-    //       for (int k = 0; k < columns.length; k++) {
-    //         if (columns[k].dbName == pk) {
-    //           columns[k].isPK = true;
-    //         }
-    //       }
-    //     }
+        var temp = string.split(" ");
+        String name = temp[0]
+            .substring(temp[0].indexOf("`") + 1, temp[0].lastIndexOf("`"));
+        String type = temp[1];
+        if (!type.contains("TINYINT")) {
+          type = type.replaceAll(RegExp(r"[^A-Z]"), "");
+        }
+        columns.add(Column(name, type, dbTypeToJavaType(type.toUpperCase()),
+            isAI, isNullable));
+      }
 
-    //     if (string.indexOf("FOREIGN KEY") == 0) {
-    //       String fk =
-    //           string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
-    //       for (int k = 0; k < columns.length; k++) {
-    //         if (columns[k].dbName == fk) {
-    //           columns[k].isFK = true;
-    //         }
-    //       }
-    //     }
-    //   }
+      // 기본키, 외래키 검수
+      if (string.indexOf("PRIMARY KEY") == 0) {
+        String pk =
+            string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        for (int k = 0; k < columns.length; k++) {
+          if (columns[k].dbName == pk) {
+            columns[k].isPK = true;
+          }
+        }
+      }
 
-    //   // 디비 컬럼명 자바 변수명으로 바꾸기
-    //   for (int i = 0; i < columns.length; i++) {
-    //     var temp = columns[i].dbName.split("_");
-    //     for (int k = 0; k < temp.length; k++) {
-    //       if (k == 0) {
-    //         columns[i].javaName = temp[k];
-    //       } else {
-    //         columns[i].javaName = columns[i].javaName! +
-    //             temp[k][0].toUpperCase() +
-    //             temp[k].substring(1);
-    //       }
-    //     }
+      if (string.indexOf("FOREIGN KEY") == 0) {
+        String fk =
+            string.substring(string.indexOf("`") + 1, string.lastIndexOf("`"));
+        for (int k = 0; k < columns.length; k++) {
+          if (columns[k].dbName == fk) {
+            columns[k].isFK = true;
+          }
+        }
+      }
+    }
 
-    //     if (!columns[i].isPK && !columns[i].isFK) {
-    //       columns[i].javaName = columns[i].javaName!.substring(1);
-    //     }
-    //   }
+    // 디비 컬럼명 자바 변수명으로 바꾸기
+    for (int i = 0; i < columns.length; i++) {
+      var temp = columns[i].dbName.split("_");
+      for (int k = 0; k < temp.length; k++) {
+        if (k == 0) {
+          columns[i].javaName = temp[k];
+        } else {
+          columns[i].javaName = columns[i].javaName! +
+              temp[k][0].toUpperCase() +
+              temp[k].substring(1);
+        }
+      }
 
-    //   for (Column column in columns) {
-    //     if (column.dbName == "id") {
-    //       hasId = true;
-    //       break;
-    //     }
-    //   }
-    // }
+      if (!columns[i].isPK && !columns[i].isFK) {
+        columns[i].javaName = columns[i].javaName!.substring(1);
+      }
+    }
 
-    // String getType(type) {
-    //   switch (type) {
-    //     case "INT":
-    //       return "int";
-    //     case "DOUBLE":
-    //       return "double";
-    //     case "TINYINT":
-    //       return "enum";
-    //     case "TINYINT(1)":
-    //     case "bool":
-    //       return "boolean";
-    //     case "VARCHAR":
-    //     case "TEXT":
-    //       return "String";
-    //     case "DECIMAL":
-    //       return "BigDecimal";
-    //     case "TIMESTAMP":
-    //       return "Date";
-    //     default:
-    //       return "UNKNOWN";
-    //   }
+    for (Column column in columns) {
+      if (column.dbName == "id") {
+        hasId = true;
+        break;
+      }
+    }
   }
 
   @override
@@ -243,4 +200,27 @@ class Column {
   bool isFK = false;
 
   Column(this.dbName, this.dbType, this.javaType, this.isAI, this.isNullable);
+}
+
+String dbTypeToJavaType(type) {
+  switch (type) {
+    case "INT":
+      return "int";
+    case "DOUBLE":
+      return "double";
+    case "TINYINT":
+      return "enum";
+    case "TINYINT(1)":
+    case "BOOL":
+      return "boolean";
+    case "VARCHAR":
+    case "TEXT":
+      return "String";
+    case "DECIMAL":
+      return "BigDecimal";
+    case "TIMESTAMP":
+      return "Date";
+    default:
+      return "UNKNOWN";
+  }
 }

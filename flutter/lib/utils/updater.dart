@@ -148,8 +148,8 @@ class Updater {
                 color: Colors.orange,
               ),
             ),
-            Text(""),
-            Text("업데이트 내용"),
+            const Text(""),
+            const Text("업데이트 내용"),
           ],
         ),
         action: TextButton(

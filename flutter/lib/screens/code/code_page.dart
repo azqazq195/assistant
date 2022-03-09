@@ -1,5 +1,4 @@
-import 'package:fluent/utils/convertor.dart';
-import 'package:fluent/utils/updater.dart';
+import 'package:fluent/utils/convertor.dart' as convertor;
 import 'package:fluent/utils/utils.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +13,6 @@ class CodePage extends StatefulWidget {
 }
 
 class _CodePageState extends State<CodePage> {
-  final convertor = Convertor();
-
   @override
   Widget build(BuildContext context) {
     final tableController = TextEditingController();
@@ -25,84 +22,116 @@ class _CodePageState extends State<CodePage> {
       builder: (context, _) {
         final database = context.watch<Database>();
 
-        return ScaffoldPage(
+        return ScaffoldPage.scrollable(
           header: PageHeader(
             title: const Text('Code'),
-            commandBar: Button(
-              child: const Text('Load Database'),
-              onPressed: () async {
-                showDialog(
-                  context: context,
-                  builder: (_) => const ContentDialog(
-                    title: Text('Load Database..'),
-                    content: Center(child: ProgressRing()),
-                  ),
-                );
-                database.tableList =
-                    await convertor.loadDatabase(Schema.center);
-                Navigator.pop(context);
-                snackbar(context, 'Load database success.');
-              },
+            commandBar: Row(
+              children: [
+                Button(
+                  child: const Text('Load center'),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const ContentDialog(
+                        title: Text('Load Database..'),
+                        content: Center(child: ProgressRing()),
+                      ),
+                    );
+                    database.tableList = await convertor.Convertor()
+                        .loadDatabase(convertor.Schema.center);
+                    Navigator.pop(context);
+                    snackbar(context, 'Load database success.');
+                  },
+                ),
+                Button(
+                  child: const Text('Load csttec'),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const ContentDialog(
+                        title: Text('Load Database..'),
+                        content: Center(child: ProgressRing()),
+                      ),
+                    );
+                    database.tableList = await convertor.Convertor()
+                        .loadDatabase(convertor.Schema.csttec);
+                    Navigator.pop(context);
+                    snackbar(context, 'Load database success.');
+                  },
+                ),
+              ],
             ),
           ),
-          content: Padding(
-            padding: EdgeInsets.only(
-              bottom: kPageDefaultVerticalPadding,
-              left: PageHeader.horizontalPadding(context),
-              right: PageHeader.horizontalPadding(context),
-            ),
-            child: Row(
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: AutoSuggestBox(
-                    items: database.tableList,
+                    items: database.tableDomainList,
                     clearButtonEnabled: false,
                     controller: tableController,
                     placeholder: 'Pick a Table',
                     trailingIcon: IconButton(
                       icon: const Icon(FluentIcons.cancel),
                       onPressed: () {
-                        print(tableController.text);
                         tableController.clear();
                       },
                     ),
-                    onSelected: (text) {},
+                    onSelected: (text) {
+                      database.setColumnList(text);
+                    },
                   ),
-                ),
-                Button(
-                  child: const Text('Load Database'),
-                  onPressed: () {
-                    showSnackbar(
-                      context,
-                      Snackbar(
-                        extended: true,
-                        content: ListBody(
-                          children: [
-                            Text(
-                              "2021-02-12",
-                              style: TextStyle(
-                                color: Colors.orange,
-                              ),
-                            ),
-                            Text(""),
-                            Text("업데이트 내용"),
-                          ],
-                        ),
-                        action: TextButton(
-                          child: const Text('Download'),
-                          onPressed: () async {
-                            await Updater().openDownloadWebUrl();
-                          },
-                        ),
-                      ),
-                      duration: const Duration(seconds: 3),
-                    );
-                  },
                 ),
               ],
             ),
-          ),
+            biggerSpacerH,
+            Card(
+              child: ReorderableListView(
+                shrinkWrap: true,
+                onReorder: (a, b) => debugPrint('reorder $a to $b'),
+                children: [
+                  for (var column in database.columnList)
+                    ListTile(
+                      key: ValueKey(column.dbName),
+                      title: Text(column.javaName ?? "ERROR"),
+                      leading: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            child: column.isPK
+                                ? Center(
+                                    child: Text(
+                                      "PK",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
+                          SizedBox(
+                            width: 20,
+                            child: column.isFK
+                                ? Center(
+                                    child: Text(
+                                      "FK",
+                                      style: TextStyle(
+                                        color: Colors.magenta['lightest'],
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
