@@ -287,6 +287,9 @@ class _MyHomePageState extends State<MyHomePage> {
           PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
+            infoBadge: const InfoBadge(
+              source: Text('9'),
+            ),
           ),
           _LinkPaneItemAction(
             icon: const Icon(FluentIcons.open_source),

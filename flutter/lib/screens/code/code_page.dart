@@ -1,4 +1,5 @@
 import 'package:fluent/utils/convertor.dart';
+import 'package:fluent/utils/updater.dart';
 import 'package:fluent/utils/utils.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +69,36 @@ class _CodePageState extends State<CodePage> {
                     ),
                     onSelected: (text) {},
                   ),
+                ),
+                Button(
+                  child: const Text('Load Database'),
+                  onPressed: () {
+                    showSnackbar(
+                      context,
+                      Snackbar(
+                        extended: true,
+                        content: ListBody(
+                          children: [
+                            Text(
+                              "2021-02-12",
+                              style: TextStyle(
+                                color: Colors.orange,
+                              ),
+                            ),
+                            Text(""),
+                            Text("업데이트 내용"),
+                          ],
+                        ),
+                        action: TextButton(
+                          child: const Text('Download'),
+                          onPressed: () async {
+                            await Updater().openDownloadWebUrl();
+                          },
+                        ),
+                      ),
+                      duration: const Duration(seconds: 3),
+                    );
+                  },
                 ),
               ],
             ),

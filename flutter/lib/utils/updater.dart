@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart' hide Response;
 import 'package:fluent/api/client/git_rest_client.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
@@ -43,7 +43,7 @@ class Updater {
     final latestVersion = await getLatestVersion();
 
     if (currentVersion != latestVersion) {
-      _showUpdateAlert(context);
+      _showUpdateSnackbar(context);
       return;
     }
 
@@ -52,7 +52,7 @@ class Updater {
     }
   }
 
-  Future<void> _openDownloadWebUrl() async {
+  Future<void> openDownloadWebUrl() async {
     final release = await GitRestClient(Dio()).getReleaseLatest();
     final url = release.assets[0]["browser_download_url"];
     if (await canLaunch(url)) {
@@ -81,8 +81,8 @@ class Updater {
           children: [
             Text(
               date,
-              style: const TextStyle(
-                color: Colors.orangeAccent,
+              style: TextStyle(
+                color: Colors.orange,
               ),
             ),
             const Text(""),
@@ -101,93 +101,65 @@ class Updater {
   }
 
   Future<void> _showUpdatedAlert(BuildContext context) async {
-    showDialog<void>(
+    showDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "업데이트 내역",
-            style: TextStyle(
-              color: Colors.blueAccent,
-              fontWeight: FontWeight.bold,
-            ),
+      builder: (_) => ContentDialog(
+        title: Text(
+          "업데이트 내역",
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
           ),
-          content: SingleChildScrollView(
-            child: FutureBuilder<Widget>(
-              future: _releaseList(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data;
-                } else {
-                  return const LinearProgressIndicator();
-                }
-              },
-            ),
+        ),
+        content: SingleChildScrollView(
+          child: FutureBuilder<Widget>(
+            future: _releaseList(),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data;
+              } else {
+                return const ProgressRing();
+              }
+            },
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('닫기'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-          elevation: 24.0,
-        );
-      },
-    );
-  }
-
-  void _showUpdateAlert(BuildContext context) {
-    List<Widget> _releaseList = [];
-    _releaseList.add(
-      ListBody(
-        children: const [
-          Text(
-            "2021-02-12",
-            style: TextStyle(
-              color: Colors.orangeAccent,
-            ),
+        ),
+        actions: [
+          FilledButton(
+            child: const Text('Update'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          Text(""),
-          Text("업데이트 내용"),
         ],
       ),
     );
+  }
 
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "새로운 버전",
-            style: TextStyle(
-              color: Colors.blueAccent,
-              fontWeight: FontWeight.bold,
+  void _showUpdateSnackbar(BuildContext context) {
+    showSnackbar(
+      context,
+      Snackbar(
+        extended: true,
+        content: ListBody(
+          children: [
+            Text(
+              "2021-02-12",
+              style: TextStyle(
+                color: Colors.orange,
+              ),
             ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(children: _releaseList),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('개발자의 노력을 무시하기'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('최신 버전 다운로드'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _openDownloadWebUrl();
-              },
-            ),
+            Text(""),
+            Text("업데이트 내용"),
           ],
-        );
-      },
+        ),
+        action: TextButton(
+          child: const Text('Download'),
+          onPressed: () async {
+            await Updater().openDownloadWebUrl();
+          },
+        ),
+      ),
+      duration: const Duration(seconds: 3),
     );
   }
 }
