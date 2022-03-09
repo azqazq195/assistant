@@ -118,8 +118,8 @@ class _MobileState extends State<Mobile> {
             onPressed: disabled
                 ? null
                 : () {
-              print('pressed text button');
-            },
+                    print('pressed text button');
+                  },
           ),
           spacer,
           FilledButton(
@@ -127,8 +127,8 @@ class _MobileState extends State<Mobile> {
             onPressed: disabled
                 ? null
                 : () {
-              print('pressed filled button');
-            },
+                    print('pressed filled button');
+                  },
           ),
           spacer,
           OutlinedButton(
@@ -136,8 +136,8 @@ class _MobileState extends State<Mobile> {
             onPressed: disabled
                 ? null
                 : () {
-              print('pressed outlined button');
-            },
+                    print('pressed outlined button');
+                  },
           ),
         ]),
         biggerSpacer,
