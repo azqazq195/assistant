@@ -84,8 +84,8 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          routes: {'/': (_) => const MyHomePageTest()},
-          // routes: {'/': (_) => const MyHomePage()},
+          // routes: {'/': (_) => const MyHomePageTest()},
+          routes: {'/': (_) => const MyHomePage()},
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
