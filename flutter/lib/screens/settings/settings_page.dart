@@ -72,7 +72,9 @@ class _SettingsState extends State<Settings> {
     final mysqlUsernameController = TextEditingController();
     final mysqlPasswordController = TextEditingController();
     final mysqlPathController = TextEditingController();
-    final persistencePathController = TextEditingController();
+
+    final svnPersistencePathController = TextEditingController();
+    final localPersistencePathController = TextEditingController();
 
     return ChangeNotifierProvider(
       create: (_) => Config(),
@@ -87,7 +89,9 @@ class _SettingsState extends State<Settings> {
         mysqlUsernameController.text = config.mySqlUsername;
         mysqlPasswordController.text = config.mysqlPassword;
         mysqlPathController.text = config.mysqlPath;
-        persistencePathController.text = config.persistencePath;
+
+        svnPersistencePathController.text = config.svnPersistencePath;
+        localPersistencePathController.text = config.localPersistencePath;
 
         return ScaffoldPage.scrollable(
           header: const PageHeader(title: Text('Settings')),
@@ -325,12 +329,15 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
+            biggerSpacerH,
+            Text('Persistence',
+                style: FluentTheme.of(context).typography.subtitle),
             spacerH,
             TextBox(
-              header: 'Persistence path',
+              header: 'Svn Persistence path',
               placeholder:
                   "C:\\Users\\azqaz\\Documents\\Assistant\\server_DevTrunk\\src\\main\\resources\\com\\csttec\\server\\persistence",
-              controller: persistencePathController,
+              controller: svnPersistencePathController,
               readOnly: true,
               textInputAction: TextInputAction.next,
               prefix: const Padding(
@@ -349,8 +356,43 @@ class _SettingsState extends State<Settings> {
                       if (directoryPath == null) {
                         snackbar(context, "선택 취소.");
                       } else {
-                        persistencePathController.text = directoryPath;
-                        config.persistencePath = persistencePathController.text;
+                        svnPersistencePathController.text = directoryPath;
+                        config.svnPersistencePath =
+                            svnPersistencePathController.text;
+                        snackbar(context, "Path 저장 완료!");
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+            spacerH,
+            TextBox(
+              header: 'Work Space Persistence path',
+              placeholder:
+                  "C:\\work_space\\server_DevTrunk\\src\\main\\resources\\com\\csttec\\server\\persistence",
+              controller: localPersistencePathController,
+              readOnly: true,
+              textInputAction: TextInputAction.next,
+              prefix: const Padding(
+                padding: EdgeInsetsDirectional.only(start: 8.0),
+                child: Icon(FluentIcons.fabric_folder),
+              ),
+              outsideSuffix: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: SizedBox(
+                  width: 80,
+                  child: Button(
+                    child: const Text('Change'),
+                    onPressed: () async {
+                      String? directoryPath =
+                          await FilePicker.platform.getDirectoryPath();
+                      if (directoryPath == null) {
+                        snackbar(context, "선택 취소.");
+                      } else {
+                        localPersistencePathController.text = directoryPath;
+                        config.localPersistencePath =
+                            localPersistencePathController.text;
                         snackbar(context, "Path 저장 완료!");
                       }
                     },

@@ -194,9 +194,9 @@ class _DatabasePageState extends State<DatabasePage> {
         SharedPreferences.prefs.getString(Preferences.mysqlPassword.name) ?? '';
     final mysqlPath =
         SharedPreferences.prefs.getString(Preferences.mysqlPath.name) ?? '';
-    final persistencePath =
-        SharedPreferences.prefs.getString(Preferences.persistencePath.name) ??
-            '';
+    final localPersistencePath = SharedPreferences.prefs
+            .getString(Preferences.localPersistencePath.name) ??
+        '';
 
     if (mysqlUsername.isEmpty) {
       snackbar(context,
@@ -210,7 +210,7 @@ class _DatabasePageState extends State<DatabasePage> {
       Logger.d('mysql path is null.. skip sql update.');
       return false;
     }
-    if (persistencePath.isEmpty) {
+    if (localPersistencePath.isEmpty) {
       snackbar(context,
           'Persistence path is null.\nPlease setting at settings page.');
       Logger.d('persistence path is null.. skip sql update.');
@@ -228,7 +228,7 @@ class _DatabasePageState extends State<DatabasePage> {
     ''';
 
     var shell = Shell(throwOnError: false);
-    shell = shell.pushd(persistencePath);
+    shell = shell.pushd(localPersistencePath);
 
     List<ProcessResult> processResultList = await shell.run('''
     chcp 65001 

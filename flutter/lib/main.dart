@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent/screens/code/code_page.dart';
 import 'package:fluent/screens/database/database_page.dart';
@@ -50,12 +51,16 @@ void main() async {
 
   if (isDesktop) {
     await WindowManager.instance.ensureInitialized();
+
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle('hidden');
-      // await windowManager.setSize(const Size(755, 545));
-      // await windowManager.setMinimumSize(const Size(755, 545));
-      await windowManager.setSize(const Size(1510, 1090));
-      await windowManager.setMinimumSize(const Size(1510, 1090));
+      if (window.physicalSize.width > 1920) {
+        await windowManager.setSize(const Size(1510, 1090));
+        await windowManager.setMinimumSize(const Size(1510, 1090));
+      } else {
+        await windowManager.setSize(const Size(755, 545));
+        await windowManager.setMinimumSize(const Size(755, 545));
+      }
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
@@ -79,8 +84,8 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          // routes: {'/': (_) => const MyHomePageTest()},
-          routes: {'/': (_) => const MyHomePage()},
+          routes: {'/': (_) => const MyHomePageTest()},
+          // routes: {'/': (_) => const MyHomePage()},
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,

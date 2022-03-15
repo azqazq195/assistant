@@ -22,7 +22,9 @@ enum Preferences {
   mysqlUsername,
   mysqlPassword,
   mysqlPath,
-  persistencePath,
+
+  svnPersistencePath,
+  localPersistencePath,
 
   indicator,
   displayMode,

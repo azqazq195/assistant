@@ -33,13 +33,25 @@ class Config extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _persistencePath =
-      SharedPreferences.prefs.getString(Preferences.persistencePath.name) ?? '';
-  String get persistencePath => _persistencePath;
-  set persistencePath(String persistencePath) {
-    _persistencePath = persistencePath;
+  String _svnPersistencePath =
+      SharedPreferences.prefs.getString(Preferences.svnPersistencePath.name) ??
+          '';
+  String get svnPersistencePath => _svnPersistencePath;
+  set svnPersistencePath(String svnPersistencePath) {
+    _svnPersistencePath = svnPersistencePath;
     SharedPreferences.prefs
-        .setString(Preferences.persistencePath.name, persistencePath);
+        .setString(Preferences.svnPersistencePath.name, svnPersistencePath);
+    notifyListeners();
+  }
+
+  String _localPersistencePath = SharedPreferences.prefs
+          .getString(Preferences.localPersistencePath.name) ??
+      '';
+  String get localPersistencePath => _localPersistencePath;
+  set localPersistencePath(String localPersistencePath) {
+    _localPersistencePath = localPersistencePath;
+    SharedPreferences.prefs
+        .setString(Preferences.localPersistencePath.name, localPersistencePath);
     notifyListeners();
   }
 
