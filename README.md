@@ -54,4 +54,4 @@ All rights reserved.
 
 작업할 Repository Url을 등록합니다.
 
-![image](https://user-images.githubusercontent.com/45132207/158577208-b11066c4-68e3-4988-90c9-031c977824a6.png)
+
