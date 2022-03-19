@@ -19,7 +19,8 @@ const List<String> accentColorNames = [
   'Green',
 ];
 
-const _svnDownloadurl = "https://tortoisesvn.net/downloads.html";
+const _svnDownloadurl =
+    "https://www.visualsvn.com/files/Apache-Subversion-1.14.1.zip";
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, this.controller}) : super(key: key);
