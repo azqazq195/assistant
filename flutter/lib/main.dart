@@ -1,9 +1,11 @@
-import 'dart:ui';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent/screens/code/code_page.dart';
 import 'package:fluent/screens/database/database_page.dart';
+import 'package:fluent/screens/update/update_page.dart';
 import 'package:fluent/utils/logger.dart';
 import 'package:fluent/utils/shared_preferences.dart';
+import 'package:fluent/utils/updater.dart';
+import 'package:fluent/utils/utils.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:system_theme/system_theme.dart';
 
@@ -54,13 +56,15 @@ void main() async {
 
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle('hidden');
-      if (window.physicalSize.width > 1920) {
-        await windowManager.setSize(const Size(1510, 1090));
-        await windowManager.setMinimumSize(const Size(1510, 1090));
-      } else {
-        await windowManager.setSize(const Size(755, 545));
-        await windowManager.setMinimumSize(const Size(755, 545));
-      }
+      await windowManager.setSize(const Size(1510, 1090));
+      await windowManager.setMinimumSize(const Size(1510, 1090));
+      // if (window.physicalSize.width > 1920) {
+      //   await windowManager.setSize(const Size(1510, 1090));
+      //   await windowManager.setMinimumSize(const Size(1510, 1090));
+      // } else {
+      //   await windowManager.setSize(const Size(755, 545));
+      //   await windowManager.setMinimumSize(const Size(755, 545));
+      // }
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
@@ -116,8 +120,6 @@ class MyHomePageTest extends StatefulWidget {
 }
 
 class _MyHomePageTestState extends State<MyHomePageTest> {
-  bool value = false;
-
   int index = 0;
 
   final settingsController = ScrollController();
@@ -126,6 +128,12 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
   void dispose() {
     settingsController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    Updater().checkVersion(context);
+    super.initState();
   }
 
   @override
@@ -236,7 +244,9 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
             'Typhography',
             'Mobile',
             'Other',
+            'Update notes',
             'Settings',
+            'Bug report',
             'Source code'
           ],
           onSelected: (str) {
@@ -277,8 +287,16 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
                 index = 8;
                 return;
               }
-              if (str == 'Settings') {
+              if (str == 'Update notes') {
                 index = 9;
+                return;
+              }
+              if (str == 'Settings') {
+                index = 10;
+                return;
+              }
+              if (str == 'Bug report') {
+                bugReport();
                 return;
               }
               if (str == 'Source code') {
@@ -291,8 +309,19 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
         footerItems: [
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.check_list),
+            title: const Text('Update notes'),
+          ),
+          PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.report_hacked),
+            title: const Text('Bug report'),
+            onTap: () {
+              bugReport();
+            },
           ),
           _LinkPaneItemAction(
             icon: const Icon(FluentIcons.open_source),
@@ -311,6 +340,7 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
         const TypographyPage(),
         const Mobile(),
         const Others(),
+        const UpdatePage(),
         Settings(controller: settingsController),
       ]),
     );
@@ -416,11 +446,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool value = false;
-
   int index = 0;
 
   final settingsController = ScrollController();
+
+  @override
+  void initState() {
+    Updater().checkVersion(context);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -489,7 +523,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         autoSuggestBox: AutoSuggestBox(
           controller: TextEditingController(),
-          items: const ['Code', 'DataBase', 'Settings', 'Source code'],
+          items: const [
+            'Code',
+            'DataBase',
+            'Update notes',
+            'Settings',
+            'Bug report',
+            'Source code'
+          ],
           onSelected: (str) {
             setState(() {
               if (str == 'Code') {
@@ -500,8 +541,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 index = 1;
                 return;
               }
-              if (str == 'Settings') {
+              if (str == 'Update notes') {
                 index = 2;
+                return;
+              }
+              if (str == 'Settings') {
+                index = 3;
+                return;
+              }
+              if (str == 'Bug report') {
+                bugReport();
                 return;
               }
               if (str == 'Source code') {
@@ -514,8 +563,19 @@ class _MyHomePageState extends State<MyHomePage> {
         footerItems: [
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.check_list),
+            title: const Text('Update notes'),
+          ),
+          PaneItem(
             icon: const Icon(FluentIcons.settings),
             title: const Text('Settings'),
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.report_hacked),
+            title: const Text('Bug report'),
+            onTap: () {
+              bugReport();
+            },
           ),
           _LinkPaneItemAction(
             icon: const Icon(FluentIcons.open_source),
@@ -527,6 +587,7 @@ class _MyHomePageState extends State<MyHomePage> {
       content: NavigationBody(index: index, children: [
         const CodePage(),
         const DatabasePage(),
+        const UpdatePage(),
         Settings(controller: settingsController),
       ]),
     );

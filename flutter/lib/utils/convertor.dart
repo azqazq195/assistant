@@ -467,11 +467,11 @@ class Convertor {
     }
   }
 
-  List<Map<String, String>> service() {
+  List<Map<String, String>> service(String packageName, String author) {
     List methods = ['Create', 'Delete', 'Edit', 'List', 'Add', 'Remove'];
     List<Map<String, String>> services = [];
     for (String method in methods) {
-      String service = """package com.csttec.server.service.PACKAGE;
+      String service = """package com.csttec.server.service.$packageName;
 
 import org.springframework.stereotype.Service;
 
@@ -490,10 +490,10 @@ import com.csttec.server.domain.Session;
  * 
  * </pre>
  * 
- * @author AUTHOR
+ * @author $author
  *
  */
-@Service("PACKAGE.$method${table.domain}")
+@Service("$packageName.$method${table.domain}")
 public class $method${table.domain}Service extends AService{
 
 	@Override

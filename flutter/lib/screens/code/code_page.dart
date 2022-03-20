@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:fluent/utils/convertor.dart' as db;
+import 'package:fluent/utils/logger.dart';
+import 'package:fluent/utils/shared_preferences.dart';
 import 'package:fluent/utils/utils.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:fluent/provider/database.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CodePage extends StatefulWidget {
   const CodePage({Key? key}) : super(key: key);
@@ -15,26 +20,25 @@ class CodePage extends StatefulWidget {
 
 class _CodePageState extends State<CodePage> {
   db.Convertor? convertor;
+  List<bool> selectedService = [];
+  final packageNameController = TextEditingController();
+  final authorController = TextEditingController();
+
+  @override
+  void initState() {
+    authorController.text =
+        SharedPreferences.prefs.getString(Preferences.author.name) ?? '';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final tableController = TextEditingController();
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => LoacalDatabase()),
-        ChangeNotifierProvider(create: (_) => SvnDatabase()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => Database(),
       builder: (context, _) {
-        final localDatabase = context.watch<LoacalDatabase>();
-        final svnDatabase = context.watch<SvnDatabase>();
-
-        Future<void> _loadDatabase(db.Schema schema) async {
-          localDatabase.tableList =
-              await db.Database().loadDatabase(db.Location.local, schema);
-          svnDatabase.tableList =
-              await db.Database().loadDatabase(db.Location.svn, schema);
-        }
+        final database = context.watch<Database>();
 
         return ScaffoldPage.scrollable(
           header: PageHeader(
@@ -51,7 +55,7 @@ class _CodePageState extends State<CodePage> {
                         content: Center(child: ProgressRing()),
                       ),
                     );
-                    _loadDatabase(db.Schema.center);
+                    await database.loadDatabase(db.Schema.center);
                     Navigator.pop(context);
                     snackbar(context, 'Load database success.');
                   },
@@ -67,7 +71,7 @@ class _CodePageState extends State<CodePage> {
                         content: Center(child: ProgressRing()),
                       ),
                     );
-                    _loadDatabase(db.Schema.csttec);
+                    await database.loadDatabase(db.Schema.csttec);
                     Navigator.pop(context);
                     snackbar(context, 'Load database success.');
                   },
@@ -81,7 +85,7 @@ class _CodePageState extends State<CodePage> {
               children: [
                 Expanded(
                   child: AutoSuggestBox(
-                    items: svnDatabase.tableDomainList,
+                    items: database.allTableDomainList,
                     clearButtonEnabled: false,
                     controller: tableController,
                     placeholder: 'Pick a Table',
@@ -93,12 +97,14 @@ class _CodePageState extends State<CodePage> {
                       },
                     ),
                     onSelected: (tableDomain) {
-                      svnDatabase.setColumnList(tableDomain);
-                      localDatabase.setColumnList(tableDomain);
+                      database.setLocalColumnList(tableDomain);
+                      database.setSvnColumnList(tableDomain);
                       setState(() {
-                        if (localDatabase.getTable(tableDomain) != null) {
+                        if (database.getLocalTable(tableDomain) == null) {
+                          convertor = null;
+                        } else {
                           convertor = db.Convertor(
-                              localDatabase.getTable(tableDomain)!);
+                              database.getLocalTable(tableDomain)!);
                         }
                       });
                     },
@@ -120,7 +126,7 @@ class _CodePageState extends State<CodePage> {
                       text: const Text('Domain'),
                       onPressed: () {
                         if (convertor == null) {
-                          snackbar(context, 'Table is null.');
+                          snackbar(context, 'Local Table is null.');
                         } else {
                           Clipboard.setData(
                               ClipboardData(text: convertor!.domain()));
@@ -137,7 +143,7 @@ class _CodePageState extends State<CodePage> {
                       text: const Text('Mapper'),
                       onPressed: () {
                         if (convertor == null) {
-                          snackbar(context, 'Table is null.');
+                          snackbar(context, 'Local Table is null.');
                         } else {
                           Clipboard.setData(
                               ClipboardData(text: convertor!.mapper()));
@@ -154,7 +160,7 @@ class _CodePageState extends State<CodePage> {
                       text: const Text('MyBatis'),
                       onPressed: () {
                         if (convertor == null) {
-                          snackbar(context, 'Table is null.');
+                          snackbar(context, 'Local Table is null.');
                         } else {
                           Clipboard.setData(
                               ClipboardData(text: convertor!.mybatis()));
@@ -168,11 +174,141 @@ class _CodePageState extends State<CodePage> {
                         radius: 12.0,
                         child: FlutterLogo(size: 14.0),
                       ),
-                      text: const Text('MyBatis'),
+                      text: const Text('Service'),
                       onPressed: () {
                         if (convertor == null) {
-                          snackbar(context, 'Table is null.');
-                        } else {}
+                          snackbar(context, 'Local Table is null.');
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (_) => ContentDialog(
+                              title: const Text('Set Package Name And Author'),
+                              content: Column(
+                                children: [
+                                  TextBox(
+                                      placeholder: 'Package Name',
+                                      controller: packageNameController,
+                                      textInputAction: TextInputAction.next),
+                                  TextBox(
+                                      placeholder: 'Author',
+                                      controller: authorController,
+                                      textInputAction: TextInputAction.next),
+                                ],
+                              ),
+                              actions: [
+                                FilledButton(
+                                  child: const Text('Next'),
+                                  onPressed: () {
+                                    SharedPreferences.prefs.setString(
+                                        Preferences.author.name,
+                                        authorController.text);
+                                    setState(() {
+                                      authorController.text =
+                                          SharedPreferences.prefs.getString(
+                                                  Preferences.author.name) ??
+                                              '';
+                                    });
+
+                                    List<Map<String, String>> serviceList =
+                                        convertor!.service(
+                                            packageNameController.text,
+                                            authorController.text);
+                                    selectedService.clear();
+                                    for (int i = 0;
+                                        i < serviceList.length;
+                                        i++) {
+                                      selectedService.add(true);
+                                    }
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return StatefulBuilder(
+                                          builder: ((context, setState) {
+                                            return ContentDialog(
+                                              title: const Text(
+                                                  'Select Service to Create'),
+                                              content: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  for (var i = 0;
+                                                      i < serviceList.length;
+                                                      i++)
+                                                    Checkbox(
+                                                      checked:
+                                                          selectedService[i],
+                                                      onChanged: (v) =>
+                                                          setState(() =>
+                                                              selectedService[
+                                                                      i] =
+                                                                  v ?? false),
+                                                      content: Text(
+                                                        serviceList[i]
+                                                            ['fileName']!,
+                                                        style: TextStyle(
+                                                          color: FluentTheme.of(
+                                                                  context)
+                                                              .inactiveColor,
+                                                        ),
+                                                      ),
+                                                    )
+                                                ],
+                                              ),
+                                              actions: [
+                                                FilledButton(
+                                                  child: const Text('Download'),
+                                                  onPressed: () async {
+                                                    Logger.i(
+                                                        "Download Serivces");
+                                                    final localDirectory =
+                                                        Logger.localDirectory;
+                                                    final directory = Directory(
+                                                        '$localDirectory/service');
+                                                    if (!await directory
+                                                        .exists()) {
+                                                      directory.create();
+                                                    }
+                                                    for (var i = 0;
+                                                        i < serviceList.length;
+                                                        i++) {
+                                                      if (selectedService[i]) {
+                                                        Logger.i(
+                                                            "create file ${serviceList[i]['fileName']!}.java");
+                                                        File('${directory.path}/${serviceList[i]['fileName']!}.java')
+                                                            .writeAsString(
+                                                                serviceList[i][
+                                                                    'service']!);
+                                                      }
+                                                    }
+                                                    await launch(
+                                                        Uri.file(directory.path)
+                                                            .toString());
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                Button(
+                                                  child: const Text('Back'),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                Button(
+                                  child: const Text('Cancel'),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                     ),
                   ],
@@ -192,7 +328,7 @@ class _CodePageState extends State<CodePage> {
                               style:
                                   FluentTheme.of(context).typography.bodyLarge),
                           spacerH,
-                          databaseCard(svnDatabase),
+                          databaseCard(database.svnColumnList),
                         ],
                       ),
                     ),
@@ -205,7 +341,7 @@ class _CodePageState extends State<CodePage> {
                               style:
                                   FluentTheme.of(context).typography.bodyLarge),
                           spacerH,
-                          databaseCard(localDatabase),
+                          databaseCard(database.localColumnList),
                         ],
                       ),
                     ),
@@ -219,8 +355,8 @@ class _CodePageState extends State<CodePage> {
     );
   }
 
-  Widget databaseCard(Database database) {
-    if (database.columnList.isEmpty) {
+  Widget databaseCard(List<db.Column> columnList) {
+    if (columnList.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -229,7 +365,7 @@ class _CodePageState extends State<CodePage> {
         shrinkWrap: true,
         onReorder: (a, b) => debugPrint('reorder $a to $b'),
         children: [
-          for (var column in database.columnList)
+          for (var column in columnList)
             ListTile(
               key: ValueKey(column.dbName),
               title: Text(column.javaName ?? "ERROR"),

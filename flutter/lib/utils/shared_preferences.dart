@@ -26,6 +26,8 @@ enum Preferences {
   svnPersistencePath,
   localPersistencePath,
 
+  author,
+
   indicator,
   displayMode,
   themeMode,

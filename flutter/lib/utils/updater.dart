@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart' hide Response;
 import 'package:fluent/api/client/git_rest_client.dart';
+import 'package:fluent/utils/logger.dart';
+import 'package:fluent/utils/utils.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,15 +42,18 @@ class Updater {
   }
 
   Future<void> checkVersion(BuildContext context) async {
+    Logger.i('check version');
     final currentVersion = await getCurrentVersion();
     final latestVersion = await getLatestVersion();
 
     if (currentVersion != latestVersion) {
-      _showUpdateSnackbar(context);
+      Logger.i('this app is old version');
+      await _showUpdateSnackbar(context);
       return;
     }
 
     if (await isUpdated()) {
+      Logger.i('this app was updated');
       _showUpdatedAlert(context);
     }
   }
@@ -135,7 +141,11 @@ class Updater {
     );
   }
 
-  void _showUpdateSnackbar(BuildContext context) {
+  Future<void> _showUpdateSnackbar(BuildContext context) async {
+    Release release = await getLatestRelease();
+    String createdAt = DateFormat("yyyy-MM-dd")
+        .format(DateFormat("yyyy-MM-dd").parse(release.createdAt));
+
     showSnackbar(
       context,
       Snackbar(
@@ -143,13 +153,14 @@ class Updater {
         content: ListBody(
           children: [
             Text(
-              "2021-02-12",
+              createdAt,
               style: TextStyle(
                 color: Colors.orange,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const Text(""),
-            const Text("업데이트 내용"),
+            spacerH,
+            MarkdownBody(data: release.body),
           ],
         ),
         action: TextButton(
