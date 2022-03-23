@@ -175,11 +175,10 @@ class Convertor {
       }
     }
 
-    String getDomainType(String type) {
-      switch (type) {
+    String getDomainType(Column column) {
+      switch (column.javaType) {
         case "int":
         case "boolean":
-        case "enum":
           return "int";
         case "double":
           return "double";
@@ -189,6 +188,8 @@ class Convertor {
           return "Date";
         case "BigDecimal":
           return "BigDecimal";
+        case "enum":
+          return toCapitalize(column.javaName);
         default:
           return "UNKNOWN";
       }
@@ -196,8 +197,7 @@ class Convertor {
 
     StringBuffer sb = StringBuffer();
     for (Column column in table.columns) {
-      sb.write(
-          """\tprivate ${getDomainType(column.javaType)} ${column.javaName}""");
+      sb.write("""\tprivate ${getDomainType(column)} ${column.javaName}""");
       if (getNullType(column.javaType) != "null") {
         sb.write(" = ${getNullType(column.javaType)};\n");
       } else {

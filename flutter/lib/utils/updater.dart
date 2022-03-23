@@ -77,6 +77,7 @@ class Updater {
     List<Widget> _releaseList = [];
     List<Release> releaseList = await getReleaseList();
 
+    int count = 4;
     for (Release release in releaseList) {
       final DateTime createdAt = DateTime.parse(release.createdAt);
       final DateFormat dateFormat = DateFormat('MM월 dd일, yyyy');
@@ -99,6 +100,10 @@ class Updater {
           ],
         ),
       );
+      count--;
+      if (count < 0) {
+        break;
+      }
     }
 
     return ListBody(
@@ -131,7 +136,7 @@ class Updater {
         ),
         actions: [
           FilledButton(
-            child: const Text('Update'),
+            child: const Text('Close'),
             onPressed: () {
               Navigator.pop(context);
             },
