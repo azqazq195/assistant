@@ -33,12 +33,14 @@ class Updater {
 
   Future<bool> isUpdated() async {
     final prefs = await SharedPreferences.getInstance();
-    final bool updated = prefs.getBool('updated') ?? true;
-    if (updated) {
-      await prefs.setBool('updated', false);
+    final String savedVersion = prefs.getString('currentVersion') ?? '';
+    final String currentVersion = await getCurrentVersion();
+    if (savedVersion != currentVersion) {
+      prefs.setString('currentVersion', currentVersion);
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future<void> checkVersion(BuildContext context) async {

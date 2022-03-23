@@ -13,6 +13,7 @@ class SharedPreferences {
 enum Preferences {
   autoLogin,
   welcome,
+  currentVersion,
 
   svnUsername,
   svnPassword,
