@@ -1,6 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'package:fluent/screens/code/code_page.dart';
+import 'package:fluent/screens/commandbars.dart';
 import 'package:fluent/screens/database/database_page.dart';
+import 'package:fluent/screens/flyouts.dart';
 import 'package:fluent/screens/update/update_page.dart';
 import 'package:fluent/utils/logger.dart';
 import 'package:fluent/utils/shared_preferences.dart';
@@ -43,7 +46,7 @@ void main() async {
   if (kIsWeb ||
       [TargetPlatform.windows, TargetPlatform.android]
           .contains(defaultTargetPlatform)) {
-    SystemTheme.accentInstance;
+    SystemTheme.accentColor;
   }
 
   setPathUrlStrategy();
@@ -55,16 +58,16 @@ void main() async {
     await WindowManager.instance.ensureInitialized();
 
     windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle('hidden');
-      await windowManager.setSize(const Size(1000, 600));
-      await windowManager.setSize(const Size(1000, 600));
-      // if (window.physicalSize.width > 1920) {
-      //   await windowManager.setSize(const Size(1510, 1090));
-      //   await windowManager.setMinimumSize(const Size(1510, 1090));
-      // } else {
-      //   await windowManager.setSize(const Size(755, 545));
-      //   await windowManager.setMinimumSize(const Size(755, 545));
-      // }
+      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+      var size = await DesktopWindow.getWindowSize();
+      print(size);
+      if (size.width > 1920) {
+        await windowManager.setSize(const Size(1510, 1090));
+        await windowManager.setMinimumSize(const Size(1510, 1090));
+      } else {
+        await windowManager.setSize(const Size(755, 545));
+        await windowManager.setMinimumSize(const Size(755, 545));
+      }
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
@@ -88,8 +91,8 @@ class MyApp extends StatelessWidget {
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          // routes: {'/': (_) => const MyHomePageTest()},
-          routes: {'/': (_) => const MyHomePage()},
+          routes: {'/': (_) => const MyHomePageTest()},
+          // routes: {'/': (_) => const MyHomePage()},
           color: appTheme.color,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -175,13 +178,13 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: () {
+        indicator: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return NavigationIndicator.end;
+              return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
             default:
-              return NavigationIndicator.sticky;
+              return const StickyNavigationIndicator();
           }
         }(),
         items: [
@@ -221,6 +224,14 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
             title: const Text('Mobile'),
           ),
           PaneItem(
+            icon: const Icon(FluentIcons.toolbox),
+            title: const Text('Command bars'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.pop_expand),
+            title: const Text('Popups, Flyouts and Context Menus'),
+          ),
+          PaneItem(
             icon: Icon(
               appTheme.displayMode == PaneDisplayMode.top
                   ? FluentIcons.more
@@ -243,6 +254,8 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
             'Icons',
             'Typhography',
             'Mobile',
+            'CommandBars',
+            'FlyoutShowcase',
             'Other',
             'Update notes',
             'Settings',
@@ -283,16 +296,24 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
                 index = 7;
                 return;
               }
-              if (str == 'Other') {
+              if (str == 'CommandBars') {
                 index = 8;
                 return;
               }
-              if (str == 'Update notes') {
+              if (str == 'FlyoutShowcase') {
                 index = 9;
                 return;
               }
-              if (str == 'Settings') {
+              if (str == 'Other') {
                 index = 10;
+                return;
+              }
+              if (str == 'Update notes') {
+                index = 11;
+                return;
+              }
+              if (str == 'Settings') {
+                index = 12;
                 return;
               }
               if (str == 'Bug report') {
@@ -339,6 +360,8 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
         const IconsPage(),
         const TypographyPage(),
         const Mobile(),
+        const CommandBars(),
+        const FlyoutShowcase(),
         const Others(),
         const UpdatePage(),
         Settings(controller: settingsController),
@@ -501,13 +524,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         displayMode: appTheme.displayMode,
-        indicatorBuilder: () {
+        indicator: () {
           switch (appTheme.indicator) {
             case NavigationIndicators.end:
-              return NavigationIndicator.end;
+              return const EndNavigationIndicator();
             case NavigationIndicators.sticky:
             default:
-              return NavigationIndicator.sticky;
+              return const StickyNavigationIndicator();
           }
         }(),
         items: [
