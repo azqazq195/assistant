@@ -1,8 +1,9 @@
 package com.moseoh.assistant.controller;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 import com.moseoh.assistant.entity.User;
+import com.moseoh.assistant.response.Response;
 import com.moseoh.assistant.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +23,22 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")
-    public ResponseEntity<Object> getUsers() {
-        List<User> users = userService.getUsers();
-        if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(users);
+    @Transactional
+    public ResponseEntity<Response> getUsers() {
+        return Response.toResponseEntity(userService.getUserList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable long id) {
-        return ResponseEntity.ok().body(userService.getUser(id));
+    @Transactional
+
+    public ResponseEntity<Response> getUser(@PathVariable long id) {
+        return Response.toResponseEntity(userService.getUser(id));
     }
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
-        return ResponseEntity.ok().body(userService.createUser(user));
+    @Transactional
+    public ResponseEntity<Response> createUser(@RequestBody User user) {
+        return Response.toResponseEntity(userService.createUser(user));
     }
 
 }
