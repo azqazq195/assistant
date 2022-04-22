@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### yaml ###
-**/resources/*.yml
+src/main/resources/*.yml
