@@ -1,4 +1,15 @@
+# common
 spring:
+  profiles:
+    active: local
+
+testKey: testKey
+
+--- # local
+spring:
+  config:
+    activate:
+      on-profile: local
   datasource:
     url: jdbc:mariadb://localhost:3306/assistant
     driver-class-name: org.mariadb.jdbc.Driver
@@ -13,6 +24,9 @@ spring:
 
 server:
   port: 8080
-# logging:
-#   level:
-#     "[org.springframework.web]": debug
+
+--- # dev
+spring:
+  config:
+    activate:
+      on-profile: dev

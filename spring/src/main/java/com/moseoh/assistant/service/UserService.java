@@ -3,14 +3,16 @@ package com.moseoh.assistant.service;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.repository.UserRepository;
 import com.moseoh.assistant.utils.ServiceException;
 import com.moseoh.assistant.utils.Validation;
 import com.moseoh.assistant.utils.ServiceException.ErrorCode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +21,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
+    // private Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Transactional
     public User getUser(long id) {
         User user = userRepository.findUserById(id);
         if (user == null) {
@@ -29,10 +32,12 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public List<User> getUserList() {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User createUser(User user) {
         validation(user);
 
@@ -56,6 +61,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     private void validation(User user) {
         if (!Validation.checkEmail(user.getEmail())) {
             throw new ServiceException(ErrorCode.NOT_VALID_EMAIL);

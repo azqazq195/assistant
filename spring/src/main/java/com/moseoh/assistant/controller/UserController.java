@@ -23,20 +23,16 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")
-    @Transactional
     public ResponseEntity<Response> getUsers() {
         return Response.toResponseEntity(userService.getUserList());
     }
 
     @GetMapping("/{id}")
-    @Transactional
-
     public ResponseEntity<Response> getUser(@PathVariable long id) {
         return Response.toResponseEntity(userService.getUser(id));
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Response> createUser(@RequestBody User user) {
         return Response.toResponseEntity(userService.createUser(user));
     }
