@@ -1,7 +1,5 @@
 package com.moseoh.assistant.controller;
 
-import javax.transaction.Transactional;
-
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.response.Response;
 import com.moseoh.assistant.service.UserService;
