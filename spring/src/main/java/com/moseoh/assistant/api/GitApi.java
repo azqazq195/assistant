@@ -1,5 +1,10 @@
 package com.moseoh.assistant.api;
 
-public class GitApi {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
+public class GitApi {
+    @Value("${gitToken}")
+    private String token;
 }

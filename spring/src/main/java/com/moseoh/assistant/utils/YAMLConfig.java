@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @Component
 public class YAMLConfig {
-    @Value("${testKey}")
-    private String testKey;
+    @Value("${gitToken}")
+    private String token;
 }

@@ -1,6 +1,6 @@
 package com.moseoh.assistant.utils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ public class YamlTest {
 
     @Test
     public void testKey() {
-        assertEquals("testKey", yamlConfig.getTestKey());
+        assertNotNull(yamlConfig.getToken());
     }
 
 }
