@@ -8,7 +8,7 @@ PINK="\033[1;35""m"
 NC="\033[0m"
 
 echo "${GREEN} > change yml profile 'local -> dev'${NC}"
-yq -i '.spring.profiles.active = "dev"' src/main/resources/application.yml
+yq -i '.spring.config.import[0] = "classpath:application-dev.yml"' src/main/resources/application.yml
 
 echo "${GREEN} > commit comment: ${NC}"
 read COMMIT
@@ -33,13 +33,13 @@ git push origin master
 
 echo "${GREEN} > build docker image.. ${NC}"
 
-./gradlew bootBuildImage --imageName=azqazq195/assistant_server
+./gradlew clean bootBuildImage --imageName=azqazq195/assistant_server
 
 echo "${GREEN} > docker push.. ${NC}"
 
 docker push azqazq195/assistant_server
 
 echo "${GREEN} > change yml profile 'dev -> local'${NC}"
-yq -i '.spring.profiles.active = "local"' src/main/resources/application.yml
+yq -i '.spring.config.import[0] = "classpath:application-local.yml"' src/main/resources/application.yml
 
 echo "${GREEN} >>> DONE <<<'${NC}"
