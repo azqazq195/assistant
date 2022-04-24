@@ -22,11 +22,11 @@ git push origin master
 # echo "${GREEN} > docker image tag: ${NC}"
 # read TAG
 
-# ./gradlew bootBuildImage -Dspring.profiles.active=dev --imageName=azqazq195/assistant:"$TAG"
+# ./gradlew bootBuildImage -Dspring.profiles.active=dev --imageName=azqazq195/assistant_server:"$TAG"
 
 # echo "${GREEN} > docker push.. ${NC}"
 
-# docker push azqazq195/assistant:"$TAG"
+# docker push azqazq195/assistant_server:"$TAG"
 
 echo "${GREEN} > build docker image.. ${NC}"
 
