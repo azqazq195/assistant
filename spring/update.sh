@@ -30,8 +30,8 @@ git push origin master
 
 echo "${GREEN} > build docker image.. ${NC}"
 
-./gradlew bootBuildImage -Dspring.profiles.active=dev --imageName=azqazq195/assistant
+./gradlew bootBuildImage -Dspring.profiles.active=dev --imageName=azqazq195/assistant_server
 
 echo "${GREEN} > docker push.. ${NC}"
 
-docker push azqazq195/assistant
+docker push azqazq195/assistant_server
