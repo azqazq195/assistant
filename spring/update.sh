@@ -30,7 +30,7 @@ git push origin master
 
 echo "${GREEN} > build docker image.. ${NC}"
 
-SPRING_PROFILES_ACTIVE=dev ./gradlew bootBuildImage -Pprofile=dev --imageName=azqazq195/assistant_server
+./gradlew bootBuildImage --imageName=azqazq195/assistant_server
 
 echo "${GREEN} > docker push.. ${NC}"
 
