@@ -16,4 +16,4 @@ git commit -m "$COMMIT"
 git push origin master
 
 echo "${GREEN} > build docker image ${NC}"
-./gradlew bootBuildImage --imageName=azqazq195/assistant
+./gradlew bootBuildImage -Dspring.profiles.active=dev --imageName=azqazq195/assistant
