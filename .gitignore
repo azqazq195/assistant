@@ -2,17 +2,3 @@
 .idea
 *.iml
 
-# token 사용 관련
-update.sh
-
-# flutter
-flutter/.dart_tool
-flutter/.idea
-flutter/.vscode
-flutter/build
-flutter/.flutter-plugins
-flutter/.flutter-plugins-dependencies
-
-flutter/update.sh
-flutter/token.dart
-
