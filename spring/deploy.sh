@@ -3,6 +3,8 @@
 GREEN="\033[1;32""m"
 NC="\033[0m"
 
+echo "${GREEN} > docker login ${NC}"
+docker login
 echo "${GREEN} > stop container ${NC}"
 docker stop assistant_server
 echo "${GREEN} > remove container ${NC}"
