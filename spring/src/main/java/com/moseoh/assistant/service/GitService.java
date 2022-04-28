@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.moseoh.assistant.utils.YAMLConfig;
+import com.moseoh.assistant.utils.config.YAMLConfig;
 
 import org.kohsuke.github.GHAsset;
 import org.kohsuke.github.GHRelease;

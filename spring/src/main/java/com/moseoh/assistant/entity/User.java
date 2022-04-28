@@ -1,44 +1,32 @@
 package com.moseoh.assistant.entity;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.moseoh.assistant.dto.UserDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonInclude(Include.NON_NULL)
+@Getter
+@Builder
 @Entity(name = "user")
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
     private String password;
-    private String passwordCheck;
-    private Date createdDate;
-    private Date modifiedDate;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    public String getPassword() {
-        return password;
-    }
-
-    @JsonProperty(access = Access.WRITE_ONLY)
-    public String getPasswordCheck() {
-        return passwordCheck;
+    public UserDto toUserDto() {
+        return new UserDto(
+                id,
+                name,
+                email,
+                getCreatedDate(),
+                getModifiDate());
     }
 }

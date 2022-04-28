@@ -3,7 +3,7 @@ package com.moseoh.assistant.api;
 import java.io.IOException;
 import java.util.List;
 
-import com.moseoh.assistant.utils.YAMLConfig;
+import com.moseoh.assistant.utils.config.YAMLConfig;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

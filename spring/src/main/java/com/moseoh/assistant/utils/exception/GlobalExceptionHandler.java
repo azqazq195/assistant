@@ -1,7 +1,7 @@
-package com.moseoh.assistant.utils;
+package com.moseoh.assistant.utils.exception;
 
 import com.moseoh.assistant.response.ErrorResponse;
-import com.moseoh.assistant.utils.ServiceException.ErrorCode;
+import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;

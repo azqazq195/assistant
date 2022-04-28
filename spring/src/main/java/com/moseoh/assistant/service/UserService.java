@@ -1,30 +1,32 @@
 package com.moseoh.assistant.service;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.moseoh.assistant.dto.SignUpRequestDto;
+import com.moseoh.assistant.dto.UserDto;
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.repository.UserRepository;
-import com.moseoh.assistant.utils.ServiceException;
 import com.moseoh.assistant.utils.Validation;
-import com.moseoh.assistant.utils.ServiceException.ErrorCode;
+import com.moseoh.assistant.utils.exception.ServiceException;
+import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-@Component
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    // private Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User getUser(long id) {
+    public User getUser(Long id) {
         User user = userRepository.findUserById(id);
         if (user == null) {
             throw new ServiceException(ErrorCode.USER_NOT_FOUND);
@@ -33,18 +35,33 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> getUserList() {
-        return userRepository.findAll();
+    public UserDto getUserDto(long id) {
+        User user = userRepository.findUserById(id);
+        if (user == null) {
+            throw new ServiceException(ErrorCode.USER_NOT_FOUND);
+        }
+        return user.toUserDto();
     }
 
     @Transactional
-    public User createUser(User user) {
-        validation(user);
+    public List<UserDto> getUserList() {
+        List<UserDto> userList = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            userList.add(user.toUserDto());
+        }
 
-        user.setCreatedDate(new Date());
-        user.setModifiedDate(new Date());
+        return userList;
+    }
 
-        return userRepository.save(user);
+    @Transactional
+    public User signUp(SignUpRequestDto signUpRequestDto) {
+        validation(signUpRequestDto);
+
+        return userRepository.save(User.builder()
+                .email(signUpRequestDto.getEmail())
+                .name(signUpRequestDto.getName())
+                .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
+                .build());
     }
 
     public User loginUser(String email, String password) {
@@ -62,16 +79,16 @@ public class UserService {
     }
 
     @Transactional
-    private void validation(User user) {
-        if (!Validation.checkEmail(user.getEmail())) {
+    private void validation(SignUpRequestDto signUpRequestDto) {
+        if (!Validation.checkEmail(signUpRequestDto.getEmail())) {
             throw new ServiceException(ErrorCode.NOT_VALID_EMAIL);
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequestDto.getEmail())) {
             throw new ServiceException(ErrorCode.EXISTS_EMALL);
         }
 
-        if (!user.getPasswordCheck().equals(user.getPassword())) {
+        if (!signUpRequestDto.getPasswordCheck().equals(signUpRequestDto.getPassword())) {
             throw new ServiceException(ErrorCode.NOT_MATCHED_PASSWORD);
         }
     }

@@ -1,4 +1,4 @@
-package com.moseoh.assistant.utils;
+package com.moseoh.assistant.utils.exception;
 
 import org.springframework.http.HttpStatus;
 

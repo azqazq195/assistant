@@ -2,7 +2,7 @@ package com.moseoh.assistant.response;
 
 import java.time.LocalDateTime;
 
-import com.moseoh.assistant.utils.ServiceException.ErrorCode;
+import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 
 import org.springframework.http.ResponseEntity;
 
