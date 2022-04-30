@@ -38,6 +38,7 @@ out/
 
 ### yaml ###
 src/main/resources/*.yml
+src/main/resources/yml.zip
 
 ### log ###
 logs/
