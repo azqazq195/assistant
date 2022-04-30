@@ -1,9 +1,11 @@
 package com.moseoh.assistant.utils.config;
 
+import com.moseoh.assistant.utils.exception.ServletExceptionHandler;
 import com.moseoh.assistant.utils.filter.JwtAuthenticationFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
+    private final ServletExceptionHandler servletExceptionHandler;
 
     @Bean
     @Override
@@ -35,15 +38,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signin", "/signup").permitAll()
-                // .anyRequest().hasRole(role)
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v1/user/signin", "/v1/user/signup").permitAll()
+                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
+                // .anyRequest().hasRole("USER")
 
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling()
+                .authenticationEntryPoint(servletExceptionHandler)
+                .accessDeniedHandler(servletExceptionHandler)
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // web.ignoring().antMatchers("/v2/api-docs");
+        web.ignoring().antMatchers(
+                "/swagger-resources/**",
+                "/swagger-ui/**",
+                "/swagger/**",
+                "**");
     }
 }

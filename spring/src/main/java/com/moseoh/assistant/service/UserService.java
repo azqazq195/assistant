@@ -54,14 +54,15 @@ public class UserService {
     }
 
     @Transactional
-    public User signUp(SignUpRequestDto signUpRequestDto) {
+    public UserDto signUp(SignUpRequestDto signUpRequestDto) {
         validation(signUpRequestDto);
 
         return userRepository.save(User.builder()
                 .email(signUpRequestDto.getEmail())
                 .name(signUpRequestDto.getName())
                 .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
-                .build());
+                .build())
+                .toUserDto();
     }
 
     public User loginUser(String email, String password) {

@@ -18,7 +18,7 @@ import lombok.Getter;
 @JsonInclude(Include.NON_NULL)
 public class Response {
 
-    private final LocalDateTime timestamp = LocalDateTime.now();
+    private final LocalDateTime timestamp;
     private final int status;
     private final int code;
     private final String message;
@@ -36,29 +36,23 @@ public class Response {
             data.add(object);
         }
 
-        // if (data.isEmpty()) {
-        // httpStatus = HttpStatus.NO_CONTENT;
-        // } else {
-        // httpStatus = HttpStatus.OK;
-        // }
-
         if (data.isEmpty()) {
             return ResponseEntity.status(httpStatus)
-                    .body(Response.builder().status(httpStatus.value()).code(httpStatus.value())
+                    .body(Response.builder()
+                            .timestamp(LocalDateTime.now())
+                            .status(httpStatus.value())
+                            .code(httpStatus.value())
                             .message(httpStatus.name())
                             .build());
         } else {
             return ResponseEntity.status(httpStatus)
-                    .body(Response.builder().status(httpStatus.value()).code(httpStatus.value())
+                    .body(Response.builder()
+                            .timestamp(LocalDateTime.now())
+                            .status(httpStatus.value())
+                            .code(httpStatus.value())
                             .message(httpStatus.name())
                             .data(data)
                             .build());
         }
-
-        // return ResponseEntity.status(httpStatus)
-        // .body(Response.builder().status(httpStatus.value()).code(httpStatus.value())
-        // .message(httpStatus.name())
-        // .data(data)
-        // .build());
     }
 }

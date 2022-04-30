@@ -23,7 +23,6 @@ public class User extends BaseTimeEntity {
 
     public UserDto toUserDto() {
         return new UserDto(
-                id,
                 name,
                 email,
                 getCreatedDate(),
