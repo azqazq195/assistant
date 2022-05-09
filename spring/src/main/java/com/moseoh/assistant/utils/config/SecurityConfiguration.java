@@ -1,7 +1,6 @@
 package com.moseoh.assistant.utils.config;
 
 import com.moseoh.assistant.utils.exception.ServletExceptionHandler;
-import com.moseoh.assistant.utils.filter.JwtAuthenticationFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,9 +38,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/v1/user/signin", "/v1/user/signup").permitAll()
+                .antMatchers("/v1/authentication/signin",
+                        "/v1/authentication/signup",
+                        "/v1/authentication/refreshToken")
+                .permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                // .anyRequest().hasRole("USER")
+                .anyRequest().hasRole("USER")
 
                 .and()
                 .exceptionHandling()
@@ -55,9 +57,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
+                "/v2/api-docs",
                 "/swagger-resources/**",
                 "/swagger-ui/**",
-                "/swagger/**",
-                "**");
+                "/swagger/**");
     }
 }

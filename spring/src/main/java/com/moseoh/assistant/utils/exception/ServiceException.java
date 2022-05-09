@@ -15,16 +15,15 @@ public class ServiceException extends RuntimeException {
     public enum ErrorCode {
 
         /* 400 BAD_REQUEST : 잘못된 요청 */
-        INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다."),
-        MISMATCH_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다."),
         CANNOT_FOLLOW_MYSELF(HttpStatus.BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다."),
         NOT_MATCHED_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 다릅니다."),
         NOT_VALID_EMAIL(HttpStatus.BAD_REQUEST, "옳바르지 않은 이메일 주소입니다."),
         EXISTS_EMALL(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일 주소 입니다."),
 
         /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
+        MISMATCH_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰의 유저 정보가 일치하지 않습니다."),
         UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
-        INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다."),
+        INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
         UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "현재 내 계정 정보가 존재하지 않습니다."),
 
         /* 403 FORBIDDEN : 인증 값이 없는 요청 */

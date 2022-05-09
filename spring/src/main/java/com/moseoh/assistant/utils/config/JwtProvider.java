@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import com.moseoh.assistant.dto.TokenDto;
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.service.UserService;
 
@@ -16,9 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,11 +42,19 @@ public class JwtProvider {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createAccessToken(Long userId, List<String> roles) {
+    public TokenDto createTokenDto(Long userId, List<String> roles) {
+        Date now = new Date();
+
+        return new TokenDto(
+                "bearer",
+                createAccessToken(userId, roles, now),
+                createRefreshToken(now),
+                new Date(now.getTime() + accessTokenValidMillisecond));
+    }
+
+    public String createAccessToken(Long userId, List<String> roles, Date now) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
         claims.put(ROLES, roles);
-
-        Date now = new Date();
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -53,9 +65,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String createRefreshToken() {
-        Date now = new Date();
-
+    public String createRefreshToken(Date now) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
@@ -68,7 +78,7 @@ public class JwtProvider {
         User user = userService.getUser(Long.parseLong(claims.getSubject()));
         // UserDetails userDetails =
         // userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(user, "");
+        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
 
     private Claims parseClaims(String token) {
@@ -79,13 +89,20 @@ public class JwtProvider {
         return request.getHeader("X-AUTH-TOKEN");
     }
 
-    public boolean validationToken(String token) throws Exception {
+    // jwt 의 유효성 및 만료일자 확인
+    public boolean validationToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-            log.error(e.toString());
-            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("잘못된 Jwt 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하지 않는 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 토큰입니다.");
         }
+        return false;
     }
 }

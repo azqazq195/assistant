@@ -14,7 +14,7 @@ public class ExceptionController {
 
     @GetMapping("/entrypoint")
     public ResponseEntity<ErrorResponse> entrypoint() {
-        return ErrorResponse.toResponseEntity(ErrorCode.HAVE_NOT_ACCESS);
+        return ErrorResponse.toResponseEntity(ErrorCode.INVALID_TOKEN);
     }
 
     @GetMapping("/accessDenied")
