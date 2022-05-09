@@ -42,3 +42,7 @@ src/main/resources/yml.zip
 
 ### log ###
 logs/
+
+### sql ###
+center-db-populate.sql
+db-populate.sql

@@ -13,8 +13,6 @@ import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class GitService {
     private GitHub gitHub;
     private GHRepository repository;
     private String repositoryName = "azqazq195/assistant";
-    private Logger logger = LoggerFactory.getLogger(GitService.class);
 
     @Autowired
     public GitService(YAMLConfig yamlConfig) throws IOException {
@@ -49,7 +46,6 @@ public class GitService {
                         });
             }
 
-            logger.info(repository.listReleases().toList().toString());
             return releaseList;
         } catch (IOException e) {
             e.printStackTrace();

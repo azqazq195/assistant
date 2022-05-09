@@ -10,4 +10,10 @@ import lombok.Data;
 public class YAMLConfig {
     @Value("${gitToken}")
     private String token;
+    @Value("${spring.svn.url}")
+    private String svnUrl;
+    @Value("${spring.svn.username}")
+    private String svnUsername;
+    @Value("${spring.svn.password}")
+    private String svnPassword;
 }
