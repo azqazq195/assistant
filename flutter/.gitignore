@@ -53,5 +53,6 @@ app.*.map.json
 /.flutter-plugins
 /.flutter-plugins-dependencies
 
+/release.sh
 /update.sh
 /token.dart

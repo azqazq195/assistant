@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:fluent/main.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' as log;
 import 'package:path_provider/path_provider.dart';
+import '../screens/main/main_page.dart';
 
 class Logger {
   static late final String localDirectory;
