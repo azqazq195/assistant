@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' as log;
 import 'package:path_provider/path_provider.dart';
-import '../screens/main/main_page.dart';
+import 'package:fluent/utils/variable.dart';
 
 class Logger {
   static late final String localDirectory;

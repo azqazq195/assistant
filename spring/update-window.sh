@@ -37,6 +37,10 @@ echo -e "${GREEN} > build docker image.. ${NC}"
 
 ./gradlew clean bootBuildImage --imageName=azqazq195/assistant_server
 
+echo -e "${GREEN} > docker login.. ${NC}"
+
+docker login
+
 echo -e "${GREEN} > docker push.. ${NC}"
 
 docker push azqazq195/assistant_server

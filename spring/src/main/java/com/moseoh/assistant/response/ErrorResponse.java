@@ -17,7 +17,7 @@ public class ErrorResponse {
     private final LocalDateTime timestamp;
     private final int status;
     private final String error;
-    private final String code;
+    private final String errorCode;
     private final String message;
 
     public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
@@ -26,7 +26,7 @@ public class ErrorResponse {
                         .timestamp(LocalDateTime.now())
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
-                        .code(errorCode.name())
+                        .errorCode(errorCode.name())
                         .message(errorCode.getDetail())
                         .build());
     }

@@ -56,6 +56,8 @@ dev_dependencies:
   flutter_native_splash: ^2.1.5
   flutter_lints: ^1.0.0
   retrofit_generator: ^4.0.1
+  build_runner: "2.1.10"
+  json_serializable: ">4.4.0"
 
 flutter:
   uses-material-design: true

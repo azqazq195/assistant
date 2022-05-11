@@ -7,9 +7,9 @@ part of 'git_rest_client.dart';
 // **************************************************************************
 
 Release _$ReleaseFromJson(Map<String, dynamic> json) => Release(
-      tagName: json['tag_name'] as String,
+      tagName: json['tagName'] as String,
       body: json['body'] as String,
-      createdAt: json['created_at'] as String,
+      createdAt: json['createdAt'] as String,
       assets: json['assets'] as List<dynamic>,
     );
 
@@ -23,6 +23,8 @@ Map<String, dynamic> _$ReleaseToJson(Release instance) => <String, dynamic>{
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
+
+// ignore_for_file: unnecessary_brace_in_string_interps
 
 class _GitRestClient implements GitRestClient {
   _GitRestClient(this._dio, {this.baseUrl}) {

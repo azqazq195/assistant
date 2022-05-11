@@ -20,7 +20,6 @@ public class Response {
 
     private final LocalDateTime timestamp;
     private final int status;
-    private final int code;
     private final String message;
     private final List<Object> data;
 
@@ -41,7 +40,6 @@ public class Response {
                     .body(Response.builder()
                             .timestamp(LocalDateTime.now())
                             .status(httpStatus.value())
-                            .code(httpStatus.value())
                             .message(httpStatus.name())
                             .build());
         } else {
@@ -49,7 +47,6 @@ public class Response {
                     .body(Response.builder()
                             .timestamp(LocalDateTime.now())
                             .status(httpStatus.value())
-                            .code(httpStatus.value())
                             .message(httpStatus.name())
                             .data(data)
                             .build());

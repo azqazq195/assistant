@@ -1,3 +1,7 @@
+import 'package:fluent/api/client/rest_client.dart';
+import 'package:dio/dio.dart' hide Response;
+import 'package:fluent/api/dto/authentication_dto.dart';
+import 'package:fluent/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 const grey = Color.fromARGB(255, 130, 130, 130);
@@ -24,6 +28,18 @@ class _LoginPageState extends State<LoginPage> {
   bool _isAutoLogin = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _signin(String email, String password) async {
+    Response response = await RestClient(Dio()).signin(SignInRequestDto(
+      email: email,
+      password: password,
+    ));
+    if (response.status == 200) {
+      snackbar(context, "로그인 성공");
+    } else {
+      snackbar(context, "로그인 실패");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +160,10 @@ class _LoginPageState extends State<LoginPage> {
                       width: 300,
                       child: OutlinedButton(
                         style: const ButtonStyle(),
-                        onPressed: () {},
+                        onPressed: () async {
+                          await _signin(
+                              _emailController.text, _passwordController.text);
+                        },
                         child: const Text(
                           "로그인",
                           style: TextStyle(

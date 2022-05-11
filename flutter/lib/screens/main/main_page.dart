@@ -1,4 +1,18 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:window_manager/window_manager.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/link.dart';
+
+import 'package:fluent/screens/colors.dart';
+import 'package:fluent/screens/forms.dart';
+import 'package:fluent/screens/icons.dart';
+import 'package:fluent/screens/inputs.dart';
+import 'package:fluent/screens/mobile.dart';
+import 'package:fluent/screens/others.dart';
+import 'package:fluent/screens/settings/settings_page.dart';
+import 'package:fluent/screens/typography.dart';
 import 'package:fluent/provider/theme.dart';
 import 'package:fluent/screens/code/code_page.dart';
 import 'package:fluent/screens/commandbars.dart';
@@ -7,23 +21,7 @@ import 'package:fluent/screens/flyouts.dart';
 import 'package:fluent/screens/update/update_page.dart';
 import 'package:fluent/utils/updater.dart';
 import 'package:fluent/utils/utils.dart';
-import 'package:window_manager/window_manager.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/link.dart';
-
-import '../colors.dart';
-import '../forms.dart';
-import '../icons.dart';
-import '../inputs.dart';
-import '../mobile.dart';
-import '../others.dart';
-import '../settings/settings_page.dart';
-import '../typography.dart';
-
-const String appTitle = 'Assistant';
+import 'package:fluent/utils/variable.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -136,7 +134,7 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
           }
         }(),
         items: [
-          PaneItemHeader(header: const Text("Assistant")),
+          PaneItemHeader(header: const Text(appTitle)),
           PaneItem(
             icon: const Icon(FluentIcons.code),
             title: const Text('Code'),
@@ -482,7 +480,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }(),
         items: [
-          PaneItemHeader(header: const Text("Assistant")),
+          PaneItemHeader(header: const Text(appTitle)),
           PaneItem(
             icon: const Icon(FluentIcons.code),
             title: const Text('Code'),
