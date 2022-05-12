@@ -1,6 +1,7 @@
 package com.moseoh.assistant.utils.config;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,7 +28,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         String token = jwtProvider.resolveToken((HttpServletRequest) request);
 
-        log.info("request uri: " + ((HttpServletRequest) request).getRequestURI().toString());
+        HttpServletRequest r = ((HttpServletRequest) request);
+        String method = r.getMethod();
+        String requestUri = r.getRequestURI().toString();
+        // r.getReader().mark(1024);
+        // String body =
+        // r.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        // r.getReader().reset();
+        log.info("request: [" + method + "] - " + requestUri);
+        // log.info("body: " + body);
 
         if (token != null && jwtProvider.validationToken(token)) {
             Authentication authentication = jwtProvider.getAuthentication(token);

@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fluent/utils/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -23,52 +24,14 @@ import 'package:fluent/utils/updater.dart';
 import 'package:fluent/utils/utils.dart';
 import 'package:fluent/utils/variable.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+class MainPageTest extends StatefulWidget {
+  const MainPageTest({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
-      builder: (context, _) {
-        final appTheme = context.watch<AppTheme>();
-        return FluentApp(
-          title: appTitle,
-          themeMode: appTheme.mode,
-          debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {'/': (_) => const MyHomePageTest()},
-          // routes: {'/': (_) => const MyHomePage()},
-          color: appTheme.color,
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen() ? 2.0 : 0.0,
-            ),
-          ),
-          theme: ThemeData(
-            accentColor: appTheme.color,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen() ? 2.0 : 0.0,
-            ),
-          ),
-        );
-      },
-    );
-  }
+  _MainPageTestState createState() => _MainPageTestState();
 }
 
-class MyHomePageTest extends StatefulWidget {
-  const MyHomePageTest({Key? key}) : super(key: key);
-
-  @override
-  _MyHomePageTestState createState() => _MyHomePageTestState();
-}
-
-class _MyHomePageTestState extends State<MyHomePageTest> {
+class _MainPageTestState extends State<MainPageTest> {
   int index = 0;
 
   final settingsController = ScrollController();
@@ -85,29 +48,17 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
     super.initState();
   }
 
+  void logout() {
+    showConfirmAlert(context, "로그아웃", const Text("로그아웃하시겠습니까?"), () {
+      SharedPreferences.prefs.setBool(Preferences.autoLogin.name, false);
+      Navigator.pushNamed(context, '/signin');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
-      appBar: NavigationAppBar(
-        title: () {
-          if (kIsWeb) return const Text(appTitle);
-          return const DragToMoveArea(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(appTitle),
-            ),
-          );
-        }(),
-        actions: kIsWeb
-            ? null
-            : DragToMoveArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [Spacer(), WindowButtons()],
-                ),
-              ),
-      ),
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
@@ -206,7 +157,8 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
             'Update notes',
             'Settings',
             'Bug report',
-            'Source code'
+            'Source code',
+            'Log Out'
           ],
           onSelected: (str) {
             setState(() {
@@ -269,6 +221,10 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
               if (str == 'Source code') {
                 return;
               }
+              if (str == 'Log Out') {
+                logout();
+                return;
+              }
             });
           },
         ),
@@ -294,6 +250,13 @@ class _MyHomePageTestState extends State<MyHomePageTest> {
             icon: const Icon(FluentIcons.open_source),
             title: const Text('Source code'),
             link: 'https://github.com/azqazq195/assistant',
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.sign_out),
+            title: const Text('Log Out'),
+            onTap: () {
+              logout();
+            },
           ),
         ],
       ),
@@ -407,14 +370,14 @@ class _LinkPaneItemAction extends PaneItem {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
   int index = 0;
 
   final settingsController = ScrollController();
@@ -429,6 +392,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     settingsController.dispose();
     super.dispose();
+  }
+
+  void logout() {
+    showConfirmAlert(context, "로그아웃", const Text("로그아웃하시겠습니까?"), () {
+      SharedPreferences.prefs.setBool(Preferences.autoLogin.name, false);
+      Navigator.pushNamed(context, '/signin');
+    });
   }
 
   @override
@@ -498,7 +468,8 @@ class _MyHomePageState extends State<MyHomePage> {
             'Update notes',
             'Settings',
             'Bug report',
-            'Source code'
+            'Source code',
+            'Log Out'
           ],
           onSelected: (str) {
             setState(() {
@@ -523,6 +494,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 return;
               }
               if (str == 'Source code') {
+                return;
+              }
+              if (str == 'Log Out') {
+                logout();
                 return;
               }
             });
@@ -550,6 +525,13 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(FluentIcons.open_source),
             title: const Text('Source code'),
             link: 'https://github.com/azqazq195/assistant',
+          ),
+          PaneItemAction(
+            icon: const Icon(FluentIcons.sign_out),
+            title: const Text('Log Out'),
+            onTap: () {
+              logout();
+            },
           ),
         ],
       ),

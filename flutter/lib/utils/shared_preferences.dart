@@ -12,6 +12,8 @@ class SharedPreferences {
 
 enum Preferences {
   autoLogin,
+  email,
+  password,
   welcome,
   currentVersion,
 

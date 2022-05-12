@@ -26,7 +26,6 @@ class Response {
   String? errorCode;
   String message;
   List<dynamic>? data;
-  // final List<String> strs = data.map((e) => e as Object).toList();
 
   Response({
     required this.timestamp,
@@ -43,6 +42,10 @@ class Response {
   Map<String, dynamic> toJson() => _$ResponseToJson(this);
 
   List<SignInResponseDto> getSignInResponseDto() {
-    return data.map((e) => e as SignInResponseDto).toList();
+    return data!.map((e) => e as SignInResponseDto).toList();
+  }
+
+  bool ok() {
+    return status == 200;
   }
 }

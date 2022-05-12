@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'authentication_dto.g.dart';
+
+@JsonSerializable()
 class SignInRequestDto {
   String email;
   String password;
@@ -6,6 +11,11 @@ class SignInRequestDto {
     required this.email,
     required this.password,
   });
+
+  factory SignInRequestDto.fromJson(Map<String, dynamic> json) =>
+      _$SignInRequestDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignInRequestDtoToJson(this);
 }
 
 class SignInResponseDto {
@@ -22,6 +32,7 @@ class SignInResponseDto {
   });
 }
 
+@JsonSerializable()
 class SignUpRequestDto {
   String username;
   String email;
@@ -34,4 +45,9 @@ class SignUpRequestDto {
     required this.password,
     required this.passwordCheck,
   });
+
+  factory SignUpRequestDto.fromJson(Map<String, dynamic> json) =>
+      _$SignUpRequestDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignUpRequestDtoToJson(this);
 }

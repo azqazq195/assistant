@@ -32,7 +32,8 @@ Map<String, dynamic> _$ResponseToJson(Response instance) => <String, dynamic>{
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'https://api.moseoh.xyz/v1';
+    // baseUrl ??= 'https://api.moseoh.xyz/v1';
+    baseUrl ??= 'http://localhost:8080/v1';
   }
 
   final Dio _dio;
@@ -44,7 +45,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = signUpRequestDto;
+    final _data = <String, dynamic>{};
+    _data.addAll(signUpRequestDto.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
             Options(method: 'POST', headers: _headers, extra: _extra)
@@ -60,7 +62,8 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = signInRequestDto;
+    final _data = <String, dynamic>{};
+    _data.addAll(signInRequestDto.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
             Options(method: 'POST', headers: _headers, extra: _extra)

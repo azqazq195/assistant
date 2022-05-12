@@ -1,11 +1,16 @@
-import 'package:fluent/screens/welcome/welcome_page.dart';
+import 'package:fluent/api/api.dart';
+import 'package:fluent/provider/theme.dart';
+import 'package:fluent/screens/main/main_page.dart';
+import 'package:fluent/screens/welcome/signin_page.dart';
 import 'package:fluent/utils/logger.dart';
 import 'package:fluent/utils/shared_preferences.dart';
-
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent/utils/variable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:dio/dio.dart' hide Response;
 
 /// Checks if the current environment is a desktop environment.
 bool get isDesktop {
@@ -30,6 +35,7 @@ void main() async {
 
   await Logger.init();
   await SharedPreferences.init();
+  Api.init(Dio());
 
   // if (isDesktop) {
   //   await WindowManager.instance.ensureInitialized();
@@ -58,6 +64,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WelcomePage();
+    return ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      builder: (context, _) {
+        final appTheme = context.watch<AppTheme>();
+        return FluentApp(
+          title: appTitle,
+          themeMode: appTheme.mode,
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/signin',
+          routes: {
+            '/signin': (_) => const SignInPage(),
+            '/main': (_) => const MainPageTest()
+          },
+          // routes: {'/': (_) => const MyHomePage()},
+          color: appTheme.color,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: appTheme.color,
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
+          theme: ThemeData(
+            accentColor: appTheme.color,
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
+        );
+      },
+    );
   }
 }
