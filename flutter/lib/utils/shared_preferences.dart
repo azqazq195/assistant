@@ -14,6 +14,9 @@ enum Preferences {
   autoLogin,
   email,
   password,
+  accessToken,
+  refreshToken,
+
   welcome,
   currentVersion,
 

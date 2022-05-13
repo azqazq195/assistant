@@ -32,6 +32,7 @@ public class AuthenticationController {
     public ResponseEntity<Response> signUp(
             @ApiParam(value = "회원가입 정보", required = true) @RequestBody SignUpRequestDto signUpRequestDto) {
         log.info(signUpRequestDto.toString());
+        signUpRequestDto.checkEmpty();
         return Response.toResponseEntity(authenticationService.signUp(signUpRequestDto));
     }
 
@@ -40,6 +41,7 @@ public class AuthenticationController {
     public ResponseEntity<Response> signIn(
             @ApiParam(value = "로그인 정보", required = true) @RequestBody SignInRequestDto signInRequestDto) {
         log.info(signInRequestDto.toString());
+        signInRequestDto.checkEmpty();
         return Response.toResponseEntity(authenticationService.signIn(signInRequestDto));
     }
 

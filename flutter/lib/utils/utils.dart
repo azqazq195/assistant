@@ -4,6 +4,8 @@ import 'package:fluent/provider/theme.dart';
 import 'package:fluent/utils/logger.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:encrypt/encrypt.dart' as en;
+import 'package:fluent/utils/variable.dart';
 import 'package:dio/dio.dart' hide Response;
 
 const spacerH = SizedBox(height: 10.0);
@@ -153,4 +155,11 @@ ${await Logger.logTxt.readAsString()}
     Logger.w("Could not launch 'bugReport'");
     throw "Could not launch 'bugReport'";
   }
+}
+
+String encrypt(String str) {
+  en.Key key = en.Key.fromBase64(encryptKey);
+  en.IV iv = en.IV.fromLength(16);
+  en.Encrypter encrpter = en.Encrypter(en.AES(key));
+  return encrpter.encrypt(str, iv: iv).base64;
 }

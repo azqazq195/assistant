@@ -19,7 +19,6 @@ import com.moseoh.assistant.utils.exception.ServiceException;
 import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -29,14 +28,12 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public UserDto signUp(SignUpRequestDto signUpRequestDto) {
         validation(signUpRequestDto);
-        signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         return userRepository.save(signUpRequestDto.toEntity()).toUserDto();
     }
 
@@ -47,7 +44,7 @@ public class AuthenticationService {
         if (user == null) {
             throw new ServiceException(ErrorCode.USER_NOT_FOUND);
         }
-        if (!passwordEncoder.matches(signInRequestDto.getPassword(), user.getPassword())) {
+        if (!signInRequestDto.getPassword().equals(user.getPassword())) {
             throw new ServiceException(ErrorCode.NOT_MATCHED_PASSWORD);
         }
 
@@ -71,6 +68,7 @@ public class AuthenticationService {
 
     @Transactional
     private void validation(SignUpRequestDto signUpRequestDto) {
+
         if (!Validation.checkEmail(signUpRequestDto.getEmail())) {
             throw new ServiceException(ErrorCode.NOT_VALID_EMAIL);
         }

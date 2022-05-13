@@ -41,7 +41,7 @@ class _RestClient implements RestClient {
   String? baseUrl;
 
   @override
-  Future<Response> singup(signUpRequestDto) async {
+  Future<Response> signup(signUpRequestDto) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

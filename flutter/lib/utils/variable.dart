@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 const String appTitle = "Assistant";
 const String adminEmail = "azqazq195@gmail.com";
+const String encryptKey = "CBoaDQIQAgceGg8dFAkMDBEOECEZCxgMBiAUFQwKFhg=";
 
 const Color pColorNormal = Color(0xff107c10);
 const Color colorLight = Color(0xff278927);

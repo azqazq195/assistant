@@ -12,7 +12,7 @@ abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
   @POST("/authentication/signup")
-  Future<Response> singup(@Body() SignUpRequestDto signUpRequestDto);
+  Future<Response> signup(@Body() SignUpRequestDto signUpRequestDto);
 
   @POST("/authentication/signin")
   Future<Response> signin(@Body() SignInRequestDto signInRequestDto);

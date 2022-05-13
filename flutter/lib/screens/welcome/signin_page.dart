@@ -162,9 +162,18 @@ class _SignInPageState extends State<SignInPage> {
                               colorLightest,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            await _signup(
+                              SignUpRequestDto(
+                                  username: _username.text,
+                                  email: _email.text,
+                                  password: _password.text,
+                                  passwordCheck: _passwordCheck.text),
+                            );
+                            Navigator.pop(context);
+                          },
                           child: const Text(
-                            "확인",
+                            "가입요청",
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -174,15 +183,33 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "닫기",
-                          style: TextStyle(
-                            color: colorLightest,
-                            fontSize: 16,
+                      child: SizedBox(
+                        height: 40,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.resolveWith<Color?>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.hovered)) {
+                                  return colorLightest.withOpacity(0.04);
+                                }
+                                if (states.contains(MaterialState.focused) ||
+                                    states.contains(MaterialState.pressed)) {
+                                  return colorLightest.withOpacity(0.12);
+                                }
+                                return null; // Defer to the widget's default.
+                              },
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            "닫기",
+                            style: TextStyle(
+                              color: colorLightest,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -224,6 +251,16 @@ class _SignInPageState extends State<SignInPage> {
             SharedPreferences.prefs.getBool(Preferences.autoLogin.name) ??
                 false;
       });
+    }
+  }
+
+  Future<bool> _signup(SignUpRequestDto signUpRequestDto) async {
+    Response response =
+        await request(context, Api.restClient.signup(signUpRequestDto));
+    if (response.ok()) {
+      return true;
+    } else {
+      return false;
     }
   }
 
