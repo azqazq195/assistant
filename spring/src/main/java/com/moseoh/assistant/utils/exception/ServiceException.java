@@ -15,6 +15,8 @@ public class ServiceException extends RuntimeException {
     public enum ErrorCode {
 
         /* 400 BAD_REQUEST : 잘못된 요청 */
+        ERROR(HttpStatus.BAD_REQUEST, "알수 없는 오류"),
+
         CANNOT_FOLLOW_MYSELF(HttpStatus.BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다."),
         NOT_MATCHED_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 다릅니다."),
         NOT_VALID_EMAIL(HttpStatus.BAD_REQUEST, "옳바르지 않은 이메일 주소입니다."),
@@ -23,6 +25,7 @@ public class ServiceException extends RuntimeException {
         EMPTY_EMAIL(HttpStatus.BAD_REQUEST, "이메일을 입력해 주세요."),
         EMPTY_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 입력해 주세요."),
         EMPTY_PASSWORD_CHECK(HttpStatus.BAD_REQUEST, "비밀번호 확인을 입력해 주세요."),
+        CANNOT_CHECKOUT_SVN(HttpStatus.BAD_REQUEST, "Svn checkout 중 오류가 발생하였습니다."),
 
         /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
         MISMATCH_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰의 유저 정보가 일치하지 않습니다."),

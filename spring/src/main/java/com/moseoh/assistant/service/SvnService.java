@@ -1,6 +1,5 @@
 package com.moseoh.assistant.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +9,7 @@ import com.moseoh.assistant.utils.config.YAMLConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class SvnService {
     private List<String> commandList;
 
@@ -36,7 +32,6 @@ public class SvnService {
     }
 
     public boolean export() {
-        log.info(new File("temp.txt").getAbsolutePath());
         for (String command : commandList) {
             try {
                 Runtime.getRuntime().exec(command);

@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           title: appTitle,
           themeMode: appTheme.mode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/signin',
+          initialRoute: '/main',
           routes: {
             '/signin': (_) => const SignInPage(),
             '/main': (_) => const MainPageTest()

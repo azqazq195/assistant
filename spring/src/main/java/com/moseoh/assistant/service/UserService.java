@@ -11,6 +11,8 @@ import com.moseoh.assistant.repository.UserRepository;
 import com.moseoh.assistant.utils.exception.ServiceException;
 import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,18 @@ public class UserService {
         }
 
         return userList;
+    }
+
+    public User getRequestedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(((User) authentication.getPrincipal()).getId()).orElse(null);
+        if (user == null)
+            throw new ServiceException(ErrorCode.USER_NOT_FOUND);
+        return user;
+    }
+
+    public User getSvnUser() {
+        return userRepository.findById(1L).get();
     }
 
 }
