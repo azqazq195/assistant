@@ -2,12 +2,15 @@ package com.moseoh.assistant.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.moseoh.assistant.entity.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
     public User findUserById(long id);
 

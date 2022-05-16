@@ -1,5 +1,7 @@
 package com.moseoh.assistant.service;
 
+import java.util.List;
+
 import com.moseoh.assistant.entity.MColumn;
 import com.moseoh.assistant.repository.ColumnRepository;
 
@@ -18,5 +20,9 @@ public class ColumnService {
             column.setId(currentColumn.getId());
         }
         columnRepository.save(column);
+    }
+
+    public List<MColumn> getColumns(Long mtableId) {
+        return columnRepository.findByMtableId(mtableId);
     }
 }

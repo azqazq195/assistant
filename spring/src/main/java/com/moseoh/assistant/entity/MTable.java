@@ -23,8 +23,7 @@ public class MTable {
     private String name;
     private String databaseName;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "mtable_id")
+    @OneToMany(mappedBy = "mtable", cascade = CascadeType.REMOVE)
     private List<MColumn> mcolumns;
 
     @OneToOne

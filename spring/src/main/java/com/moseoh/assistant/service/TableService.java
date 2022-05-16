@@ -1,10 +1,12 @@
 package com.moseoh.assistant.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.moseoh.assistant.dto.ColumnsResponseDto;
 import com.moseoh.assistant.entity.MColumn;
 import com.moseoh.assistant.entity.MTable;
 import com.moseoh.assistant.entity.User;
@@ -22,6 +24,27 @@ public class TableService {
 
     private final ColumnService columnService;
     private final UserService userService;
+
+    private final String[] DATABASE_NAMES = { "csttec", "center" };
+
+    public ColumnsResponseDto getColumns(String databaseName, String tableName) {
+        User user = userService.getRequestedUser();
+        User adminUser = userService.getSvnUser();
+
+        MTable userTable = tableRepository.findByNameAndDatabaseNameAndUserId(tableName, databaseName, user.getId());
+        List<MColumn> userColumns = columnService.getColumns(userTable.getId());
+
+        MTable adminTable = tableRepository.findByNameAndDatabaseNameAndUserId(tableName, databaseName,
+                adminUser.getId());
+        List<MColumn> adminColumns = columnService.getColumns(adminTable.getId());
+
+        ColumnsResponseDto dto = new ColumnsResponseDto();
+        dto.setData(new HashMap<>());
+        dto.getData().put("svnColumns", adminColumns);
+        dto.getData().put("userColumns", userColumns);
+
+        return dto;
+    }
 
     public List<String> getTableNames(String databaseName) {
         User user = userService.getRequestedUser();
@@ -81,6 +104,12 @@ public class TableService {
         }
         tableRepository.save(table);
 
+    }
+
+    public void deleteTables(User user) {
+        for (String databaseName : DATABASE_NAMES) {
+            tableRepository.deleteAllByUserIdAndDatabaseName(user.getId(), databaseName);
+        }
     }
 
     private MTable getTable(String code) {

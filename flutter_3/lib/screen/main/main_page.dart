@@ -64,53 +64,55 @@ class _MainPageState extends State<MainPage> {
       }
     }
 
+    Widget drawNav() {
+      return Drawer(
+        backgroundColor: drawerColor,
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Assistant',
+                style: textTheme.headline6,
+              ),
+            ),
+            const Divider(
+              height: 1,
+              thickness: 1,
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Main',
+              ),
+            ),
+            spacerH,
+            listTile(1, const Icon(Icons.code), "Code"),
+            spacerH,
+            const Divider(
+              height: 1,
+              thickness: 1,
+            ),
+            spacerH,
+            listTile(_settingsIndex, const Icon(Icons.settings), "설정"),
+            spacerH,
+            listTile(_bugReportIndex, const Icon(Icons.bug_report), "버그 제보"),
+            spacerH,
+            listTile(
+                _sourceCodeIndex, const Icon(Icons.source_outlined), "소스 코드"),
+            spacerH,
+            listTile(_logoutIndex, const Icon(Icons.logout_outlined), "로그아웃"),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       body: Row(
         children: [
-          Drawer(
-            backgroundColor: drawerColor,
-            child: ListView(
-              // Important: Remove any padding from the ListView.
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Assistant',
-                    style: textTheme.headline6,
-                  ),
-                ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Main',
-                  ),
-                ),
-                spacerH,
-                listTile(1, const Icon(Icons.code), "Code"),
-                spacerH,
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                spacerH,
-                listTile(_settingsIndex, const Icon(Icons.settings), "설정"),
-                spacerH,
-                listTile(
-                    _bugReportIndex, const Icon(Icons.bug_report), "버그 제보"),
-                spacerH,
-                listTile(_sourceCodeIndex, const Icon(Icons.source_outlined),
-                    "소스 코드"),
-                spacerH,
-                listTile(
-                    _logoutIndex, const Icon(Icons.logout_outlined), "로그아웃"),
-              ],
-            ),
-          ),
+          drawNav(),
           Expanded(
             child: content(),
           ),
@@ -120,7 +122,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   void selectDestination(int index) async {
-    print(index);
     if (index == _logoutIndex) {
       MyAlertDialog(
         context: context,

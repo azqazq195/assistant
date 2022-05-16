@@ -24,6 +24,7 @@ public class MColumn {
     private boolean nullable;
 
     @ManyToOne
+    @JoinColumn(name = "mtable_id")
     private MTable mtable;
 
     @Override

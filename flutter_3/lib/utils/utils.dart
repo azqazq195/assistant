@@ -1,3 +1,4 @@
+import 'package:assistant/utils/shared_preferences.dart';
 import 'package:dio/dio.dart' hide Response;
 import 'package:assistant/components/my_alert_dialog.dart';
 import 'package:assistant/api/client/rest_client.dart';
@@ -18,6 +19,7 @@ Future<Response> request(BuildContext context, Future<dynamic> func) async {
   try {
     return await func;
   } catch (e) {
+    print(e);
     switch (e.runtimeType) {
       case DioError:
         ErrorResponse? error = ErrorResponse.fromJson(
@@ -105,4 +107,8 @@ showSnackbar(BuildContext context, String? title, String content) {
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
   bool get hasFocus => false;
+}
+
+myAccessToken() {
+  return SharedPreferences.prefs.getString(Preferences.accessToken.name);
 }

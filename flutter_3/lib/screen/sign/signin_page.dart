@@ -48,6 +48,15 @@ class _SignInPageState extends State<SignInPage> {
           .setString(Preferences.email.name, signInRequestDto.email);
       SharedPreferences.prefs
           .setString(Preferences.password.name, signInRequestDto.password);
+
+      print(response.getSignInResponseDto());
+
+      SignInResponseDto signInResponseDto = response.getSignInResponseDto();
+      SharedPreferences.prefs.setString(
+          Preferences.accessToken.name, signInResponseDto.accessToken);
+      SharedPreferences.prefs.setString(
+          Preferences.refreshToken.name, signInResponseDto.refreshToken);
+
       Navigator.pushNamed(context, '/main');
     } else {
       SharedPreferences.prefs.setString(Preferences.email.name, "");

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:assistant/utils/logger.dart';
-import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
 
 enum Schema { csttec, center }
@@ -535,20 +534,20 @@ class Database {
   Future<List<Table>> loadDatabase(Location location, Schema schema) async {
     StringBuffer filePath = StringBuffer();
 
-    switch (location) {
-      case Location.local:
-        filePath.write(SharedPreferences.prefs
-                .getString(Preferences.localPersistencePath.name) ??
-            '');
-        break;
-      case Location.svn:
-        filePath.write(SharedPreferences.prefs
-                .getString(Preferences.svnPersistencePath.name) ??
-            '');
-        break;
-      default:
-        break;
-    }
+    // switch (location) {
+    //   case Location.local:
+    //     filePath.write(SharedPreferences.prefs
+    //             .getString(Preferences.localPersistencePath.name) ??
+    //         '');
+    //     break;
+    //   case Location.svn:
+    //     filePath.write(SharedPreferences.prefs
+    //             .getString(Preferences.svnPersistencePath.name) ??
+    //         '');
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     switch (schema) {
       case Schema.csttec:

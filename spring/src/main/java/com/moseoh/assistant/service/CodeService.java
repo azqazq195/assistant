@@ -22,18 +22,26 @@ public class CodeService {
     private final UserService userService;
 
     public String reload(ReloadReqeustDto reloadReqeustDto) {
-        updateSvnTables();
-        updateUserTables(reloadReqeustDto);
+        updateSvnTables(userService.getSvnUser());
+        updateUserTables(userService.getRequestedUser(), reloadReqeustDto);
         return "";
     }
 
-    protected void updateSvnTables() {
-        User adminUser = userService.getSvnUser();
-
+    protected void updateSvnTables(User adminUser) {
         if (!svnService.export()) {
             throw new ServiceException(ErrorCode.CANNOT_CHECKOUT_SVN);
         }
 
+        deleteTables(adminUser);
+        createSvnTables(adminUser);
+    }
+
+    protected void updateUserTables(User user, ReloadReqeustDto reloadReqeustDto) {
+        deleteTables(user);
+        createUserTables(user, reloadReqeustDto);
+    }
+
+    protected void createSvnTables(User adminUser) {
         File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
 
         try {
@@ -46,10 +54,16 @@ public class CodeService {
         }
     }
 
-    private void updateUserTables(ReloadReqeustDto reloadReqeustDto) {
-        User user = userService.getRequestedUser();
+    protected void createUserTables(User user, ReloadReqeustDto reloadReqeustDto) {
+        if (reloadReqeustDto.getCenterDbPopulate() != null) {
+            tableService.createTables(user, reloadReqeustDto.getCenterDbPopulate());
+        }
+        if (reloadReqeustDto.getDbPopulate() != null) {
+            tableService.createTables(user, reloadReqeustDto.getDbPopulate());
+        }
+    }
 
-        tableService.createTables(user, reloadReqeustDto.getDbPopulate());
-        tableService.createTables(user, reloadReqeustDto.getCenterDbPopulate());
+    protected void deleteTables(User user) {
+        tableService.deleteTables(user);
     }
 }

@@ -1,5 +1,14 @@
+import 'dart:io';
+
+import 'package:assistant/api/api.dart';
+import 'package:assistant/api/client/rest_client.dart';
+import 'package:assistant/api/dto/code_dto.dart';
+import 'package:assistant/components/my_alert_dialog.dart';
+import 'package:assistant/components/my_elevated_button.dart';
 import 'package:assistant/components/my_field_card.dart';
+import 'package:assistant/components/my_text_button.dart';
 import 'package:assistant/provider/config.dart';
+import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
 import 'package:assistant/utils/variable.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +22,7 @@ class CodePage extends StatefulWidget {
 }
 
 class _CodePageState extends State<CodePage> {
+  bool _reloading = false;
   Widget content() {
     return ChangeNotifierProvider(
       create: (_) => Config(),
@@ -21,9 +31,9 @@ class _CodePageState extends State<CodePage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            header(),
+            header(config),
             biggerSpacerH,
-            searchBox(),
+            searchBox(config),
             biggerSpacerH,
             cardList(),
           ],
@@ -32,39 +42,113 @@ class _CodePageState extends State<CodePage> {
     );
   }
 
-  Widget header() {
-    return const Text(
-      "코드",
-      style: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-      ),
-    );
+  Widget header(Config config) {
+    return Builder(builder: (context) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "코드",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Row(
+            children: [
+              MyTextButton(
+                height: 45,
+                width: 180,
+                text: "CENTER 테이블 불러오기",
+                onPressed: () async {
+                  config.tableNames = await _tablenames("center");
+                  showSnackbar(context, "완료", "테이블 목록 불러오기 완료.");
+                },
+              ),
+              spacerW,
+              MyTextButton(
+                height: 45,
+                width: 180,
+                text: "CSTTEC 테이블 불러오기",
+                onPressed: () async {
+                  config.tableNames = await _tablenames("csttec");
+                  showSnackbar(context, "완료", "테이블 목록 불러오기 완료.");
+                },
+              ),
+              spacerW,
+              Tooltip(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: const EdgeInsets.all(10),
+                textStyle: const TextStyle(fontSize: 15),
+                decoration: BoxDecoration(
+                  color: greyLightest,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                message:
+                    "csttec, center 데이터 베이스를 최신화 시킵니다.\nSvn과 로컬 작업 폴더의 sql를 모두 분석하기\n때문에 5~10초 정도 소요됩니다.",
+                child: _reloading
+                    ? const SizedBox(
+                        height: 45,
+                        width: 200,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : MyElevatedButton(
+                        height: 45,
+                        width: 200,
+                        text: "데이터베이스 최신화",
+                        fontSize: 16,
+                        onPressed: () async {
+                          setState(() {
+                            _reloading = true;
+                          });
+
+                          bool result = await _reload();
+
+                          setState(() {
+                            _reloading = false;
+                          });
+
+                          if (result) {
+                            showSnackbar(context, "완료", "데이터베이스 최신화 완료.");
+                          } else {
+                            showSnackbar(context, "실패", "왜 실패했는지 알리가 없죠?");
+                          }
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 
-  Widget searchBox() {
-    const List<User> userOptions = <User>[
-      User(name: 'Alice', email: 'alice@example.com'),
-      User(name: 'Bob', email: 'bob@example.com'),
-      User(name: 'Charlie', email: 'charlie123@gmail.com'),
-    ];
-
-    String _displayStringForOption(User option) => option.name;
-
+  Widget searchBox(Config config) {
     return Row(
       children: [
         Expanded(
-          child: Autocomplete<User>(
-            displayStringForOption: _displayStringForOption,
+          child: Autocomplete<String>(
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted) {
+              return TextField(
+                controller: fieldTextEditingController,
+                focusNode: fieldFocusNode,
+                style: const TextStyle(fontWeight: FontWeight.normal),
+              );
+            },
             optionsBuilder: (TextEditingValue textEditingValue) {
-              return userOptions.where((User option) {
+              return config.tableNames.where((String option) {
                 return option
-                    .toString()
+                    .toLowerCase()
                     .contains(textEditingValue.text.toLowerCase());
               });
             },
-            onSelected: (User selection) {
-              showSnackbar(context, "선택", selection.name);
+            onSelected: (String selection) {
+              _columns(selection);
             },
           ),
         ),
@@ -147,6 +231,47 @@ class _CodePageState extends State<CodePage> {
         );
       }
     });
+  }
+
+  Future<void> _columns(String tableName) async {
+    Response response = await request(
+        context, Api.restClient.columns(myAccessToken(), "csttec", tableName));
+
+    print(response.getColumnsResponseDto());
+  }
+
+  Future<List<String>> _tablenames(String databaseName) async {
+    Response response = await request(
+        context, Api.restClient.tablenames(myAccessToken(), databaseName));
+    return response.getTableNames();
+  }
+
+  Future<bool> _reload() async {
+    String? path = SharedPreferences.prefs
+        .getString(Preferences.localPersistencePath.name);
+
+    if (path == null) {
+      MyAlertDialog(
+        context: context,
+        title: "설정 오류",
+        content: const Text("설정 화면에서 작업폴더를 등록해주세요."),
+      );
+    }
+
+    File csttecFile = File("$path/db-populate.sql");
+    File centerFile = File("$path/center-db-populate.sql");
+    String csttecSql = await csttecFile.readAsString();
+    String centerSql = await centerFile.readAsString();
+
+    ReloadRequestDto reloadRequestDto =
+        ReloadRequestDto(dbPopulate: csttecSql, centerDbPopulate: centerSql);
+    Response response = await request(
+        context, Api.restClient.reload(myAccessToken(), reloadRequestDto));
+    if (response.ok()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override

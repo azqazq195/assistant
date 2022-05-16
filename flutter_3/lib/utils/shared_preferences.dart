@@ -21,25 +21,7 @@ enum Preferences {
   accessToken,
   refreshToken,
 
-  welcome,
-  currentVersion,
-
-  svnUsername,
-  svnPassword,
-  svnPath,
-  svnUrl,
-
-  mysqlUsername,
-  mysqlPassword,
-  mysqlPath,
-
-  svnPersistencePath,
   localPersistencePath,
 
   author,
-
-  indicator,
-  displayMode,
-  themeMode,
-  colorIndex,
 }
