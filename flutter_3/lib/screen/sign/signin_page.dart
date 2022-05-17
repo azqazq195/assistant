@@ -49,8 +49,6 @@ class _SignInPageState extends State<SignInPage> {
       SharedPreferences.prefs
           .setString(Preferences.password.name, signInRequestDto.password);
 
-      print(response.getSignInResponseDto());
-
       SignInResponseDto signInResponseDto = response.getSignInResponseDto();
       SharedPreferences.prefs.setString(
           Preferences.accessToken.name, signInResponseDto.accessToken);

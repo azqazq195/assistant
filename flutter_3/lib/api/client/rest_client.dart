@@ -10,6 +10,9 @@ part 'rest_client.g.dart';
 
 // baseUrl ??= 'http://localhost:8080/v1';
 
+// accessTokenExpireDate: DateTime.fromMillisecondsSinceEpoch(
+//     json['accessTokenExpireDate'] as int),
+
 @RestApi(baseUrl: "https://api.moseoh.xyz/v1")
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
@@ -51,7 +54,7 @@ class Response {
   String? error;
   String? errorCode;
   String message;
-  List<dynamic>? data;
+  dynamic data;
 
   Response({
     required this.timestamp,
@@ -68,11 +71,11 @@ class Response {
   Map<String, dynamic> toJson() => _$ResponseToJson(this);
 
   SignInResponseDto getSignInResponseDto() {
-    return data!.map((e) => SignInResponseDto.fromJson(e)).toList()[0];
+    return SignInResponseDto.fromJson(data);
   }
 
   ColumnsResponseDto getColumnsResponseDto() {
-    return data!.map((e) => ColumnsResponseDto.fromJson(e)).toList()[0];
+    return ColumnsResponseDto.fromJson(data);
   }
 
   List<String> getTableNames() {

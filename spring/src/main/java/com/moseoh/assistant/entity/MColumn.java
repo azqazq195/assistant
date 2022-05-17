@@ -2,6 +2,8 @@ package com.moseoh.assistant.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 @Getter
@@ -25,6 +27,7 @@ public class MColumn {
 
     @ManyToOne
     @JoinColumn(name = "mtable_id")
+    @JsonIgnore
     private MTable mtable;
 
     @Override

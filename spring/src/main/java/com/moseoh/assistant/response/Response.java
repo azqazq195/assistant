@@ -1,8 +1,6 @@
 package com.moseoh.assistant.response;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,30 +10,22 @@ import org.springframework.http.ResponseEntity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Builder
+@Slf4j
 @JsonInclude(Include.NON_NULL)
 public class Response {
-
     private final LocalDateTime timestamp;
     private final int status;
     private final String message;
-    private final List<Object> data;
+    private final Object data;
 
-    @SuppressWarnings("unchecked")
     public static ResponseEntity<Response> toResponseEntity(Object object) {
-        List<Object> data;
         HttpStatus httpStatus = HttpStatus.OK;
 
-        if (object instanceof List) {
-            data = (List<Object>) object;
-        } else {
-            data = new ArrayList<>();
-            data.add(object);
-        }
-
-        if (data.isEmpty()) {
+        if (object == null) {
             return ResponseEntity.status(httpStatus)
                     .body(Response.builder()
                             .timestamp(LocalDateTime.now())
@@ -43,12 +33,13 @@ public class Response {
                             .message(httpStatus.name())
                             .build());
         } else {
+            log.info(object.toString());
             return ResponseEntity.status(httpStatus)
                     .body(Response.builder()
                             .timestamp(LocalDateTime.now())
                             .status(httpStatus.value())
                             .message(httpStatus.name())
-                            .data(data)
+                            .data(object)
                             .build());
         }
     }

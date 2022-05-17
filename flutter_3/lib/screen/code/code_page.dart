@@ -23,6 +23,9 @@ class CodePage extends StatefulWidget {
 
 class _CodePageState extends State<CodePage> {
   bool _reloading = false;
+  String _databaseName = "";
+  List<MColumn> _userColumns = [];
+  List<MColumn> _svnColumns = [];
   Widget content() {
     return ChangeNotifierProvider(
       create: (_) => Config(),
@@ -61,6 +64,7 @@ class _CodePageState extends State<CodePage> {
                 width: 180,
                 text: "CENTER 테이블 불러오기",
                 onPressed: () async {
+                  _databaseName = "center";
                   config.tableNames = await _tablenames("center");
                   showSnackbar(context, "완료", "테이블 목록 불러오기 완료.");
                 },
@@ -71,6 +75,7 @@ class _CodePageState extends State<CodePage> {
                 width: 180,
                 text: "CSTTEC 테이블 불러오기",
                 onPressed: () async {
+                  _databaseName = "csttec";
                   config.tableNames = await _tablenames("csttec");
                   showSnackbar(context, "완료", "테이블 목록 불러오기 완료.");
                 },
@@ -148,7 +153,7 @@ class _CodePageState extends State<CodePage> {
               });
             },
             onSelected: (String selection) {
-              _columns(selection);
+              _columns(_databaseName, selection);
             },
           ),
         ),
@@ -233,11 +238,13 @@ class _CodePageState extends State<CodePage> {
     });
   }
 
-  Future<void> _columns(String tableName) async {
-    Response response = await request(
-        context, Api.restClient.columns(myAccessToken(), "csttec", tableName));
-
-    print(response.getColumnsResponseDto());
+  Future<void> _columns(String databaseName, String tableName) async {
+    Response response = await request(context,
+        Api.restClient.columns(myAccessToken(), databaseName, tableName));
+    setState(() {
+      _svnColumns = response.getColumnsResponseDto().svnColumns;
+      _userColumns = response.getColumnsResponseDto().userColumns;
+    });
   }
 
   Future<List<String>> _tablenames(String databaseName) async {

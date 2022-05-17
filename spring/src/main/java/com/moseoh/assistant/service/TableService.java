@@ -1,7 +1,6 @@
 package com.moseoh.assistant.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,7 +26,7 @@ public class TableService {
 
     private final String[] DATABASE_NAMES = { "csttec", "center" };
 
-    public ColumnsResponseDto getColumns(String databaseName, String tableName) {
+    public Object getColumns(String databaseName, String tableName) {
         User user = userService.getRequestedUser();
         User adminUser = userService.getSvnUser();
 
@@ -38,12 +37,7 @@ public class TableService {
                 adminUser.getId());
         List<MColumn> adminColumns = columnService.getColumns(adminTable.getId());
 
-        ColumnsResponseDto dto = new ColumnsResponseDto();
-        dto.setData(new HashMap<>());
-        dto.getData().put("svnColumns", adminColumns);
-        dto.getData().put("userColumns", userColumns);
-
-        return dto;
+        return new ColumnsResponseDto(adminColumns, userColumns);
     }
 
     public List<String> getTableNames(String databaseName) {
