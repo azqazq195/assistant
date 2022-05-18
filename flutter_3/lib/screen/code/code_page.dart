@@ -26,24 +26,8 @@ class _CodePageState extends State<CodePage> {
   String _databaseName = "";
   List<MColumn> _userColumns = [];
   List<MColumn> _svnColumns = [];
-  Widget content() {
-    return ChangeNotifierProvider(
-      create: (_) => Config(),
-      builder: (context, _) {
-        final config = context.watch<Config>();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            header(config),
-            biggerSpacerH,
-            searchBox(config),
-            biggerSpacerH,
-            cardList(),
-          ],
-        );
-      },
-    );
-  }
+  final ScrollController _scrollController =
+      ScrollController(keepScrollOffset: false);
 
   Widget header(Config config) {
     return Builder(builder: (context) {
@@ -131,40 +115,47 @@ class _CodePageState extends State<CodePage> {
   }
 
   Widget searchBox(Config config) {
-    return Row(
-      children: [
-        Expanded(
-          child: Autocomplete<String>(
-            fieldViewBuilder: (BuildContext context,
-                TextEditingController fieldTextEditingController,
-                FocusNode fieldFocusNode,
-                VoidCallback onFieldSubmitted) {
-              return TextField(
-                controller: fieldTextEditingController,
-                focusNode: fieldFocusNode,
-                style: const TextStyle(fontWeight: FontWeight.normal),
-              );
-            },
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              return config.tableNames.where((String option) {
-                return option
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (String selection) {
-              _columns(_databaseName, selection);
-            },
+    return SizedBox(
+      child: Autocomplete<String>(
+        optionsViewBuilder: (context, onSelected, options) => Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
+            ),
+            child: SizedBox(
+              height: 52.0 * options.length,
+              width: 300, // <-- Right here !
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: options.length,
+                shrinkWrap: false,
+                itemBuilder: (BuildContext context, int index) {
+                  final String option = options.elementAt(index);
+                  return InkWell(
+                    onTap: () => onSelected(option),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(option),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
-        SizedBox(
-          width: 100,
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.remove_circle_outline_sharp),
-          ),
-        ),
-      ],
+        optionsBuilder: (TextEditingValue textEditingValue) {
+          return config.tableNames.where((String option) {
+            return option
+                .toLowerCase()
+                .contains(textEditingValue.text.toLowerCase());
+          });
+        },
+        onSelected: (String selection) {
+          print(selection);
+          _columns(_databaseName, selection);
+        },
+      ),
     );
   }
 
@@ -238,6 +229,73 @@ class _CodePageState extends State<CodePage> {
     });
   }
 
+  Widget columnsList(List<MColumn> userColumns, List<MColumn> svnColumns) {
+    final Color changedItemColor = Colors.red.withOpacity(0.3);
+    final Color itemColor = const Color(0xFFE8DEF8).withOpacity(0.7);
+
+    return Center(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ReorderableListView(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: <Widget>[
+                for (int index = 0; index < userColumns.length; index += 1)
+                  ListTile(
+                    key: Key('$index'),
+                    tileColor: userColumns[index].name != svnColumns[index].name
+                        ? changedItemColor
+                        : greyLightest,
+                    title: Text(userColumns[index].name),
+                  ),
+              ],
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final MColumn column = userColumns.removeAt(oldIndex);
+                  userColumns.insert(newIndex, column);
+                });
+              },
+            ),
+          ),
+          spacerW,
+          Expanded(
+            child: ReorderableListView(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: <Widget>[
+                for (int index = 0; index < svnColumns.length; index += 1)
+                  ListTile(
+                    key: Key('$index'),
+                    tileColor: userColumns[index].name != svnColumns[index].name
+                        ? changedItemColor
+                        : greyLightest,
+                    title: Text(svnColumns[index].name),
+                  ),
+              ],
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final MColumn column = svnColumns.removeAt(oldIndex);
+                  svnColumns.insert(newIndex, column);
+                  for (MColumn c in svnColumns) {
+                    print(c.id);
+                  }
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _columns(String databaseName, String tableName) async {
     Response response = await request(context,
         Api.restClient.columns(myAccessToken(), databaseName, tableName));
@@ -290,8 +348,34 @@ class _CodePageState extends State<CodePage> {
           width: 0.2,
         ),
       ),
-      padding: const EdgeInsets.all(20),
-      child: content(),
+      child: ChangeNotifierProvider(
+        create: (_) => Config(),
+        builder: (context, _) {
+          final config = context.watch<Config>();
+          return Scrollbar(
+            thumbVisibility: true,
+            controller: _scrollController,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    header(config),
+                    biggerSpacerH,
+                    searchBox(config),
+                    biggerSpacerH,
+                    cardList(),
+                    biggerSpacerH,
+                    columnsList(_userColumns, _svnColumns),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

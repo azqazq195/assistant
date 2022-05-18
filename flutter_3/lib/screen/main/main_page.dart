@@ -111,6 +111,7 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           drawNav(),
           Expanded(
