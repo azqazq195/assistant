@@ -1,7 +1,6 @@
 import 'dart:collection';
-
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent/utils/convertor.dart' as db;
+import 'package:assistant/utils/convertor.dart' as db;
+import 'package:flutter/foundation.dart';
 
 class Database with ChangeNotifier {
   Database() {

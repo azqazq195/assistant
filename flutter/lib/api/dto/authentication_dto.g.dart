@@ -18,6 +18,23 @@ Map<String, dynamic> _$SignInRequestDtoToJson(SignInRequestDto instance) =>
       'password': instance.password,
     };
 
+SignInResponseDto _$SignInResponseDtoFromJson(Map<String, dynamic> json) =>
+    SignInResponseDto(
+      grantType: json['grantType'] as String,
+      accessToken: json['accessToken'] as String,
+      refreshToken: json['refreshToken'] as String,
+      accessTokenExpireDate: DateTime.fromMillisecondsSinceEpoch(
+          json['accessTokenExpireDate'] as int),
+    );
+
+Map<String, dynamic> _$SignInResponseDtoToJson(SignInResponseDto instance) =>
+    <String, dynamic>{
+      'grantType': instance.grantType,
+      'accessToken': instance.accessToken,
+      'refreshToken': instance.refreshToken,
+      'accessTokenExpireDate': instance.accessTokenExpireDate.toIso8601String(),
+    };
+
 SignUpRequestDto _$SignUpRequestDtoFromJson(Map<String, dynamic> json) =>
     SignUpRequestDto(
       username: json['username'] as String,

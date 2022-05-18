@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:fluent/utils/logger.dart';
-import 'package:fluent/utils/shared_preferences.dart';
-import 'package:fluent/utils/utils.dart';
+import 'package:assistant/utils/logger.dart';
+import 'package:assistant/utils/utils.dart';
 
 enum Schema { csttec, center }
+
 enum Location { local, svn }
 
 class Convertor {
@@ -354,13 +354,7 @@ class Convertor {
         return sb.toString();
       }
 
-      return mybatisInsert() +
-          "\n\n" +
-          mybatisSelect() +
-          "\n\n" +
-          mybatisUpdate() +
-          "\n\n" +
-          mybatisDelete();
+      return "${mybatisInsert()}\n\n${mybatisSelect()}\n\n${mybatisUpdate()}\n\n${mybatisDelete()}";
     }
 
     String hasNotAI() {
@@ -451,13 +445,7 @@ class Convertor {
         return sb.toString();
       }
 
-      return mybatisInsert() +
-          "\n\n" +
-          mybatisSelect() +
-          "\n\n" +
-          mybatisUpdate() +
-          "\n\n" +
-          mybatisDelete();
+      return "${mybatisInsert()}\n\n${mybatisSelect()}\n\n${mybatisUpdate()}\n\n${mybatisDelete()}";
     }
 
     if (table.hasAI && table.hasId) {
@@ -546,20 +534,20 @@ class Database {
   Future<List<Table>> loadDatabase(Location location, Schema schema) async {
     StringBuffer filePath = StringBuffer();
 
-    switch (location) {
-      case Location.local:
-        filePath.write(SharedPreferences.prefs
-                .getString(Preferences.localPersistencePath.name) ??
-            '');
-        break;
-      case Location.svn:
-        filePath.write(SharedPreferences.prefs
-                .getString(Preferences.svnPersistencePath.name) ??
-            '');
-        break;
-      default:
-        break;
-    }
+    // switch (location) {
+    //   case Location.local:
+    //     filePath.write(SharedPreferences.prefs
+    //             .getString(Preferences.localPersistencePath.name) ??
+    //         '');
+    //     break;
+    //   case Location.svn:
+    //     filePath.write(SharedPreferences.prefs
+    //             .getString(Preferences.svnPersistencePath.name) ??
+    //         '');
+    //     break;
+    //   default:
+    //     break;
+    // }
 
     switch (schema) {
       case Schema.csttec:
@@ -591,7 +579,7 @@ class Database {
       }
 
       if (insert) {
-        code += sqlContent + "\n";
+        code += "$sqlContent\n";
       }
 
       if (sqlContent.contains(";")) {

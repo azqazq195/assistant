@@ -1,6 +1,6 @@
-import 'package:fluent/api/client/rest_client.dart';
+import 'package:assistant/api/client/rest_client.dart';
 import 'package:dio/dio.dart' hide Response;
-import 'package:fluent/utils/logger.dart';
+import 'package:assistant/utils/logger.dart';
 
 class Api {
   static late final RestClient restClient;

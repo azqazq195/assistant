@@ -18,11 +18,13 @@ class SignInRequestDto {
   Map<String, dynamic> toJson() => _$SignInRequestDtoToJson(this);
 }
 
+@JsonSerializable()
 class SignInResponseDto {
   String grantType;
   String accessToken;
   String refreshToken;
   DateTime accessTokenExpireDate;
+  // DateTime.fromMillisecondsSinceEpoch(json['accessTokenExpireDate'] as int * 1000),
 
   SignInResponseDto({
     required this.grantType,
@@ -30,6 +32,11 @@ class SignInResponseDto {
     required this.refreshToken,
     required this.accessTokenExpireDate,
   });
+
+  factory SignInResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$SignInResponseDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignInResponseDtoToJson(this);
 }
 
 @JsonSerializable()
