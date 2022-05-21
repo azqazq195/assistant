@@ -33,9 +33,14 @@ public class CodeController {
         return Response.toResponseEntity(tableService.getTableNames(databaseName));
     }
 
-    @GetMapping("/columns")
-    public ResponseEntity<Response> columns(@RequestParam String databaseName, @RequestParam String tablename) {
-        return Response.toResponseEntity(tableService.getColumns(databaseName, tablename));
+    @GetMapping("/table")
+    public ResponseEntity<Response> table(@RequestParam String databaseName, @RequestParam String tablename) {
+        return Response.toResponseEntity(tableService.getTable(databaseName, tablename));
+    }
+
+    @GetMapping("/domain")
+    public ResponseEntity<Response> domain(@RequestParam Long mtableId) {
+        return Response.toResponseEntity(tableService.getDomainData(mtableId));
     }
 
 }

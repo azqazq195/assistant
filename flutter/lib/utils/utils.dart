@@ -19,7 +19,6 @@ Future<Response> request(BuildContext context, Future<dynamic> func) async {
   try {
     return await func;
   } catch (e) {
-    print(e);
     switch (e.runtimeType) {
       case DioError:
         ErrorResponse? error = ErrorResponse.fromJson(

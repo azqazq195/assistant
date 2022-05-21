@@ -13,6 +13,15 @@ class Config extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _author =
+      SharedPreferences.prefs.getString(Preferences.author.name) ?? '';
+  String get author => _author;
+  set author(String author) {
+    _author = author;
+    SharedPreferences.prefs.setString(Preferences.author.name, author);
+    notifyListeners();
+  }
+
   List<String> _tableNames = [];
   List<String> get tableNames => _tableNames;
   set tableNames(List<String> tableNames) {

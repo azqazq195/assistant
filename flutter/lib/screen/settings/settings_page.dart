@@ -14,6 +14,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final TextEditingController _authorController = TextEditingController();
   final TextEditingController _localPersistencePathController =
       TextEditingController();
 
@@ -23,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, _) {
         final config = context.watch<Config>();
         _localPersistencePathController.text = config.localPersistencePath;
+        _authorController.text = config.author;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,6 +34,40 @@ class _SettingsPageState extends State<SettingsPage> {
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            biggerSpacerH,
+            const Text("Author"),
+            spacerH,
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 40,
+                    child: TextField(
+                      controller: _authorController,
+                      textInputAction: TextInputAction.next,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.people_alt),
+                        hintText: "seongha.moon",
+                      ),
+                    ),
+                  ),
+                ),
+                spacerW,
+                MyElevatedButton(
+                  height: 40,
+                  width: 80,
+                  text: "저장",
+                  hasBorder: true,
+                  onPressed: () async {
+                    showSnackbar(context, "성공", "저장 완료.");
+                    config.author = _authorController.text;
+                  },
+                ),
+              ],
             ),
             biggerSpacerH,
             const Text("작업폴더 경로"),
@@ -69,12 +105,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     String? directoryPath =
                         await FilePicker.platform.getDirectoryPath();
                     if (directoryPath == null) {
-                      showSnackbar(context, "실패", "선택 취소");
+                      showSnackbar(context, "실패", "선택 취소.");
                     } else {
                       _localPersistencePathController.text = directoryPath;
                       config.localPersistencePath =
                           _localPersistencePathController.text;
-                      showSnackbar(context, "완료", "Path 저장 완료");
+                      showSnackbar(context, "완료", "Path 저장 완료.");
                     }
                   },
                 ),

@@ -1,5 +1,6 @@
 package com.moseoh.assistant.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,9 @@ import com.moseoh.assistant.utils.config.YAMLConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class SvnService {
     private List<String> commandList;
@@ -32,6 +36,15 @@ public class SvnService {
     }
 
     public boolean export() {
+        log.info("delete old files, before export.");
+        File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        log.info("export files from svn");
         for (String command : commandList) {
             try {
                 Runtime.getRuntime().exec(command);

@@ -18,20 +18,32 @@ Map<String, dynamic> _$ReloadRequestDtoToJson(ReloadRequestDto instance) =>
       'centerDbPopulate': instance.centerDbPopulate,
     };
 
-ColumnsResponseDto _$ColumnsResponseDtoFromJson(Map<String, dynamic> json) =>
-    ColumnsResponseDto(
-      svnColumns: (json['svnColumns'] as List<dynamic>)
-          .map((e) => MColumn.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      userColumns: (json['userColumns'] as List<dynamic>)
+TableResponseDto _$TableResponseDtoFromJson(Map<String, dynamic> json) =>
+    TableResponseDto(
+      svnTable: json['svnTable'] == null
+          ? null
+          : MTable.fromJson(json['svnTable'] as Map<String, dynamic>),
+      userTable: MTable.fromJson(json['userTable'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$TableResponseDtoToJson(TableResponseDto instance) =>
+    <String, dynamic>{
+      'svnTable': instance.svnTable,
+      'userTable': instance.userTable,
+    };
+
+MTable _$MTableFromJson(Map<String, dynamic> json) => MTable(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      mcolumns: (json['mcolumns'] as List<dynamic>)
           .map((e) => MColumn.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$ColumnsResponseDtoToJson(ColumnsResponseDto instance) =>
-    <String, dynamic>{
-      'svnColumns': instance.svnColumns,
-      'userColumns': instance.userColumns,
+Map<String, dynamic> _$MTableToJson(MTable instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'mcolumns': instance.mcolumns,
     };
 
 MColumn _$MColumnFromJson(Map<String, dynamic> json) => MColumn(

@@ -24,8 +24,8 @@ class CodePage extends StatefulWidget {
 class _CodePageState extends State<CodePage> {
   bool _reloading = false;
   String _databaseName = "";
-  List<MColumn> _userColumns = [];
-  List<MColumn> _svnColumns = [];
+  MTable? _svnTable;
+  MTable? _userTable;
   final ScrollController _scrollController =
       ScrollController(keepScrollOffset: false);
 
@@ -93,7 +93,7 @@ class _CodePageState extends State<CodePage> {
                             _reloading = true;
                           });
 
-                          bool result = await _reload();
+                          bool result = await _reload(context);
 
                           setState(() {
                             _reloading = false;
@@ -102,7 +102,7 @@ class _CodePageState extends State<CodePage> {
                           if (result) {
                             showSnackbar(context, "완료", "데이터베이스 최신화 완료.");
                           } else {
-                            showSnackbar(context, "실패", "왜 실패했는지 알리가 없죠?");
+                            showSnackbar(context, "실패", "불러오기 실패.");
                           }
                         },
                       ),
@@ -123,9 +123,21 @@ class _CodePageState extends State<CodePage> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(4.0)),
             ),
-            child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: grey, width: 0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.7),
+                    blurRadius: 7,
+                    offset: const Offset(7, 7), // changes position of shadow
+                  ),
+                ],
+              ),
               height: 52.0 * options.length,
-              width: 300, // <-- Right here !
+              width: 800,
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: options.length,
@@ -152,7 +164,6 @@ class _CodePageState extends State<CodePage> {
           });
         },
         onSelected: (String selection) {
-          print(selection);
           _columns(_databaseName, selection);
         },
       ),
@@ -169,13 +180,25 @@ class _CodePageState extends State<CodePage> {
                 MyFieldCard(
                   title: "Domain",
                   content: "Domain 코드를 클립보드에 복사합니다.",
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_userTable == null) {
+                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                      return;
+                    }
+                    _domain(_userTable!.id);
+                  },
                 ),
                 middleSpacerW,
                 MyFieldCard(
                   title: "Mapper.java",
                   content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_userTable == null) {
+                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                      return;
+                    }
+                    _mapper(_userTable!.id);
+                  },
                 ),
               ],
             ),
@@ -185,13 +208,25 @@ class _CodePageState extends State<CodePage> {
                 MyFieldCard(
                   title: "Mapper.xml",
                   content: "Mybatis 코드를 클립보드에 복사합니다.",
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_userTable == null) {
+                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                      return;
+                    }
+                    _mybatis(_userTable!.id);
+                  },
                 ),
                 middleSpacerW,
                 MyFieldCard(
                   title: "Service",
                   content: "Service 코드 양식을 다운로드 받습니다.",
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_userTable == null) {
+                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                      return;
+                    }
+                    _service(_userTable!.id);
+                  },
                 ),
               ],
             )
@@ -203,25 +238,49 @@ class _CodePageState extends State<CodePage> {
             MyFieldCard(
               title: "Domain",
               content: "Domain 코드를 클립보드에 복사합니다.",
-              onPressed: () {},
+              onPressed: () {
+                if (_userTable == null) {
+                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                  return;
+                }
+                _domain(_userTable!.id);
+              },
             ),
             middleSpacerW,
             MyFieldCard(
               title: "Mapper.java",
               content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-              onPressed: () {},
+              onPressed: () {
+                if (_userTable == null) {
+                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                  return;
+                }
+                _mapper(_userTable!.id);
+              },
             ),
             middleSpacerW,
             MyFieldCard(
               title: "Mapper.xml",
               content: "Mybatis 코드를 클립보드에 복사합니다.",
-              onPressed: () {},
+              onPressed: () {
+                if (_userTable == null) {
+                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                  return;
+                }
+                _mybatis(_userTable!.id);
+              },
             ),
             middleSpacerW,
             MyFieldCard(
               title: "Service",
               content: "Service 코드 양식을 다운로드 받습니다.",
-              onPressed: () {},
+              onPressed: () {
+                if (_userTable == null) {
+                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                  return;
+                }
+                _service(_userTable!.id);
+              },
             ),
           ],
         );
@@ -229,66 +288,91 @@ class _CodePageState extends State<CodePage> {
     });
   }
 
-  Widget columnsList(List<MColumn> userColumns, List<MColumn> svnColumns) {
+  Widget columnsList() {
     final Color changedItemColor = Colors.red.withOpacity(0.3);
-    final Color itemColor = const Color(0xFFE8DEF8).withOpacity(0.7);
-
+    final Color addedItemColor = Colors.green.withOpacity(0.3);
     return Center(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ReorderableListView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: <Widget>[
-                for (int index = 0; index < userColumns.length; index += 1)
-                  ListTile(
-                    key: Key('$index'),
-                    tileColor: userColumns[index].name != svnColumns[index].name
-                        ? changedItemColor
-                        : greyLightest,
-                    title: Text(userColumns[index].name),
-                  ),
-              ],
-              onReorder: (int oldIndex, int newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final MColumn column = userColumns.removeAt(oldIndex);
-                  userColumns.insert(newIndex, column);
-                });
-              },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _userTable == null
+                  ? [Container()]
+                  : [
+                      const Text(
+                        "로컬",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      spacerH,
+                      ReorderableListView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          for (int index = 0;
+                              index < _userTable!.mcolumns.length;
+                              index += 1)
+                            ListTile(
+                              key: Key('$index'),
+                              tileColor:
+                                  _svnTable == null ? addedItemColor : null,
+                              title: Text(_userTable!.mcolumns[index].name),
+                            ),
+                        ],
+                        onReorder: (int oldIndex, int newIndex) {
+                          setState(() {
+                            if (oldIndex < newIndex) {
+                              newIndex -= 1;
+                            }
+                            final MColumn column =
+                                _userTable!.mcolumns.removeAt(oldIndex);
+                            _userTable!.mcolumns.insert(newIndex, column);
+                          });
+                        },
+                      ),
+                    ],
             ),
           ),
           spacerW,
           Expanded(
-            child: ReorderableListView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: <Widget>[
-                for (int index = 0; index < svnColumns.length; index += 1)
-                  ListTile(
-                    key: Key('$index'),
-                    tileColor: userColumns[index].name != svnColumns[index].name
-                        ? changedItemColor
-                        : greyLightest,
-                    title: Text(svnColumns[index].name),
-                  ),
-              ],
-              onReorder: (int oldIndex, int newIndex) {
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final MColumn column = svnColumns.removeAt(oldIndex);
-                  svnColumns.insert(newIndex, column);
-                  for (MColumn c in svnColumns) {
-                    print(c.id);
-                  }
-                });
-              },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _svnTable == null
+                  ? [Container()]
+                  : [
+                      const Text(
+                        "SVN",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      spacerH,
+                      ReorderableListView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          for (int index = 0;
+                              index < _svnTable!.mcolumns.length;
+                              index += 1)
+                            ListTile(
+                              key: Key('$index'),
+                              tileColor: _userTable!.mcolumns[index].name !=
+                                      _svnTable!.mcolumns[index].name
+                                  ? changedItemColor
+                                  : greyLightest,
+                              title: Text(_svnTable!.mcolumns[index].name),
+                            ),
+                        ],
+                        onReorder: (int oldIndex, int newIndex) {
+                          showSnackbar(context, "알림", "SVN 칼럼은 조정할 수 없습니다.");
+                        },
+                      ),
+                    ],
             ),
           ),
         ],
@@ -298,10 +382,10 @@ class _CodePageState extends State<CodePage> {
 
   Future<void> _columns(String databaseName, String tableName) async {
     Response response = await request(context,
-        Api.restClient.columns(myAccessToken(), databaseName, tableName));
+        Api.restClient.table(myAccessToken(), databaseName, tableName));
     setState(() {
-      _svnColumns = response.getColumnsResponseDto().svnColumns;
-      _userColumns = response.getColumnsResponseDto().userColumns;
+      _svnTable = response.getTableResponseDto().svnTable;
+      _userTable = response.getTableResponseDto().userTable;
     });
   }
 
@@ -311,7 +395,7 @@ class _CodePageState extends State<CodePage> {
     return response.getTableNames();
   }
 
-  Future<bool> _reload() async {
+  Future<bool> _reload(context) async {
     String? path = SharedPreferences.prefs
         .getString(Preferences.localPersistencePath.name);
 
@@ -320,11 +404,30 @@ class _CodePageState extends State<CodePage> {
         context: context,
         title: "설정 오류",
         content: const Text("설정 화면에서 작업폴더를 등록해주세요."),
-      );
+      ).show();
+      return false;
     }
 
     File csttecFile = File("$path/db-populate.sql");
+    if (!await csttecFile.exists()) {
+      MyAlertDialog(
+        context: context,
+        title: "설정 오류",
+        content: const Text(
+            "지정된 경로에 파일(db-populate.sql)이 존재하지 않습니다.\n경로 및 파일을 확인해 주세요."),
+      ).show();
+      return false;
+    }
     File centerFile = File("$path/center-db-populate.sql");
+    if (!await centerFile.exists()) {
+      MyAlertDialog(
+        context: context,
+        title: "설정 오류",
+        content: const Text(
+            "지정된 경로에 파일(center-db-populate.sql)이 존재하지 않습니다.\n경로 및 파일을 확인해 주세요."),
+      ).show();
+      return false;
+    }
     String csttecSql = await csttecFile.readAsString();
     String centerSql = await centerFile.readAsString();
 
@@ -337,6 +440,30 @@ class _CodePageState extends State<CodePage> {
     } else {
       return false;
     }
+  }
+
+  Future<String> _domain(int tableId) async {
+    Response response =
+        await request(context, Api.restClient.domain(myAccessToken(), tableId));
+    return "";
+  }
+
+  Future<String> _mapper(int tableId) async {
+    Response response =
+        await request(context, Api.restClient.mapper(myAccessToken(), tableId));
+    return "";
+  }
+
+  Future<String> _mybatis(int tableId) async {
+    Response response = await request(
+        context, Api.restClient.mybatis(myAccessToken(), tableId));
+    return "";
+  }
+
+  Future<String> _service(int tableId) async {
+    Response response = await request(
+        context, Api.restClient.service(myAccessToken(), tableId));
+    return "";
   }
 
   @override
@@ -368,7 +495,7 @@ class _CodePageState extends State<CodePage> {
                     biggerSpacerH,
                     cardList(),
                     biggerSpacerH,
-                    columnsList(_userColumns, _svnColumns),
+                    columnsList(),
                   ],
                 ),
               ),

@@ -19,19 +19,36 @@ class ReloadRequestDto {
 }
 
 @JsonSerializable()
-class ColumnsResponseDto {
-  List<MColumn> svnColumns;
-  List<MColumn> userColumns;
+class TableResponseDto {
+  MTable? svnTable;
+  MTable userTable;
 
-  ColumnsResponseDto({
-    required this.svnColumns,
-    required this.userColumns,
+  TableResponseDto({
+    this.svnTable,
+    required this.userTable,
   });
 
-  factory ColumnsResponseDto.fromJson(Map<String, dynamic> json) =>
-      _$ColumnsResponseDtoFromJson(json);
+  factory TableResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$TableResponseDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ColumnsResponseDtoToJson(this);
+  Map<String, dynamic> toJson() => _$TableResponseDtoToJson(this);
+}
+
+@JsonSerializable()
+class MTable {
+  int id;
+  String name;
+  List<MColumn> mcolumns;
+
+  MTable({
+    required this.id,
+    required this.name,
+    required this.mcolumns,
+  });
+
+  factory MTable.fromJson(Map<String, dynamic> json) => _$MTableFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MTableToJson(this);
 }
 
 @JsonSerializable()

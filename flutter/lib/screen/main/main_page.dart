@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> {
     } else if (index == _sourceCodeIndex) {
       await sourceCode();
     } else if (index == _bugReportIndex) {
-      // await bugReport();
+      await bugReport();
     } else {
       setState(() {
         _selectedDestination = index;
@@ -150,10 +150,8 @@ class _MainPageState extends State<MainPage> {
   sourceCode() async {
     Uri uri = Uri.parse("https://github.com/azqazq195/assistant");
     if (await canLaunchUrl(uri)) {
-      Logger.i("launch '${uri.toString()}'");
       await launchUrl(uri);
     } else {
-      Logger.w("Could not launch '${uri.toString()}'");
       throw "Could not launch '${uri.toString()}'";
     }
   }
@@ -166,7 +164,6 @@ class _MainPageState extends State<MainPage> {
           .join('&');
     }
 
-    Logger.i('bugReport');
     final Uri uri = Uri(
       scheme: 'mailto',
       path: 'azqazq195@gmail.com',
@@ -183,10 +180,8 @@ ${await Logger.logTxt.readAsString()}
       ),
     );
     if (await canLaunchUrl(uri)) {
-      Logger.i("launch '${uri.toString()}'");
       await launchUrl(uri);
     } else {
-      Logger.w("Could not launch '${uri.toString()}'");
       throw "Could not launch '${uri.toString()}'";
     }
   }

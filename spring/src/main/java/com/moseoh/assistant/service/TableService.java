@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.moseoh.assistant.dto.ColumnsResponseDto;
+import com.moseoh.assistant.dto.DomainDto;
+import com.moseoh.assistant.dto.TableResponseDto;
 import com.moseoh.assistant.entity.MColumn;
 import com.moseoh.assistant.entity.MTable;
 import com.moseoh.assistant.entity.User;
@@ -26,18 +27,25 @@ public class TableService {
 
     private final String[] DATABASE_NAMES = { "csttec", "center" };
 
-    public Object getColumns(String databaseName, String tableName) {
-        User user = userService.getRequestedUser();
-        User adminUser = userService.getSvnUser();
+    public String getDomainData(Long mtableId) {
+        MTable table = tableRepository.getById(mtableId);
+        StringBuilder sb = new StringBuilder();
+        return "result";
+    }
 
-        MTable userTable = tableRepository.findByNameAndDatabaseNameAndUserId(tableName, databaseName, user.getId());
-        List<MColumn> userColumns = columnService.getColumns(userTable.getId());
+    public TableResponseDto getTable(String databaseName, String tableName) {
+        User adminUser = userService.getSvnUser();
+        User user = userService.getRequestedUser();
 
         MTable adminTable = tableRepository.findByNameAndDatabaseNameAndUserId(tableName, databaseName,
                 adminUser.getId());
-        List<MColumn> adminColumns = columnService.getColumns(adminTable.getId());
+        if (adminTable != null) {
+            adminTable.setMcolumns(columnService.getColumns(adminTable.getId()));
+        }
+        MTable userTable = tableRepository.findByNameAndDatabaseNameAndUserId(tableName, databaseName, user.getId());
+        userTable.setMcolumns(columnService.getColumns(userTable.getId()));
 
-        return new ColumnsResponseDto(adminColumns, userColumns);
+        return new TableResponseDto(adminTable, userTable);
     }
 
     public List<String> getTableNames(String databaseName) {
@@ -72,7 +80,7 @@ public class TableService {
                 if (code.length() == 0) {
                     continue;
                 }
-                tables.add(getTable(code.toString()));
+                tables.add(createTable(code.toString()));
                 code.setLength(0);
                 insert = false;
             }
@@ -106,7 +114,7 @@ public class TableService {
         }
     }
 
-    private MTable getTable(String code) {
+    private MTable createTable(String code) {
         String[] strs = code.split("\n");
 
         /*

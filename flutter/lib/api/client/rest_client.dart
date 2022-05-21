@@ -39,11 +39,35 @@ abstract class RestClient {
     @Query("databaseName") String databaseName,
   );
 
-  @GET("/code/columns")
-  Future<Response> columns(
+  @GET("/code/table")
+  Future<Response> table(
     @Header("X-AUTH-TOKEN") String accessToken,
     @Query("databaseName") String databaseName,
     @Query("tablename") String tablename,
+  );
+
+  @GET("/code/domain")
+  Future<Response> domain(
+    @Header("X-AUTH-TOKEN") String accessToken,
+    @Query("mtableId") int mtableId,
+  );
+
+  @GET("/code/mapper")
+  Future<Response> mapper(
+    @Header("X-AUTH-TOKEN") String accessToken,
+    @Query("mtableId") int mtableId,
+  );
+
+  @GET("/code/mybatis")
+  Future<Response> mybatis(
+    @Header("X-AUTH-TOKEN") String accessToken,
+    @Query("mtableId") int mtableId,
+  );
+
+  @GET("/code/service")
+  Future<Response> service(
+    @Header("X-AUTH-TOKEN") String accessToken,
+    @Query("mtableId") int mtableId,
   );
 }
 
@@ -74,8 +98,8 @@ class Response {
     return SignInResponseDto.fromJson(data);
   }
 
-  ColumnsResponseDto getColumnsResponseDto() {
-    return ColumnsResponseDto.fromJson(data);
+  TableResponseDto getTableResponseDto() {
+    return TableResponseDto.fromJson(data);
   }
 
   List<String> getTableNames() {
