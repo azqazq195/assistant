@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.moseoh.assistant.dto.DomainDto;
+import javax.transaction.Transactional;
+
 import com.moseoh.assistant.dto.TableResponseDto;
 import com.moseoh.assistant.entity.MColumn;
 import com.moseoh.assistant.entity.MTable;
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.repository.TableRepository;
+import com.moseoh.assistant.utils.Utils;
 
 import org.springframework.stereotype.Service;
 
@@ -26,12 +28,6 @@ public class TableService {
     private final UserService userService;
 
     private final String[] DATABASE_NAMES = { "csttec", "center" };
-
-    public String getDomainData(Long mtableId) {
-        MTable table = tableRepository.getById(mtableId);
-        StringBuilder sb = new StringBuilder();
-        return "result";
-    }
 
     public TableResponseDto getTable(String databaseName, String tableName) {
         User adminUser = userService.getSvnUser();
@@ -98,6 +94,7 @@ public class TableService {
         return tables;
     }
 
+    @Transactional
     public void save(MTable table) {
         MTable currentTable = tableRepository.findByNameAndDatabaseNameAndUserId(table.getName(),
                 table.getDatabaseName(), table.getUser().getId());
@@ -108,10 +105,18 @@ public class TableService {
 
     }
 
+    @Transactional
     public void deleteTables(User user) {
         for (String databaseName : DATABASE_NAMES) {
             tableRepository.deleteAllByUserIdAndDatabaseName(user.getId(), databaseName);
         }
+    }
+
+    @Transactional
+    public MTable getTable(Long mtableId) {
+        MTable mTable = tableRepository.getById(mtableId);
+        mTable.setMcolumns(columnService.getColumns(mtableId));
+        return mTable;
     }
 
     private MTable createTable(String code) {
@@ -125,10 +130,10 @@ public class TableService {
         String tableName = temp.substring(temp.lastIndexOf("`") + 2);
         temp = temp.substring(0, temp.lastIndexOf("`"));
         String databaseName = temp.substring(temp.indexOf("`") + 1, temp.lastIndexOf("`"));
-        String domain = toCapitalize(toCamel(tableName));
 
         MTable mTable = new MTable();
-        mTable.setName(domain);
+        mTable.setDbName(tableName);
+        mTable.setName(Utils.toCapitalize(Utils.toCamel(mTable.getDbName())));
         mTable.setDatabaseName(databaseName);
 
         for (int i = 1; i < strs.length; i++) {
@@ -147,14 +152,15 @@ public class TableService {
             }
         }
 
-        setNameDbToDomain(mTable.getMcolumns());
+        setColumnName(mTable.getMcolumns());
 
         return mTable;
     }
 
-    private void setNameDbToDomain(List<MColumn> columns) {
+    private void setColumnName(List<MColumn> columns) {
         for (MColumn column : columns) {
-            String name = toCamel(column.getName());
+            column.setDbName(column.getName());
+            String name = Utils.toCamel(column.getName());
             if (!column.isPk() && !column.isFk() && name.startsWith("c")) {
                 name = name.substring(1);
             }
@@ -212,25 +218,25 @@ public class TableService {
             type = type.replaceAll("[^A-Z]", "");
         }
 
-        if (type.contains("INT")) {
+        if (type.equals("INT")) {
             return "int";
-        } else if (type.contains("SMALLINT")) {
+        } else if (type.equals("SMALLINT")) {
             return "int";
-        } else if (type.contains("DOUBLE")) {
+        } else if (type.equals("DOUBLE")) {
             return "double";
-        } else if (type.contains("TINYINT")) {
+        } else if (type.equals("TINYINT")) {
             return "enum";
-        } else if (type.contains("TINYINT(1)")) {
+        } else if (type.equals("TINYINT(1)")) {
             return "boolean";
-        } else if (type.contains("BOOL")) {
+        } else if (type.equals("BOOL")) {
             return "boolean";
-        } else if (type.contains("VARCHAR")) {
+        } else if (type.equals("VARCHAR")) {
             return "String";
-        } else if (type.contains("TEXT")) {
+        } else if (type.equals("TEXT")) {
             return "String";
-        } else if (type.contains("DECIMAL")) {
+        } else if (type.equals("DECIMAL")) {
             return "BigDecimal";
-        } else if (type.contains("TIMESTAMP")) {
+        } else if (type.equals("TIMESTAMP")) {
             return "Date";
         } else {
             return "UNKNOWNTYPE_PLEASE_REQUEST_BUG_REPORT";
@@ -253,20 +259,4 @@ public class TableService {
         }
     }
 
-    private String toCapitalize(String str) {
-        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-    }
-
-    private String toCamel(String str) {
-        var result = "";
-        var temp = str.split("_");
-        for (int k = 0; k < temp.length; k++) {
-            if (k == 0) {
-                result += temp[k];
-            } else {
-                result += Character.toUpperCase(temp[k].charAt(0)) + temp[k].substring(1);
-            }
-        }
-        return result;
-    }
 }

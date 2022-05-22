@@ -32,8 +32,8 @@ Map<String, dynamic> _$ResponseToJson(Response instance) => <String, dynamic>{
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
-    // baseUrl ??= 'https://api.moseoh.xyz/v1';
-    baseUrl ??= 'http://localhost:8080/v1';
+    baseUrl ??= 'https://api.moseoh.xyz/v1';
+    // baseUrl ??= 'http://localhost:8080/v1';
   }
 
   final Dio _dio;
@@ -42,158 +42,158 @@ class _RestClient implements RestClient {
 
   @override
   Future<Response> signup(signUpRequestDto) async {
-    const extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{};
-    final data = <String, dynamic>{};
-    data.addAll(signUpRequestDto.toJson());
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(signUpRequestDto.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'POST', headers: headers, extra: extra)
+            Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/authentication/signup',
-                    queryParameters: queryParameters, data: data)
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> signin(signInRequestDto) async {
-    const extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{};
-    final data = <String, dynamic>{};
-    data.addAll(signInRequestDto.toJson());
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(signInRequestDto.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'POST', headers: headers, extra: extra)
+            Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/authentication/signin',
-                    queryParameters: queryParameters, data: data)
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> reload(accessToken, reloadRequestDto) async {
-    const extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    data.addAll(reloadRequestDto.toJson());
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(reloadRequestDto.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'POST', headers: headers, extra: extra)
+            Options(method: 'POST', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/code/reload',
-                    queryParameters: queryParameters, data: data)
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> tablenames(accessToken, databaseName) async {
-    const extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'databaseName': databaseName};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
+            Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/code/tablenames',
-                    queryParameters: queryParameters, data: data)
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> table(accessToken, databaseName, tablename) async {
-    const extra = <String, dynamic>{};
+    const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'databaseName': databaseName,
       r'tablename': tablename
     };
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
+            Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/code/table',
-                    queryParameters: queryParameters, data: data)
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> domain(accessToken, mtableId) async {
-    const extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'mtableId': mtableId};
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
-                .compose(_dio.options, '/code/domain/${mtableId}',
-                    queryParameters: queryParameters, data: data)
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/code/domain',
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> mapper(accessToken, mtableId) async {
-    const extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'mtableId': mtableId};
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
-                .compose(_dio.options, '/code/mapper/${mtableId}',
-                    queryParameters: queryParameters, data: data)
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/code/mapper',
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> mybatis(accessToken, mtableId) async {
-    const extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'mtableId': mtableId};
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
-                .compose(_dio.options, '/code/mybatis/${mtableId}',
-                    queryParameters: queryParameters, data: data)
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/code/mybatis',
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<Response> service(accessToken, mtableId) async {
-    const extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
-    final data = <String, dynamic>{};
-    final result = await _dio.fetch<Map<String, dynamic>>(
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'mtableId': mtableId};
+    final _headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(
-            Options(method: 'GET', headers: headers, extra: extra)
-                .compose(_dio.options, '/code/service/${mtableId}',
-                    queryParameters: queryParameters, data: data)
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/code/service',
+                    queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = Response.fromJson(result.data!);
+    final value = Response.fromJson(_result.data!);
     return value;
   }
 

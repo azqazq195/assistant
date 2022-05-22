@@ -3,6 +3,7 @@ package com.moseoh.assistant.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.moseoh.assistant.dto.ReloadReqeustDto;
 import com.moseoh.assistant.entity.User;
@@ -12,7 +13,9 @@ import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodeService {
@@ -42,14 +45,14 @@ public class CodeService {
     }
 
     protected void createSvnTables(User adminUser) {
-        File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
-
+        Path[] paths = new Path[] { Path.of("db-populate.sql"), Path.of("center-db-populate.sql") };
         try {
-            for (File file : files) {
-                String sqlContents = Files.readString(file.toPath());
+            for (Path path : paths) {
+                String sqlContents = Files.readString(path);
                 tableService.createTables(adminUser, sqlContents);
             }
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ServiceException(ErrorCode.ERROR);
         }
     }

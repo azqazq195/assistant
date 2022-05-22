@@ -12,6 +12,7 @@ import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
 import 'package:assistant/utils/variable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CodePage extends StatefulWidget {
@@ -180,24 +181,28 @@ class _CodePageState extends State<CodePage> {
                 MyFieldCard(
                   title: "Domain",
                   content: "Domain 코드를 클립보드에 복사합니다.",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_userTable == null) {
                       showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                       return;
                     }
-                    _domain(_userTable!.id);
+                    String domain = await _domain(_userTable!.id);
+                    Clipboard.setData(ClipboardData(text: domain));
+                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
                   },
                 ),
                 middleSpacerW,
                 MyFieldCard(
                   title: "Mapper.java",
                   content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_userTable == null) {
                       showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                       return;
                     }
-                    _mapper(_userTable!.id);
+                    String mapper = await _mapper(_userTable!.id);
+                    Clipboard.setData(ClipboardData(text: mapper));
+                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
                   },
                 ),
               ],
@@ -208,12 +213,14 @@ class _CodePageState extends State<CodePage> {
                 MyFieldCard(
                   title: "Mapper.xml",
                   content: "Mybatis 코드를 클립보드에 복사합니다.",
-                  onPressed: () {
+                  onPressed: () async {
                     if (_userTable == null) {
                       showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                       return;
                     }
-                    _mybatis(_userTable!.id);
+                    String mybatis = await _mybatis(_userTable!.id);
+                    Clipboard.setData(ClipboardData(text: mybatis));
+                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
                   },
                 ),
                 middleSpacerW,
@@ -225,7 +232,7 @@ class _CodePageState extends State<CodePage> {
                       showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                       return;
                     }
-                    _service(_userTable!.id);
+                    // _service(_userTable!.id);
                   },
                 ),
               ],
@@ -238,36 +245,42 @@ class _CodePageState extends State<CodePage> {
             MyFieldCard(
               title: "Domain",
               content: "Domain 코드를 클립보드에 복사합니다.",
-              onPressed: () {
+              onPressed: () async {
                 if (_userTable == null) {
                   showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                   return;
                 }
-                _domain(_userTable!.id);
+                String domain = await _domain(_userTable!.id);
+                Clipboard.setData(ClipboardData(text: domain));
+                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
               },
             ),
             middleSpacerW,
             MyFieldCard(
               title: "Mapper.java",
               content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-              onPressed: () {
+              onPressed: () async {
                 if (_userTable == null) {
                   showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                   return;
                 }
-                _mapper(_userTable!.id);
+                String mapper = await _mapper(_userTable!.id);
+                Clipboard.setData(ClipboardData(text: mapper));
+                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
               },
             ),
             middleSpacerW,
             MyFieldCard(
               title: "Mapper.xml",
               content: "Mybatis 코드를 클립보드에 복사합니다.",
-              onPressed: () {
+              onPressed: () async {
                 if (_userTable == null) {
                   showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
                   return;
                 }
-                _mybatis(_userTable!.id);
+                String mybatis = await _mybatis(_userTable!.id);
+                Clipboard.setData(ClipboardData(text: mybatis));
+                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
               },
             ),
             middleSpacerW,
@@ -361,10 +374,7 @@ class _CodePageState extends State<CodePage> {
                               index += 1)
                             ListTile(
                               key: Key('$index'),
-                              tileColor: _userTable!.mcolumns[index].name !=
-                                      _svnTable!.mcolumns[index].name
-                                  ? changedItemColor
-                                  : greyLightest,
+                              tileColor: greyLightest,
                               title: Text(_svnTable!.mcolumns[index].name),
                             ),
                         ],
@@ -445,25 +455,25 @@ class _CodePageState extends State<CodePage> {
   Future<String> _domain(int tableId) async {
     Response response =
         await request(context, Api.restClient.domain(myAccessToken(), tableId));
-    return "";
+    return response.data;
   }
 
   Future<String> _mapper(int tableId) async {
     Response response =
         await request(context, Api.restClient.mapper(myAccessToken(), tableId));
-    return "";
+    return response.data;
   }
 
   Future<String> _mybatis(int tableId) async {
     Response response = await request(
         context, Api.restClient.mybatis(myAccessToken(), tableId));
-    return "";
+    return response.data;
   }
 
   Future<String> _service(int tableId) async {
     Response response = await request(
         context, Api.restClient.service(myAccessToken(), tableId));
-    return "";
+    return response.data;
   }
 
   @override

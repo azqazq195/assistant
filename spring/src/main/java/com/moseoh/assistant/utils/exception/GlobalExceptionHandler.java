@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { ServiceException.class })
     protected ResponseEntity<ErrorResponse> handleCustomException(ServiceException e) {
+        e.printStackTrace();
         log.error("handleServiceException throw ServiceException : {}", e.getErrorCode());
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }

@@ -10,11 +10,9 @@ import org.springframework.http.ResponseEntity;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Builder
-@Slf4j
 @JsonInclude(Include.NON_NULL)
 public class Response {
     private final LocalDateTime timestamp;
@@ -33,7 +31,6 @@ public class Response {
                             .message(httpStatus.name())
                             .build());
         } else {
-            log.info(object.toString());
             return ResponseEntity.status(httpStatus)
                     .body(Response.builder()
                             .timestamp(LocalDateTime.now())

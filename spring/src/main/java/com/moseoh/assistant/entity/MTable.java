@@ -21,9 +21,10 @@ public class MTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String dbName;
     private String databaseName;
 
-    @OneToMany(mappedBy = "mtable", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "mtable", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MColumn> mcolumns;
 
     @OneToOne

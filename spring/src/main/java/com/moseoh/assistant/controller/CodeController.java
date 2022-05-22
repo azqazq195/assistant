@@ -3,6 +3,7 @@ package com.moseoh.assistant.controller;
 import com.moseoh.assistant.dto.ReloadReqeustDto;
 import com.moseoh.assistant.response.Response;
 import com.moseoh.assistant.service.CodeService;
+import com.moseoh.assistant.service.ConvertService;
 import com.moseoh.assistant.service.TableService;
 
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class CodeController {
 
     private final CodeService codeService;
     private final TableService tableService;
+    private final ConvertService convertService;
 
     @PostMapping("/reload")
     public ResponseEntity<Response> reload(@RequestBody ReloadReqeustDto reloadReqeustDto) {
@@ -40,7 +42,17 @@ public class CodeController {
 
     @GetMapping("/domain")
     public ResponseEntity<Response> domain(@RequestParam Long mtableId) {
-        return Response.toResponseEntity(tableService.getDomainData(mtableId));
+        return Response.toResponseEntity(convertService.getDomain(mtableId));
+    }
+
+    @GetMapping("/mapper")
+    public ResponseEntity<Response> mapper(@RequestParam Long mtableId) {
+        return Response.toResponseEntity(convertService.getMapper(mtableId));
+    }
+
+    @GetMapping("/mybatis")
+    public ResponseEntity<Response> mybatis(@RequestParam Long mtableId) {
+        return Response.toResponseEntity(convertService.getMybatis(mtableId));
     }
 
 }
