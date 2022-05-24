@@ -23,26 +23,19 @@ echo -e "${GREEN} > git push.. ${NC}"
 
 git push origin master
 
-# echo -e "${GREEN} > build docker image.. ${NC}"
-# echo -e "${GREEN} > docker image tag: ${NC}"
-# read TAG
-
-# ./gradlew bootBuildImage --args='--spring.profiles.active=dev' --imageName=azqazq195/assistant_server:"$TAG"
-
-# echo -e "${GREEN} > docker push.. ${NC}"
-
-# docker push azqazq195/assistant_server:"$TAG"
+echo -e "${GREEN} > build jar.. ${NC}"
+./gradlew clean build -x test 
 
 echo -e "${GREEN} > build docker image.. ${NC}"
+docker build -t azqazq195/assistant_server .
 
-./gradlew clean bootBuildImage --imageName=azqazq195/assistant_server
+# echo -e "${GREEN} > build docker image.. ${NC}"
+# ./gradlew clean bootBuildImage --imageName=azqazq195/assistant_server
 
 echo -e "${GREEN} > docker login.. ${NC}"
-
 docker login
 
 echo -e "${GREEN} > docker push.. ${NC}"
-
 docker push azqazq195/assistant_server
 
 echo -e "${GREEN} > change yml profile 'dev -> local'${NC}"

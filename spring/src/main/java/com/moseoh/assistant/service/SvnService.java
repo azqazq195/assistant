@@ -47,12 +47,13 @@ public class SvnService {
         log.info("export files from svn");
         for (String command : commandList) {
             try {
-                Runtime.getRuntime().exec(command);
+                Process process = Runtime.getRuntime().exec(command);
+                process.destroy();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
+        log.info(files[0].getAbsolutePath());
         return true;
     }
 }

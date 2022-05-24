@@ -1,6 +1,5 @@
 package com.moseoh.assistant.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,9 +12,7 @@ import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodeService {
