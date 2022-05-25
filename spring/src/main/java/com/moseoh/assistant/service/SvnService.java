@@ -1,7 +1,9 @@
 package com.moseoh.assistant.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +48,35 @@ public class SvnService {
 
         log.info("export files from svn");
         for (String command : commandList) {
+            Process process = null;
+            BufferedReader br = null;
             try {
-                Process process = Runtime.getRuntime().exec(command);
-                process.destroy();
-            } catch (IOException e) {
+                process = Runtime.getRuntime().exec(command, null, new File("/"));
+
+                // 실행 결과 확인 (에러) 
+                br = new BufferedReader(new InputStreamReader(process.getErrorStream(), "EUC-KR"));
+                log.info("\n ## ERROR : ");
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    log.info(line);
+                }
+                br = null;
+
+                // 실행 결과 확인
+                br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                log.info("\n ## RESULT:");
+                line = null;
+                while ((line = br.readLine()) != null) {
+                    log.info(line);
+                }
+
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+            } finally {
+                process.destroy();
             }
         }
-        log.info(files[0].getAbsolutePath());
         return true;
     }
 }

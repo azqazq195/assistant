@@ -1,8 +1,8 @@
 package com.moseoh.assistant.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import com.moseoh.assistant.dto.ReloadReqeustDto;
 import com.moseoh.assistant.entity.User;
@@ -42,10 +42,10 @@ public class CodeService {
     }
 
     protected void createSvnTables(User adminUser) {
-        Path[] paths = new Path[] { Path.of("db-populate.sql"), Path.of("center-db-populate.sql") };
+        File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
         try {
-            for (Path path : paths) {
-                String sqlContents = Files.readString(path);
+            for (File file : files) {
+                String sqlContents = Files.readString(file.toPath());
                 tableService.createTables(adminUser, sqlContents);
             }
         } catch (IOException e) {

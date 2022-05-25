@@ -53,7 +53,7 @@ git push origin master
 # github api 용 변수 준비
 GIT_TOKEN="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"
 GIT_CREATE_RELEASE="https://api.github.com/repos/azqazq195/assistant/releases"
-FILE="D:\DEV\Code\Project\assistant\flutter\fluent.msix"
+FILE="D:\DEV\Code\Project\assistant\flutter\assistant.msix"
 
 # Release 생성
 echo -e " > ${GREEN}create release..${NC}"

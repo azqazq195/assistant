@@ -7,7 +7,7 @@ NC='\e[0m'
 # github api 용 변수 준비
 GIT_TOKEN="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"
 GIT_CREATE_RELEASE="https://api.github.com/repos/azqazq195/assistant/releases"
-FILE="D:\DEV\Code\Project\assistant\flutter\fluent.msix"
+FILE="D:\DEV\Code\Project\assistant\flutter\assistant.msix"
 RELEASENOTE="D:/DEV/Code/Project/assistant/flutter/release_note"
 
 VERSION="1.0.6.2"
