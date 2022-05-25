@@ -49,3 +49,7 @@ app.*.map.json
 ### sql ###
 center-db-populate.sql
 db-populate.sql
+
+### sh ###
+release.sh
+update.sh
