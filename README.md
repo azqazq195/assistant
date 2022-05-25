@@ -19,4 +19,4 @@ Copyright 2022. Moseoh. all rights reserved.
 
 ## Architecture
 
-서버 구성 설명하[Nextflutter](https://app.gitbook.com/s/v5CNoI03Pu7W7oajZ1d5/\~/changes/By7jkjGxZIm5bm6yfZ1F/flutter)
+서버 구성 설명하기
