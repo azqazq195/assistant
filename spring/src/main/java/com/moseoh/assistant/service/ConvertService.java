@@ -68,6 +68,14 @@ public class ConvertService {
         StringBuilder sb = new StringBuilder();
 
         sb.append(getInsertQuery(mTable));
+        sb.append("\n\n");
+        sb.append(getSelectQuery(mTable));
+        sb.append("\n\n");
+        sb.append(getListQuery(mTable));
+        sb.append("\n\n");
+        sb.append(getUpdateQuery(mTable));
+        sb.append("\n\n");
+        sb.append(getDeleteQuery(mTable));
 
         return sb.toString();
     }
@@ -275,21 +283,103 @@ public class ConvertService {
 
     private String getSelectQuery(MTable mTable) {
         StringBuilder sb = new StringBuilder();
+        String format = null;
+
+        format = "<select id=\"get%1$s\" resultType=\"%1$s\">\n";
+        sb.append(String.format(format, mTable.getName()));
+        sb.append("\tselect\n");
+
+        for (int i = 0; i < mTable.getMcolumns().size(); i++) {
+            format = "\t\t%1$s as \"%2$s\"";
+            sb.append(String.format(format, mTable.getMcolumns().get(i).getDbName(),
+                    mTable.getMcolumns().get(i).getName()));
+            if (i != mTable.getMcolumns().size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        sb.append("\tfrom\n");
+        format = "\t\t${siteName}.%1$s\n";
+        sb.append(String.format(format, mTable.getDbName()));
+        sb.append("\t<where>\n");
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            format = "\t\t<if test=\"option.%1$s != %2$s\">and %3$s = #{option.%1$s}</if>\n";
+            sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+        }
+        sb.append("\t</where>\n");
+        sb.append("</select>");
         return sb.toString();
     }
 
     private String getListQuery(MTable mTable) {
         StringBuilder sb = new StringBuilder();
+        String format = null;
+
+        format = "<select id=\"get%1$s\" resultType=\"%1$s\">\n";
+        sb.append(String.format(format, mTable.getName()));
+        sb.append("\tselect\n");
+
+        for (int i = 0; i < mTable.getMcolumns().size(); i++) {
+            format = "\t\t%1$s as \"%2$s\"";
+            sb.append(String.format(format, mTable.getMcolumns().get(i).getDbName(),
+                    mTable.getMcolumns().get(i).getName()));
+            if (i != mTable.getMcolumns().size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        sb.append("\tfrom\n");
+        format = "\t\t${siteName}.%1$s\n";
+        sb.append(String.format(format, mTable.getDbName()));
+        sb.append("\t<where>\n");
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            format = "\t\t<if test=\"option.%1$s != %2$s\">and %3$s = #{option.%1$s}</if>\n";
+            sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+        }
+        sb.append("\t</where>\n");
+        sb.append("</select>");
         return sb.toString();
     }
 
     private String getUpdateQuery(MTable mTable) {
         StringBuilder sb = new StringBuilder();
+        String format = null;
+
+        format = "<update id=\"update%1$s\">\n";
+        sb.append(String.format(format, mTable.getName()));
+        format = "\tupdate ${siteName}.%1$s\n";
+        sb.append(String.format(format, mTable.getDbName()));
+        sb.append("\t<set>\n");
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            if (mColumn.getName().equals("id"))
+                continue;
+            format = "\t\t<if test=\"value.%1$s != %2$s\">%3$s = #{value.%1$s},</if>\n";
+            sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+        }
+        sb.append("\t</set>\n");
+        sb.append("\t<where>\n");
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+            sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+        }
+        sb.append("\t</where>\n");
+        sb.append("</update>");
+
         return sb.toString();
     }
 
     private String getDeleteQuery(MTable mTable) {
         StringBuilder sb = new StringBuilder();
+        String format = null;
+
+        format = "<delete id=\"delete%1$s\">\n";
+        sb.append(String.format(format, mTable.getName()));
+        format = "\tdelete from\n\t${siteName}.%1$s\n";
+        sb.append(String.format(format, mTable.getDbName()));
+        sb.append("\twhere\n");
+        sb.append("\t\tid=${id}\n");
+        sb.append("</delete>");
+
         return sb.toString();
     }
 

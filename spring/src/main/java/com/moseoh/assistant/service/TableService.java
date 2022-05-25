@@ -17,7 +17,9 @@ import com.moseoh.assistant.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TableService {
@@ -30,6 +32,7 @@ public class TableService {
     private final String[] DATABASE_NAMES = { "csttec", "center" };
 
     public TableResponseDto getTable(String databaseName, String tableName) {
+        log.info("getTable database:" + databaseName + ", tableName:" + tableName);
         User adminUser = userService.getSvnUser();
         User user = userService.getRequestedUser();
 
@@ -127,13 +130,13 @@ public class TableService {
          */
         String temp = strs[0].trim();
         temp = temp.substring(0, temp.lastIndexOf("`"));
-        String tableName = temp.substring(temp.lastIndexOf("`") + 2);
+        String tableName = temp.substring(temp.lastIndexOf("`") + 1);
         temp = temp.substring(0, temp.lastIndexOf("`"));
         String databaseName = temp.substring(temp.indexOf("`") + 1, temp.lastIndexOf("`"));
 
         MTable mTable = new MTable();
         mTable.setDbName(tableName);
-        mTable.setName(Utils.toCapitalize(Utils.toCamel(mTable.getDbName())));
+        mTable.setName(Utils.toCapitalize(Utils.toCamel(mTable.getDbName().substring(1))));
         mTable.setDatabaseName(databaseName);
 
         for (int i = 1; i < strs.length; i++) {
