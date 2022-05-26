@@ -32,8 +32,8 @@ Map<String, dynamic> _$ResponseToJson(Response instance) => <String, dynamic>{
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl}) {
-    // baseUrl ??= 'https://api.moseoh.xyz/v1';
-    baseUrl ??= 'http://localhost:8080/v1';
+    baseUrl ??= 'https://api.moseoh.xyz/v1';
+    // baseUrl ??= 'http://localhost:8080/v1';
   }
 
   final Dio _dio;
