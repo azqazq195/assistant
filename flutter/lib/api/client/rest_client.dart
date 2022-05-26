@@ -1,5 +1,6 @@
 import 'package:assistant/api/dto/authentication_dto.dart';
 import 'package:assistant/api/dto/code_dto.dart';
+import 'package:assistant/api/dto/git_dto.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart' hide Headers;
@@ -12,6 +13,8 @@ part 'rest_client.g.dart';
 
 // accessTokenExpireDate: DateTime.fromMillisecondsSinceEpoch(
 //     json['accessTokenExpireDate'] as int),
+
+// createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
 
 @RestApi(baseUrl: "https://api.moseoh.xyz/v1")
 abstract class RestClient {
@@ -69,6 +72,16 @@ abstract class RestClient {
     @Header("X-AUTH-TOKEN") String accessToken,
     @Query("mtableId") int mtableId,
   );
+
+  @GET("/git/releases")
+  Future<Response> releases(
+    @Header("X-AUTH-TOKEN") String accessToken,
+  );
+
+  @GET("/git/releaseLatest")
+  Future<Response> releaseLatest(
+    @Header("X-AUTH-TOKEN") String accessToken,
+  );
 }
 
 @JsonSerializable()
@@ -94,6 +107,10 @@ class Response {
 
   Map<String, dynamic> toJson() => _$ResponseToJson(this);
 
+  bool ok() {
+    return status == 200;
+  }
+
   SignInResponseDto getSignInResponseDto() {
     return SignInResponseDto.fromJson(data);
   }
@@ -110,7 +127,7 @@ class Response {
     }
   }
 
-  bool ok() {
-    return status == 200;
+  ReleaseDto getRelease() {
+    return ReleaseDto.fromJson(data);
   }
 }

@@ -94,7 +94,11 @@ class MyAlertDialog extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      content: content,
+      content: SizedBox(
+        width: 200,
+        height: 200,
+        child: SingleChildScrollView(child: content),
+      ),
       actions: actions(),
     );
   }

@@ -1,13 +1,19 @@
 import 'package:assistant/api/api.dart';
 import 'package:assistant/api/client/rest_client.dart';
 import 'package:assistant/api/dto/authentication_dto.dart';
+import 'package:assistant/api/dto/git_dto.dart';
 import 'package:assistant/components/my_alert_dialog.dart';
 import 'package:assistant/components/my_text_button.dart';
 import 'package:assistant/components/my_text_field.dart';
+import 'package:assistant/utils/logger.dart';
 import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
 import 'package:assistant/utils/variable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:yaml/yaml.dart';
 
 const grey = Color.fromARGB(255, 130, 130, 130);
 
@@ -22,6 +28,11 @@ class _SignInPageState extends State<SignInPage> {
   @override
   initState() {
     super.initState();
+
+    Future(() async {
+      await checkUpdate();
+    });
+
     if (_isAutoLogin) {
       _signin(
         SignInRequestDto(
@@ -39,6 +50,42 @@ class _SignInPageState extends State<SignInPage> {
       text: SharedPreferences.prefs.getString(Preferences.email.name) ?? "");
   final TextEditingController _passwordController = TextEditingController(
       text: SharedPreferences.prefs.getString(Preferences.password.name) ?? "");
+
+  Future<void> checkUpdate() async {
+    Future<ReleaseDto> getReleaseLatest() async {
+      Response response =
+          await request(context, Api.restClient.releaseLatest(myAccessToken()));
+      return response.getRelease();
+    }
+
+    ReleaseDto releaseDto = await getReleaseLatest();
+
+    String latestVersion = releaseDto.tagName.replaceAll("v", "");
+    String currentVersion =
+        await rootBundle.loadString('pubspec.yaml').then((value) {
+      var yaml = loadYaml(value);
+      return yaml['msix_config']['msix_version'];
+    });
+    Logger.i("currentVersion: $currentVersion, latestVersion: $latestVersion");
+    if (latestVersion != currentVersion && releaseDto.downloadUrl != null) {
+      MyAlertDialog(
+        context: context,
+        title: "업데이트 안내",
+        content: MarkdownBody(
+          data: releaseDto.body,
+        ),
+        actionText: "다운로드",
+        actionFunction: () async {
+          Uri uri = Uri.parse(releaseDto.downloadUrl!);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          } else {
+            throw "Could not launch '${uri.toString()}'";
+          }
+        },
+      ).show();
+    }
+  }
 
   Future<void> _signin(SignInRequestDto signInRequestDto) async {
     Response response =
