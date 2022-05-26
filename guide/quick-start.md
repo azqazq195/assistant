@@ -16,4 +16,4 @@ description: 실행 방법
 
 Windows 버전 10 이상:
 
-> [Assistant.msix](https://github.com/azqazq195/assistant/releases/download/v2.0.0.0/assistant.msix)
+> [Assistant.msix](https://github.com/azqazq195/assistant/releases/download/v2.0.0.2/assistant.msix)
