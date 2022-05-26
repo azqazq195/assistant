@@ -4,20 +4,23 @@ import 'package:assistant/screen/main/main_page.dart';
 import 'package:assistant/screen/sign/signin_page.dart';
 import 'package:assistant/utils/logger.dart';
 import 'package:assistant/utils/shared_preferences.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_strategy/url_strategy.dart';
 import 'package:assistant/utils/variable.dart';
+// ignore: depend_on_referenced_packages
 import 'package:dio/dio.dart' hide Response;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setPathUrlStrategy();
+  await DesktopWindow.setMinWindowSize(const Size(1280, 720));
+  await DesktopWindow.setWindowSize(const Size(1280, 720));
 
   await Logger.init();
   await SharedPreferences.init();
   Api.init(Dio());
+
   runApp(const MyApp());
 }
 
