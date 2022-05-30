@@ -22,7 +22,7 @@ public class CodeService {
     private final UserService userService;
 
     public String reload(ReloadReqeustDto reloadReqeustDto) {
-        updateSvnTables(userService.getSvnUser());
+        // updateSvnTables(userService.getSvnUser());
         updateUserTables(userService.getRequestedUser(), reloadReqeustDto);
         return "";
     }

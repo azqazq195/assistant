@@ -7,6 +7,8 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:package_info_plus_web/package_info_plus_web.dart';
+import 'package:sentry_flutter/sentry_flutter_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:system_theme_web/system_theme_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
@@ -16,6 +18,8 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 // ignore: public_member_api_docs
 void registerPlugins(Registrar registrar) {
   FilePickerWeb.registerWith(registrar);
+  PackageInfoPlugin.registerWith(registrar);
+  SentryFlutterWeb.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   SystemThemeWeb.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);

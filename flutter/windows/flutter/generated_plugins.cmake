@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   desktop_window
+  sentry_flutter
   system_theme
   url_launcher_windows
   window_manager

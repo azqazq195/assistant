@@ -35,7 +35,7 @@ class MyFieldCard extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
               height: height ?? 80,
-              width: width ?? 200,
+              width: width ?? 190,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

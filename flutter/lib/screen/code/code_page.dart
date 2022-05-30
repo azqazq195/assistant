@@ -8,12 +8,16 @@ import 'package:assistant/components/my_elevated_button.dart';
 import 'package:assistant/components/my_field_card.dart';
 import 'package:assistant/components/my_text_button.dart';
 import 'package:assistant/provider/config.dart';
+import 'package:assistant/utils/logger.dart';
 import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
 import 'package:assistant/utils/variable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../components/my_text_field.dart';
 
 class CodePage extends StatefulWidget {
   const CodePage({Key? key}) : super(key: key);
@@ -23,6 +27,25 @@ class CodePage extends StatefulWidget {
 }
 
 class _CodePageState extends State<CodePage> {
+  final List _serviceMethods = [
+    'Create',
+    'Get',
+    'Edit',
+    'List',
+    'Delete',
+    'Add',
+    'Remove'
+  ];
+  // ignore: prefer_final_fields
+  List<bool> _downlaodServiceMethods = [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ];
   bool _reloading = false;
   String _databaseName = "";
   MTable? _svnTable;
@@ -173,131 +196,160 @@ class _CodePageState extends State<CodePage> {
 
   Widget cardList() {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < 960) {
-        return Column(
-          children: [
-            Row(
-              children: [
-                MyFieldCard(
-                  title: "Domain",
-                  content: "Domain 코드를 클립보드에 복사합니다.",
-                  onPressed: () async {
-                    if (_userTable == null) {
-                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                      return;
-                    }
-                    String domain = await _domain(_userTable!.id);
-                    Clipboard.setData(ClipboardData(text: domain));
-                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-                  },
-                ),
-                middleSpacerW,
-                MyFieldCard(
-                  title: "Mapper.java",
-                  content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-                  onPressed: () async {
-                    if (_userTable == null) {
-                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                      return;
-                    }
-                    String mapper = await _mapper(_userTable!.id);
-                    Clipboard.setData(ClipboardData(text: mapper));
-                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-                  },
-                ),
-              ],
-            ),
-            middleSpacerH,
-            Row(
-              children: [
-                MyFieldCard(
-                  title: "Mapper.xml",
-                  content: "Mybatis 코드를 클립보드에 복사합니다.",
-                  onPressed: () async {
-                    if (_userTable == null) {
-                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                      return;
-                    }
-                    String mybatis = await _mybatis(_userTable!.id);
-                    Clipboard.setData(ClipboardData(text: mybatis));
-                    showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-                  },
-                ),
-                middleSpacerW,
-                MyFieldCard(
-                  title: "Service",
-                  content: "Service 코드 양식을 다운로드 받습니다.",
-                  onPressed: () {
-                    if (_userTable == null) {
-                      showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                      return;
-                    }
-                    // _service(_userTable!.id);
-                  },
-                ),
-              ],
-            )
-          ],
-        );
-      } else {
-        return Row(
-          children: [
-            MyFieldCard(
-              title: "Domain",
-              content: "Domain 코드를 클립보드에 복사합니다.",
-              onPressed: () async {
-                if (_userTable == null) {
-                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                  return;
-                }
-                String domain = await _domain(_userTable!.id);
-                Clipboard.setData(ClipboardData(text: domain));
-                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-              },
-            ),
-            middleSpacerW,
-            MyFieldCard(
-              title: "Mapper.java",
-              content: "Mapper Interface 코드를 클립보드에 복사합니다.",
-              onPressed: () async {
-                if (_userTable == null) {
-                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                  return;
-                }
-                String mapper = await _mapper(_userTable!.id);
-                Clipboard.setData(ClipboardData(text: mapper));
-                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-              },
-            ),
-            middleSpacerW,
-            MyFieldCard(
-              title: "Mapper.xml",
-              content: "Mybatis 코드를 클립보드에 복사합니다.",
-              onPressed: () async {
-                if (_userTable == null) {
-                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                  return;
-                }
-                String mybatis = await _mybatis(_userTable!.id);
-                Clipboard.setData(ClipboardData(text: mybatis));
-                showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
-              },
-            ),
-            middleSpacerW,
-            MyFieldCard(
-              title: "Service",
-              content: "Service 코드 양식을 다운로드 받습니다.",
-              onPressed: () {
-                if (_userTable == null) {
-                  showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
-                  return;
-                }
-                _service(_userTable!.id);
-              },
-            ),
-          ],
-        );
-      }
+      return Row(
+        children: [
+          MyFieldCard(
+            title: "Domain",
+            content: "Domain 코드를 클립보드에 복사합니다.",
+            onPressed: () async {
+              if (_userTable == null) {
+                showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                return;
+              }
+              String domain = await _domain(_userTable!.id);
+              Clipboard.setData(ClipboardData(text: domain));
+              showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
+            },
+          ),
+          middleSpacerW,
+          MyFieldCard(
+            title: "Mapper.java",
+            content: "Mapper Interface 코드를 클립보드에 복사합니다.",
+            onPressed: () async {
+              if (_userTable == null) {
+                showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                return;
+              }
+              String mapper = await _mapper(_userTable!.id);
+              Clipboard.setData(ClipboardData(text: mapper));
+              showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
+            },
+          ),
+          middleSpacerW,
+          MyFieldCard(
+            title: "Mapper.xml",
+            content: "Mybatis 코드를 클립보드에 복사합니다.",
+            onPressed: () async {
+              if (_userTable == null) {
+                showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                return;
+              }
+              String mybatis = await _mybatis(_userTable!.id);
+              Clipboard.setData(ClipboardData(text: mybatis));
+              showSnackbar(context, "완료", "클립보드에 복사되었습니다.");
+            },
+          ),
+          middleSpacerW,
+          MyFieldCard(
+            title: "Service",
+            content: "Service 코드 양식을 다운로드 받습니다.",
+            onPressed: () {
+              if (_userTable == null) {
+                showSnackbar(context, "경고", "테이블이 선택되지 않았습니다.");
+                return;
+              }
+              TextEditingController packageNameController =
+                  TextEditingController();
+              TextEditingController authorController = TextEditingController();
+              authorController.text =
+                  SharedPreferences.prefs.getString(Preferences.author.name) ??
+                      '';
+
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        title: const Text(
+                          "*Service.java 다운로드",
+                          style: TextStyle(
+                            color: colorLightest,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        content: SizedBox(
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("서비스 선택"),
+                                  const SizedBox(height: 5),
+                                  for (int index = 0;
+                                      index < _serviceMethods.length;
+                                      index += 1)
+                                    CheckboxListTile(
+                                      title: Text(
+                                          '${_serviceMethods[index]}${_userTable!.name}Service'),
+                                      value: _downlaodServiceMethods[index],
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _downlaodServiceMethods[index] =
+                                              value!;
+                                        });
+                                      },
+                                    ),
+                                  middleSpacerH,
+                                  const Text("Package Name"),
+                                  const SizedBox(height: 5),
+                                  MyTextField(
+                                      height: 30,
+                                      width: 200,
+                                      hintText: "Pacakge Name",
+                                      controller: packageNameController),
+                                  middleSpacerH,
+                                  const Text("Author"),
+                                  const SizedBox(height: 5),
+                                  MyTextField(
+                                      height: 30,
+                                      width: 200,
+                                      hintText: "Author",
+                                      controller: authorController),
+                                ]),
+                          ),
+                        ),
+                        actions: [
+                          MyElevatedButton(
+                            height: 46,
+                            width: 200,
+                            text: "다운로드",
+                            fontSize: 16,
+                            onPressed: () {
+                              SharedPreferences.prefs.setString(
+                                  Preferences.author.name,
+                                  authorController.text);
+                              _service(
+                                _userTable!,
+                                packageNameController.text,
+                                authorController.text,
+                              );
+                            },
+                          ),
+                          middleSpacerW,
+                          MyTextButton(
+                            height: 46,
+                            width: 200,
+                            text: "닫기",
+                            fontSize: 16,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      );
     });
   }
 
@@ -331,8 +383,7 @@ class _CodePageState extends State<CodePage> {
                               index += 1)
                             ListTile(
                               key: Key('$index'),
-                              tileColor:
-                                  _svnTable == null ? addedItemColor : null,
+                              tileColor: greyLightest,
                               title: Text(_userTable!.mcolumns[index].name),
                             ),
                         ],
@@ -470,10 +521,63 @@ class _CodePageState extends State<CodePage> {
     return response.data;
   }
 
-  Future<String> _service(int tableId) async {
-    Response response = await request(
-        context, Api.restClient.service(myAccessToken(), tableId));
-    return response.data;
+  Future<void> _service(
+      MTable mtable, String packageName, String author) async {
+    List<Map<String, String>> services = [];
+    for (int index = 0; index < _serviceMethods.length; index += 1) {
+      if (!_downlaodServiceMethods[index]) {
+        continue;
+      }
+
+      String service = """package com.csttec.server.service.$packageName;
+
+import org.springframework.stereotype.Service;
+
+import com.csttec.server.core.AService;
+import com.csttec.server.core.Bean;
+import com.csttec.server.domain.Session;
+
+/**
+ * 설명.
+ * 
+ * <pre>
+
+ * IN: NONE
+ *  
+ * OUT: NONE
+ * 
+ * </pre>
+ * 
+ * @author $author
+ *
+ */
+@Service("$packageName.${_serviceMethods[index]}${mtable.name}")
+public class ${_serviceMethods[index]}${mtable.name}Service extends AService{
+
+	@Override
+	protected void doExecute(Bean input, Bean output) {
+		Session session = (Session) input.get("session");
+	}
+
+}
+      """;
+      services.add({
+        "fileName": "${_serviceMethods[index]}${mtable.name}Service",
+        "service": service
+      });
+    }
+    Logger.i("Download Serivces");
+    final localDirectory = Logger.localDirectory;
+    final directory = Directory('$localDirectory/service');
+    if (await directory.exists()) {
+      directory.deleteSync(recursive: true);
+    }
+    await directory.create();
+    for (Map<String, String> service in services) {
+      File('${directory.path}/${service['fileName']!}.java')
+          .writeAsString(service['service']!);
+    }
+    await launchUrl(Uri.file(directory.path));
   }
 
   @override
@@ -515,31 +619,4 @@ class _CodePageState extends State<CodePage> {
       ),
     );
   }
-}
-
-@immutable
-class User {
-  const User({
-    required this.email,
-    required this.name,
-  });
-
-  final String email;
-  final String name;
-
-  @override
-  String toString() {
-    return '$name, $email';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is User && other.name == name && other.email == email;
-  }
-
-  @override
-  int get hashCode => Object.hash(email, name);
 }
