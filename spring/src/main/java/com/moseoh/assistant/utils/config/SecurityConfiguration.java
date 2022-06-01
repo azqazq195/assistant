@@ -40,7 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v1/authentication/signin",
                         "/v1/authentication/signup",
-                        "/v1/authentication/refreshToken")
+                        "/v1/authentication/refreshToken",
+                        "/v1/git/releaseLatest")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .anyRequest().hasRole("USER")
