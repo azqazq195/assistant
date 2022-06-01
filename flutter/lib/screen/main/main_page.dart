@@ -1,6 +1,7 @@
 import 'package:assistant/components/my_alert_dialog.dart';
 import 'package:assistant/screen/code/code_page.dart';
 import 'package:assistant/screen/settings/settings_page.dart';
+import 'package:assistant/screen/update/update_page.dart';
 import 'package:assistant/utils/logger.dart';
 import 'package:assistant/utils/shared_preferences.dart';
 import 'package:assistant/utils/utils.dart';
@@ -17,6 +18,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedDestination = 1;
   static const int _settingsIndex = 50;
+  static const int _updateIndex = 55;
   static const int _bugReportIndex = 60;
   static const int _sourceCodeIndex = 70;
   static const int _logoutIndex = 100;
@@ -59,6 +61,8 @@ class _MainPageState extends State<MainPage> {
           return const CodePage();
         case _settingsIndex:
           return const SettingsPage();
+        case _updateIndex:
+          return const UpdatePage();
         default:
           return const Text("에러");
       }
@@ -97,6 +101,8 @@ class _MainPageState extends State<MainPage> {
             ),
             spacerH,
             listTile(_settingsIndex, const Icon(Icons.settings), "설정"),
+            spacerH,
+            listTile(_updateIndex, const Icon(Icons.update), "업데이트"),
             spacerH,
             listTile(_bugReportIndex, const Icon(Icons.bug_report), "버그 제보"),
             spacerH,

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+// ignore: depend_on_referenced_packages
 import 'package:yaml/yaml.dart';
 
 const grey = Color.fromARGB(255, 130, 130, 130);
@@ -54,7 +55,7 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> checkUpdate() async {
     Future<ReleaseDto> getReleaseLatest() async {
       Response response =
-          await request(context, Api.restClient.releaseLatest(myAccessToken()));
+          await request(context, Api.restClient.releaseLatest());
       return response.getRelease();
     }
 

@@ -98,7 +98,7 @@ class _CodePageState extends State<CodePage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 message:
-                    "csttec, center 데이터 베이스를 최신화 시킵니다.\nSvn과 로컬 작업 폴더의 sql를 모두 분석하기\n때문에 5~10초 정도 소요됩니다.",
+                    "csttec, center 데이터 베이스를 최신화 시킵니다.\n로컬 작업 폴더의 sql를 모두 분석하기\n때문에 5초 정도 소요됩니다.",
                 child: _reloading
                     ? const SizedBox(
                         height: 45,
@@ -354,89 +354,88 @@ class _CodePageState extends State<CodePage> {
   }
 
   Widget columnsList() {
-    final Color changedItemColor = Colors.red.withOpacity(0.3);
-    final Color addedItemColor = Colors.green.withOpacity(0.3);
     return Center(
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _userTable == null
-                  ? [Container()]
-                  : [
-                      const Text(
-                        "로컬",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+        children: _userTable == null
+            ? [Container()]
+            : [
+                Text(
+                  "${_userTable!.name} 테이블",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                spacerH,
+                ReorderableListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    for (int index = 0;
+                        index < _userTable!.mcolumns.length;
+                        index += 1)
+                      ListTile(
+                        key: Key('$index'),
+                        tileColor: greyLightest,
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(_userTable!.mcolumns[index].name),
+                            Row(
+                              children: [
+                                _userTable!.mcolumns[index].pk
+                                    ? const Text(
+                                        "PK",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : const Text(""),
+                                _userTable!.mcolumns[index].ai
+                                    ? spacerW
+                                    : const SizedBox(),
+                                _userTable!.mcolumns[index].ai
+                                    ? const Text(
+                                        "AI",
+                                        style: TextStyle(
+                                          color: Colors.purple,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : const Text(""),
+                                _userTable!.mcolumns[index].fk
+                                    ? spacerW
+                                    : const SizedBox(),
+                                _userTable!.mcolumns[index].fk
+                                    ? Text(
+                                        "FK",
+                                        style: TextStyle(
+                                          color: Colors.pink[400],
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : const Text(""),
+                                biggerSpacerW
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      spacerH,
-                      ReorderableListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          for (int index = 0;
-                              index < _userTable!.mcolumns.length;
-                              index += 1)
-                            ListTile(
-                              key: Key('$index'),
-                              tileColor: greyLightest,
-                              title: Text(_userTable!.mcolumns[index].name),
-                            ),
-                        ],
-                        onReorder: (int oldIndex, int newIndex) {
-                          setState(() {
-                            if (oldIndex < newIndex) {
-                              newIndex -= 1;
-                            }
-                            final MColumn column =
-                                _userTable!.mcolumns.removeAt(oldIndex);
-                            _userTable!.mcolumns.insert(newIndex, column);
-                          });
-                        },
-                      ),
-                    ],
-            ),
-          ),
-          spacerW,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _svnTable == null
-                  ? [Container()]
-                  : [
-                      const Text(
-                        "SVN",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      spacerH,
-                      ReorderableListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          for (int index = 0;
-                              index < _svnTable!.mcolumns.length;
-                              index += 1)
-                            ListTile(
-                              key: Key('$index'),
-                              tileColor: greyLightest,
-                              title: Text(_svnTable!.mcolumns[index].name),
-                            ),
-                        ],
-                        onReorder: (int oldIndex, int newIndex) {
-                          showSnackbar(context, "알림", "SVN 칼럼은 조정할 수 없습니다.");
-                        },
-                      ),
-                    ],
-            ),
-          ),
-        ],
+                  ],
+                  onReorder: (int oldIndex, int newIndex) {
+                    setState(() {
+                      if (oldIndex < newIndex) {
+                        newIndex -= 1;
+                      }
+                      final MColumn column =
+                          _userTable!.mcolumns.removeAt(oldIndex);
+                      _userTable!.mcolumns.insert(newIndex, column);
+                    });
+                  },
+                ),
+              ],
       ),
     );
   }

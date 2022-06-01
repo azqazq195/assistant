@@ -79,9 +79,7 @@ abstract class RestClient {
   );
 
   @GET("/git/releaseLatest")
-  Future<Response> releaseLatest(
-    @Header("X-AUTH-TOKEN") String accessToken,
-  );
+  Future<Response> releaseLatest();
 }
 
 @JsonSerializable()
@@ -129,5 +127,13 @@ class Response {
 
   ReleaseDto getRelease() {
     return ReleaseDto.fromJson(data);
+  }
+
+  List<ReleaseDto> getReleaseList() {
+    List<ReleaseDto> list = [];
+    for (dynamic d in (data as List<dynamic>)) {
+      list.add(ReleaseDto.fromJson(d));
+    }
+    return list;
   }
 }

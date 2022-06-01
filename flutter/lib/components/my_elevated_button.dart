@@ -24,6 +24,9 @@ class MyElevatedButton extends StatelessWidget {
       height: height,
       width: width,
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          onSurface: Colors.black,
+        ),
         onPressed: onPressed,
         child: Text(
           text,

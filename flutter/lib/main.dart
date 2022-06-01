@@ -14,10 +14,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await DesktopWindow.setMinWindowSize(const Size(1920, 1080));
-  // await DesktopWindow.setWindowSize(const Size(1920, 1080));
-  // await DesktopWindow.setWindowSize(const Size(1920, 1080));
-
   // await DesktopWindow.setMinWindowSize(const Size(960, 540));
   // await DesktopWindow.setWindowSize(const Size(960, 540));
   // await DesktopWindow.setWindowSize(const Size(960, 540));

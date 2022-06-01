@@ -32,8 +32,11 @@ public class GitService {
 
     public List<Map<String, Object>> getReleaseList() {
         List<Map<String, Object>> releaseList = new ArrayList<>();
+        int count = 10;
         try {
             for (GHRelease ghRelease : repository.listReleases()) {
+                if (count-- < 0)
+                    break;
                 releaseList.add(
                         new HashMap<String, Object>() {
                             {

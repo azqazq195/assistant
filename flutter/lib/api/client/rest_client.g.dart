@@ -215,11 +215,10 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Response> releaseLatest(accessToken) async {
+  Future<Response> releaseLatest() async {
     const extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final headers = <String, dynamic>{r'X-AUTH-TOKEN': accessToken};
-    headers.removeWhere((k, v) => v == null);
+    final headers = <String, dynamic>{};
     final data = <String, dynamic>{};
     final result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<Response>(

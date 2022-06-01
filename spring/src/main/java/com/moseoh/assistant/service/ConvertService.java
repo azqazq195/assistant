@@ -315,7 +315,7 @@ public class ConvertService {
         StringBuilder sb = new StringBuilder();
         String format = null;
 
-        format = "<select id=\"get%1$s\" resultType=\"%1$s\">\n";
+        format = "<select id=\"list%1$ss\" resultType=\"%1$s\">\n";
         sb.append(String.format(format, mTable.getName()));
         sb.append("\tselect\n");
 
@@ -357,12 +357,32 @@ public class ConvertService {
             sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
         }
         sb.append("\t</set>\n");
+
         sb.append("\t<where>\n");
-        for (MColumn mColumn : mTable.getMcolumns()) {
-            format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
-            sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+        if (hasPk(mTable)) {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                if (!mColumn.isPk()) {
+                    continue;
+                }
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
+        } else if (hasFk(mTable)) {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                if (!mColumn.isFk()) {
+                    continue;
+                }
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
+        } else {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
         }
         sb.append("\t</where>\n");
+
         sb.append("</update>");
 
         return sb.toString();
@@ -374,13 +394,53 @@ public class ConvertService {
 
         format = "<delete id=\"delete%1$s\">\n";
         sb.append(String.format(format, mTable.getName()));
-        format = "\tdelete from\n\t${siteName}.%1$s\n";
+        format = "\tdelete from\n\t\t${siteName}.%1$s\n";
         sb.append(String.format(format, mTable.getDbName()));
-        sb.append("\twhere\n");
-        sb.append("\t\tid=${id}\n");
+        sb.append("\t<where>\n");
+        if (hasPk(mTable)) {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                if (!mColumn.isPk()) {
+                    continue;
+                }
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
+        } else if (hasFk(mTable)) {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                if (!mColumn.isFk()) {
+                    continue;
+                }
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
+        } else {
+            for (MColumn mColumn : mTable.getMcolumns()) {
+                format = "\t\t<if test=\"value.%1$s != %2$s\">and %3$s = #{value.%1$s}</if>\n";
+                sb.append(String.format(format, mColumn.getName(), getDefaultValue(mColumn), mColumn.getDbName()));
+            }
+        }
+        sb.append("\t</where>\n");
         sb.append("</delete>");
 
         return sb.toString();
+    }
+
+    private boolean hasPk(MTable mTable) {
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            if (mColumn.isPk()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasFk(MTable mTable) {
+        for (MColumn mColumn : mTable.getMcolumns()) {
+            if (mColumn.isFk()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hasAI(MTable mTable) {
