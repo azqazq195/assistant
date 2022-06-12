@@ -37,9 +37,11 @@ class _SignInPageState extends State<SignInPage> {
     if (_isAutoLogin) {
       _signin(
         SignInRequestDto(
-          email: SharedPreferences.prefs.getString(Preferences.email.name)!,
+          email:
+              SharedPreferences.prefs.getString(Preferences.email.name) ?? '',
           password:
-              SharedPreferences.prefs.getString(Preferences.password.name)!,
+              SharedPreferences.prefs.getString(Preferences.password.name) ??
+                  '',
         ),
       );
     }
