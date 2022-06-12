@@ -29,9 +29,6 @@ echo -e "${GREEN} > build jar.. ${NC}"
 echo -e "${GREEN} > build docker image.. ${NC}"
 docker build -t azqazq195/assistant_server .
 
-# echo -e "${GREEN} > build docker image.. ${NC}"
-# ./gradlew clean bootBuildImage --imageName=azqazq195/assistant_server
-
 echo -e "${GREEN} > docker login.. ${NC}"
 docker login
 
