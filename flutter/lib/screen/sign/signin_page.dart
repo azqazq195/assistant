@@ -204,7 +204,7 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "아~ 일하기 싫다✨",
+                      "Assistant✨",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 24,
