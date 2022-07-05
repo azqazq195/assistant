@@ -10,9 +10,7 @@
 - [개요](##사용-설명)
 - [기술 스택](##기술-스택)
 
-## 사용 설명서
-
-{% embed url="https://docs.moseoh.xyz" %}
+## [사용 설명서](https://docs.moseoh.xyz)
 
 ## 개요
 
