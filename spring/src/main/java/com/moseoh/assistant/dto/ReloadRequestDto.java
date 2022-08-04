@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReloadReqeustDto {
+public class ReloadRequestDto {
     private String dbPopulate;
     private String centerDbPopulate;
 }

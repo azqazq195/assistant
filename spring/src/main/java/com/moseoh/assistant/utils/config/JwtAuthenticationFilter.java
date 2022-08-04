@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         HttpServletRequest r = ((HttpServletRequest) request);
         String method = r.getMethod();
-        String requestUri = r.getRequestURI().toString();
+        String requestUri = r.getRequestURI();
         log.info("request: [" + method + "] - " + requestUri);
 
         if (token != null && jwtProvider.validationToken(token)) {

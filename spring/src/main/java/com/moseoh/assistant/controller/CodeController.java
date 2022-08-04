@@ -1,20 +1,13 @@
 package com.moseoh.assistant.controller;
 
-import com.moseoh.assistant.dto.ReloadReqeustDto;
+import com.moseoh.assistant.dto.ReloadRequestDto;
 import com.moseoh.assistant.response.Response;
 import com.moseoh.assistant.service.CodeService;
 import com.moseoh.assistant.service.ConvertService;
 import com.moseoh.assistant.service.TableService;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,12 +19,12 @@ public class CodeController {
     private final ConvertService convertService;
 
     @PostMapping("/reload")
-    public ResponseEntity<Response> reload(@RequestBody ReloadReqeustDto reloadReqeustDto) {
-        return Response.toResponseEntity(codeService.reload(reloadReqeustDto));
+    public ResponseEntity<Response> reload(@RequestBody ReloadRequestDto reloadRequestDto) {
+        return Response.toResponseEntity(codeService.reload(reloadRequestDto));
     }
 
     @GetMapping("/tablenames")
-    public ResponseEntity<Response> tablenames(@RequestParam String databaseName) {
+    public ResponseEntity<Response> tableNames(@RequestParam String databaseName) {
         return Response.toResponseEntity(tableService.getTableNames(databaseName));
     }
 

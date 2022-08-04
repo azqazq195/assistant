@@ -1,24 +1,22 @@
 package com.moseoh.assistant.repository;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import com.moseoh.assistant.entity.User;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
-    public User findUserById(long id);
+    User findUserById(long id);
 
-    public List<User> findAll();
+    List<User> findAll();
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
-    public User findUserByEmailAndPassword(String email, String password);
+    User findUserByEmailAndPassword(String email, String password);
 
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 }

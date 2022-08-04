@@ -1,14 +1,13 @@
 package com.moseoh.assistant.dto;
 
-import java.util.Collections;
-
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.utils.exception.ServiceException;
 import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collections;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class SignUpRequestDto {
                 .build();
     }
 
-    public void checkEmpty() {
+    public void validation() {
         if (username.isEmpty()) {
             throw new ServiceException(ErrorCode.EMPTY_USERNAME);
         }

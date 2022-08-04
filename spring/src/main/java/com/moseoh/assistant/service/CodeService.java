@@ -1,17 +1,15 @@
 package com.moseoh.assistant.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
-import com.moseoh.assistant.dto.ReloadReqeustDto;
+import com.moseoh.assistant.dto.ReloadRequestDto;
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.utils.exception.ServiceException;
 import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +19,9 @@ public class CodeService {
     private final TableService tableService;
     private final UserService userService;
 
-    public String reload(ReloadReqeustDto reloadReqeustDto) {
+    public String reload(ReloadRequestDto reloadRequestDto) {
         // updateSvnTables(userService.getSvnUser());
-        updateUserTables(userService.getRequestedUser(), reloadReqeustDto);
+        updateUserTables(userService.getRequestedUser(), reloadRequestDto);
         return "";
     }
 
@@ -36,13 +34,13 @@ public class CodeService {
         createSvnTables(adminUser);
     }
 
-    protected void updateUserTables(User user, ReloadReqeustDto reloadReqeustDto) {
+    protected void updateUserTables(User user, ReloadRequestDto reloadRequestDto) {
         deleteTables(user);
-        createUserTables(user, reloadReqeustDto);
+        createUserTables(user, reloadRequestDto);
     }
 
     protected void createSvnTables(User adminUser) {
-        File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
+        File[] files = new File[]{new File("db-populate.sql"), new File("center-db-populate.sql")};
         try {
             for (File file : files) {
                 String sqlContents = Files.readString(file.toPath());
@@ -54,12 +52,12 @@ public class CodeService {
         }
     }
 
-    protected void createUserTables(User user, ReloadReqeustDto reloadReqeustDto) {
-        if (reloadReqeustDto.getCenterDbPopulate() != null) {
-            tableService.createTables(user, reloadReqeustDto.getCenterDbPopulate());
+    protected void createUserTables(User user, ReloadRequestDto reloadRequestDto) {
+        if (reloadRequestDto.getCenterDbPopulate() != null) {
+            tableService.createTables(user, reloadRequestDto.getCenterDbPopulate());
         }
-        if (reloadReqeustDto.getDbPopulate() != null) {
-            tableService.createTables(user, reloadReqeustDto.getDbPopulate());
+        if (reloadRequestDto.getDbPopulate() != null) {
+            tableService.createTables(user, reloadRequestDto.getDbPopulate());
         }
     }
 
