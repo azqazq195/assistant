@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 RED="\033[1;31""m"
 GREEN="\033[1;32""m"
@@ -7,7 +7,9 @@ BLUE="\033[1;34""m"
 PINK="\033[1;35""m"
 NC="\033[0m"
 
-YAML="/d/DEV/Code/Project/assistant/spring/src/main/resources/application.yml"
+#PATH 변수를 사용하면 에러가 남
+#PATH=$(dirname $0)
+YAML="$(dirname $0)/src/main/resources/application.yml"
 
 echo -e "${GREEN} > change yml profile 'local -> dev'${NC}"
 yq -i '.spring.config.import[0] = "classpath:application-dev.yml"' $YAML
