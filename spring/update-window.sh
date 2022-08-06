@@ -10,6 +10,7 @@ NC="\033[0m"
 #PATH 변수를 사용하면 에러가 남
 #PATH=$(dirname $0)
 YAML="$(dirname $0)/src/main/resources/application.yml"
+#DOCKER_PATH="chmod a+x /c/Program\ Files/Docker/Docker/Docker\ Desktop.exe"
 
 echo -e "${GREEN} > change yml profile 'local -> dev'${NC}"
 yq -i '.spring.config.import[0] = "classpath:application-dev.yml"' $YAML
@@ -26,7 +27,10 @@ echo -e "${GREEN} > git push.. ${NC}"
 git push origin master
 
 echo -e "${GREEN} > build jar.. ${NC}"
-./gradlew clean build -x test 
+./gradlew clean build -x test
+
+#echo -e "${GREEN} > start docker.. ${NC}"
+#"$DOCKER_PATH"
 
 echo -e "${GREEN} > build docker image.. ${NC}"
 docker build -t azqazq195/assistant_server .
