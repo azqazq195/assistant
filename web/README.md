@@ -1,12 +1,12 @@
 ### next 설치
 
-`npx create-next-app {AppName}`
+`npx create-next-app {AppName} --typescript`
 
 react react-dom next 가 함께 설치된다.
 
 ```shell
-npm i zustand next-theme
 # d 옵션은 dev dependency
+npm i zustand next-theme axios
 npm i -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```
