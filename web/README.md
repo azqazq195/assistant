@@ -6,7 +6,7 @@ react react-dom next 가 함께 설치된다.
 
 ```shell
 # d 옵션은 dev dependency
-npm i zustand next-theme axios
+npm i zustand next-theme axios @heroicons/react @headlessui/react classnames styled-components
 npm i -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 ```

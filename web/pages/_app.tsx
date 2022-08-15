@@ -1,6 +1,6 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-theme'
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { ThemeProvider } from 'next-theme';
 import Head from 'next/head';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -16,5 +16,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-
-export default MyApp
+export default MyApp;

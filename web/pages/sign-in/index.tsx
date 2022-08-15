@@ -1,7 +1,11 @@
 import Head from 'next/head';
 import Link from 'next/dist/client/link';
+import { useStoreSignIn } from './signInStore';
+import SignUp from '../../components/signUp/signUp';
 
 export default function SignIn() {
+  const { showSignUp, setShowSignUp } = useStoreSignIn();
+
   return (
     <>
       <Head>
@@ -9,6 +13,8 @@ export default function SignIn() {
         <meta name="description" content="로그인" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {showSignUp ? <SignUp /> : null}
 
       <section className="h-screen items-center justify-center grid grid-cols-2">
         <div className="flex flex-col min-h-screen items-center justify-center">
@@ -49,15 +55,18 @@ export default function SignIn() {
             </div>
 
             <Link href="/">
-              <button className="w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mb-1">
-                로그인
-              </button>
+              <div className="relative mb-3">
+                <button className="w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+                  로그인
+                </button>
+              </div>
             </Link>
-            <Link href="/sign-up">
-              <button className="w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                회원가입
-              </button>
-            </Link>
+            <button
+              className="w-full text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+              onClick={() => setShowSignUp(true)}
+            >
+              회원가입
+            </button>
             <p className="text-xs text-gray-500 mt-3">
               Copyright 2022. Moseoh all rights reserved.
             </p>
