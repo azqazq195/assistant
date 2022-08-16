@@ -1,27 +1,20 @@
 package com.moseoh.assistant.service;
 
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import com.moseoh.assistant.dto.RefreshTokenRequestDto;
-import com.moseoh.assistant.dto.SignInRequestDto;
-import com.moseoh.assistant.dto.SignUpRequestDto;
-import com.moseoh.assistant.dto.TokenDto;
-import com.moseoh.assistant.dto.UserDto;
+import com.moseoh.assistant.config.JwtProvider;
+import com.moseoh.assistant.dto.*;
 import com.moseoh.assistant.entity.RefreshToken;
 import com.moseoh.assistant.entity.User;
 import com.moseoh.assistant.repository.RefreshTokenRepository;
 import com.moseoh.assistant.repository.UserRepository;
 import com.moseoh.assistant.utils.Validation;
-import com.moseoh.assistant.utils.config.JwtProvider;
 import com.moseoh.assistant.utils.exception.ServiceException;
 import com.moseoh.assistant.utils.exception.ServiceException.ErrorCode;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,14 +60,14 @@ public class AuthenticationService {
     }
 
     @Transactional
-    private void validation(SignUpRequestDto signUpRequestDto) {
+    void validation(SignUpRequestDto signUpRequestDto) {
 
         if (!Validation.checkEmail(signUpRequestDto.getEmail())) {
             throw new ServiceException(ErrorCode.NOT_VALID_EMAIL);
         }
 
         if (userRepository.existsByEmail(signUpRequestDto.getEmail())) {
-            throw new ServiceException(ErrorCode.EXISTS_EMALL);
+            throw new ServiceException(ErrorCode.EXISTS_EMAIL);
         }
 
         if (!signUpRequestDto.getPasswordCheck().equals(signUpRequestDto.getPassword())) {

@@ -1,18 +1,16 @@
 package com.moseoh.assistant.service;
 
+import com.moseoh.assistant.config.YAMLConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.moseoh.assistant.utils.config.YAMLConfig;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -39,7 +37,7 @@ public class SvnService {
 
     public boolean export() {
         log.info("delete old files, before export.");
-        File[] files = new File[] { new File("db-populate.sql"), new File("center-db-populate.sql") };
+        File[] files = new File[]{new File("db-populate.sql"), new File("center-db-populate.sql")};
         for (File file : files) {
             if (file.exists()) {
                 file.delete();

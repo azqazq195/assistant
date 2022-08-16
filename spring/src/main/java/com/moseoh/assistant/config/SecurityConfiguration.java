@@ -1,33 +1,45 @@
-package com.moseoh.assistant.utils.config;
+package com.moseoh.assistant.config;
 
 import com.moseoh.assistant.utils.exception.ServletExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
     private final JwtProvider jwtProvider;
     private final ServletExceptionHandler servletExceptionHandler;
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors()
+                .and()
+
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement()
@@ -35,13 +47,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/v1/authentication/signin",
-                        "/v1/authentication/signup",
-                        "/v1/authentication/refreshToken",
-                        "/v1/git/releaseLatest")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .anyRequest().hasRole("USER")
 
                 .and()
@@ -50,15 +55,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(servletExceptionHandler)
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class).build();
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(
-                "/v2/api-docs",
-                "/swagger-resources/**",
-                "/swagger-ui/**",
-                "/swagger/**");
+    @Bean
+    public WebSecurityCustomizer configure() {
+        return (web) -> web.ignoring()
+                .antMatchers(HttpMethod.GET, "/exception/**")
+                .antMatchers(
+                        "/v1/authentication/signin",
+                        "/v1/authentication/signup",
+                        "/v1/authentication/refreshToken",
+                        "/v1/git/releaseLatest",
+
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/swagger/**");
     }
 }

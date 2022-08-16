@@ -1,9 +1,8 @@
 package com.moseoh.assistant.utils.exception;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class ServiceException extends RuntimeException {
         CANNOT_FOLLOW_MYSELF(HttpStatus.BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다."),
         NOT_MATCHED_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 다릅니다."),
         NOT_VALID_EMAIL(HttpStatus.BAD_REQUEST, "옳바르지 않은 이메일 주소입니다."),
-        EXISTS_EMALL(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일 주소 입니다."),
+        EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일 주소 입니다."),
         EMPTY_USERNAME(HttpStatus.BAD_REQUEST, "이름을 입력해 주세요."),
         EMPTY_EMAIL(HttpStatus.BAD_REQUEST, "이메일을 입력해 주세요."),
         EMPTY_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 입력해 주세요."),
@@ -43,9 +42,7 @@ public class ServiceException extends RuntimeException {
 
         /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
         DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
-        DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.")
-
-        ;
+        DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.");
 
         private final HttpStatus httpStatus;
         private final String detail;
