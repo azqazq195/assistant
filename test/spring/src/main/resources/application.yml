@@ -5,6 +5,13 @@ spring:
     username: root
     password: qwe123
 
+#spring:
+#  datasource:
+#    url: ${datasource.url}
+#    username: ${datasource.username}
+#    password: ${datasource.password}
+#java -jar {jar 경로} --datasource.username=강승현 --datasource.password=비밀번호 --datasource.url=링크
+
   jpa:
     open-in-view: false
     generate-ddl: true
@@ -14,8 +21,16 @@ spring:
   info:
     build:
       encoding: UTF-8
+  output:
+    ansi:
+      enabled: always
 
 server:
   port: 8080
   servlet:
     context-path: /assistant
+
+logging:
+  pattern:
+    console: "%d{{$LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd E HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%8.15t]){cyan} %clr(%-25.25logger{0}){blue} %clr(:){red} %clr(%m){faint}%n"
+    file: "%d{{$LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd E HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%8.15t]){cyan} %clr(%-25.25logger{0}){blue} %clr(:){red} %clr(%m){faint}%n"
