@@ -1,7 +1,7 @@
 package com.moseoh.assistant.config.exception;
 
 import com.moseoh.assistant.response.ErrorCode;
-import com.moseoh.assistant.response.ErrorResponse;
+import com.moseoh.assistant.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +16,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<Object> handleApiException(ApiException e) {
+    public ResponseEntity<Response<Object>> handleApiException(ApiException e) {
         log.info("api exception", e);
         return errorResponse(e.getErrorCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception e) {
+    public ResponseEntity<Response<Object>> handleException(Exception e) {
         log.info("unhandled exception", e);
         return errorResponse();
     }
 
-    private ResponseEntity<Object> errorResponse() {
+    private ResponseEntity<Response<Object>> errorResponse() {
         return errorResponse(ErrorCode.INTERNAL_SERVER_ERROR, null);
     }
 
-    private ResponseEntity<Object> errorResponse(ErrorCode errorCode, String message) {
+    private ResponseEntity<Response<Object>> errorResponse(ErrorCode errorCode, String message) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(ErrorResponse.builder()
-                        .status(errorCode.getHttpStatus().value())
-                        .message(message == null ? errorCode.getMessage() : message)
-                        .build()
+                .body(
+                        new Response<>(
+                                errorCode,
+                                message == null ? errorCode.getMessage() : message,
+                                null
+                        )
                 );
     }
 }

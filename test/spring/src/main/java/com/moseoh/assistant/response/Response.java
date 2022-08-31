@@ -15,4 +15,10 @@ public class Response<T> {
         this.message = successCode.getMessage();
         this.data = data;
     }
+
+    public Response(ErrorCode errorCode, String message, T data) {
+        this.status = errorCode.getHttpStatus().value();
+        this.message = message;
+        this.data = data;
+    }
 }

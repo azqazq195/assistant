@@ -34,3 +34,7 @@ logging:
   pattern:
     console: "%d{{$LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd E HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%8.15t]){cyan} %clr(%-25.25logger{0}){blue} %clr(:){red} %clr(%m){faint}%n"
     file: "%d{{$LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd E HH:mm:ss.SSS}} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%8.15t]){cyan} %clr(%-25.25logger{0}){blue} %clr(:){red} %clr(%m){faint}%n"
+
+config:
+#  base-url: https://intranet.csttec.com/json
+  base-url: https://csweb.kncsoft.co.kr/json

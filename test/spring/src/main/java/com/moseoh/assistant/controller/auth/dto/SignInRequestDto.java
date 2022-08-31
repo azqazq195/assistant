@@ -1,6 +1,6 @@
 package com.moseoh.assistant.controller.auth.dto;
 
-import com.moseoh.assistant.client.dto.LoginRequestDto;
+import com.moseoh.assistant.client.dto.LoginRequestRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +18,8 @@ public class SignInRequestDto {
     @NotBlank
     private String ip;
 
-    public LoginRequestDto toLoginRequestDto() {
-        return new LoginRequestDto(
+    public LoginRequestRequestDto toLoginRequestDto() {
+        return new LoginRequestRequestDto(
                 email,
                 password,
                 ip
