@@ -1,13 +1,13 @@
-package com.moseoh.assistant.client.dto;
+package com.moseoh.assistant.csttec.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import com.moseoh.assistant.csttec.dto.base.BaseRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequestRequestDto extends BaseRequestDto {
+public class LoginRequest extends BaseRequestDto {
     @JsonProperty(value = "email")
     private String email;
     @JsonProperty(value = "password")

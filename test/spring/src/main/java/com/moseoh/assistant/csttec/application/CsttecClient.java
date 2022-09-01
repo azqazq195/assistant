@@ -1,7 +1,10 @@
-package com.moseoh.assistant.client;
+package com.moseoh.assistant.csttec.application;
 
-import com.moseoh.assistant.client.dto.*;
+import com.moseoh.assistant.csttec.dto.LoginRequest;
 import com.moseoh.assistant.config.exception.ApiException;
+import com.moseoh.assistant.csttec.dto.LoginResponse;
+import com.moseoh.assistant.csttec.dto.base.BaseRequestDto;
+import com.moseoh.assistant.csttec.dto.base.BaseResponseDto;
 import com.moseoh.assistant.response.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -9,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -39,11 +41,7 @@ public class CsttecClient {
         return baseResponseDto;
     }
 
-    public LoginResponseDto login(LoginRequestRequestDto loginRequestDto) {
-        return (LoginResponseDto) request(loginRequestDto, LoginResponseDto.class, "common.Login");
-    }
-
-    public GetWorkResponseDto getWork(GetWorkRequestRequestDto getWorkRequestDto) {
-        return (GetWorkResponseDto) request(getWorkRequestDto, GetWorkResponseDto.class, "login.service");
+    public LoginResponse login(LoginRequest loginRequestDto) {
+        return (LoginResponse) request(loginRequestDto, LoginResponse.class, "common.Login");
     }
 }

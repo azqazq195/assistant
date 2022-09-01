@@ -1,6 +1,6 @@
-package com.moseoh.assistant.controller.auth.dto;
+package com.moseoh.assistant.auth.application.dto;
 
-import com.moseoh.assistant.client.dto.LoginRequestRequestDto;
+import com.moseoh.assistant.csttec.dto.LoginRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInRequestDto {
+public class SignInRequest {
     @NotBlank
     private String email;
     @NotBlank
@@ -18,8 +18,8 @@ public class SignInRequestDto {
     @NotBlank
     private String ip;
 
-    public LoginRequestRequestDto toLoginRequestDto() {
-        return new LoginRequestRequestDto(
+    public LoginRequest toLoginRequestDto() {
+        return new LoginRequest(
                 email,
                 password,
                 ip

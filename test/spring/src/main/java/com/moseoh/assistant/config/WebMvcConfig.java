@@ -1,5 +1,6 @@
 package com.moseoh.assistant.config;
 
+import com.moseoh.assistant.config.filter.JwtFilter;
 import com.moseoh.assistant.config.interceptor.LoggingInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,12 +18,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoggingInterceptor loggingInterceptor;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loggingInterceptor)
-                .addPathPatterns("/**");
-//                .excludePathPatterns("/auth/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/auth/sign-in");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
@@ -37,7 +40,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .authorizeRequests()
                 .anyRequest().hasRole("USER")
                 .and()
-                .build();
+                .addFilterBefore(
+                        new JwtFilter(jwtProvider),
+                        UsernamePasswordAuthenticationFilter.class
+                ).build();
     }
 
     @Bean

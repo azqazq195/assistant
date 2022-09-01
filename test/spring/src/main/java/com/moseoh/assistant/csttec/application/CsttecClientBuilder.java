@@ -1,4 +1,4 @@
-package com.moseoh.assistant.client;
+package com.moseoh.assistant.csttec.application;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;

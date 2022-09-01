@@ -1,7 +1,7 @@
-package com.moseoh.assistant.controller.auth;
+package com.moseoh.assistant.auth.controller;
 
-import com.moseoh.assistant.controller.auth.dto.SignInRequestDto;
-import com.moseoh.assistant.controller.auth.dto.SignInResponseDto;
+import com.moseoh.assistant.auth.application.dto.SignInRequest;
+import com.moseoh.assistant.auth.application.dto.SignInResponse;
 import com.moseoh.assistant.response.SuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moseoh.assistant.response.Response;
-import com.moseoh.assistant.service.AuthService;
+import com.moseoh.assistant.auth.application.AuthService;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,13 +21,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Response<SignInResponseDto>> signIn(
-            @RequestBody SignInRequestDto signInRequestDto
+    public ResponseEntity<Response<SignInResponse>> signIn(
+            @RequestBody SignInRequest signInRequest
             ) {
         return ResponseEntity.ok().body(
           new Response<>(
                   SuccessCode.SIGN_IN,
-                  authService.signIn(signInRequestDto)
+                  authService.signIn(signInRequest)
           )
         );
     }
