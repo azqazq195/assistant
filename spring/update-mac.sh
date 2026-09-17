@@ -15,12 +15,12 @@ yq -i '.spring.config.import[0] = "classpath:application-dev.yml"' $YAML
 echo "${GREEN} > commit comment: ${NC}"
 read COMMIT
 
-git pull origin master
+git pull origin main
 git add .
 git commit -m "$COMMIT"
 
 echo "${GREEN} > git push.. ${NC}"
-git push origin master
+git push origin main
 
 echo "${GREEN} > build jar.. ${NC}"
 ./gradlew clean build -x test 
